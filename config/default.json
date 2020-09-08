@@ -1,0 +1,4 @@
+{
+	"MongoURI": "mongodb+srv://UnderArbor:Hamon002@magenta.uluah.mongodb.net/Magenta?retryWrites=true&w=majority",
+	"ScryFallAPI": "https://api.scryfall.com"
+}

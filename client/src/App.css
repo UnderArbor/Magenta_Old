@@ -1,0 +1,145 @@
+:root {
+	--main-bg-color: #50395b;
+	--secondary-color: #dd9;
+	--backdrop-color: #212;
+	--header-color: #a6a;
+	--header-text-color: #eae;
+}
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background-color: var(--main-bg-color);
+	width: 100%;
+	margin: auto;
+	border-color: var(--backdrop-color);
+	border-style: solid;
+	border-width: 3px;
+}
+
+hr {
+	height: 1px;
+	background-color: var(--secondary-color);
+	border: none;
+}
+
+ul li {
+	color: #fff;
+	background-color: #fff;
+}
+
+.header {
+	background-color: var(--header-color);
+	height: 84px;
+	font-size: 36px;
+	padding-left: 16px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--header-text-color);
+}
+
+.home {
+	border-right: 2px solid var(--header-text-color);
+	padding-right: 30px;
+	align-items: center;
+}
+
+.colorButton {
+	margin: 16px;
+	size: 20px;
+	align-items: center;
+}
+
+.colorSelection {
+	display: flex;
+}
+
+.color {
+	-webkit-text-stroke-width: 0.3px;
+	-webkit-text-stroke-color: black;
+	font-weight: bold;
+	padding-right: 10px;
+}
+
+.deckList {
+	color: var(--secondary-color);
+	background-color: var(--main-bg-color);
+}
+
+.ownerName {
+	font-size: 28px;
+	padding: 16px;
+}
+
+.createDeckButton {
+	margin: 16px;
+}
+
+.searchArea {
+	display: flex;
+	align-items: center;
+}
+
+.searchBar {
+	background-color: #fff;
+	margin: 16px;
+	text-align: left;
+	padding-left: 8px;
+	height: 20px;
+	border-radius: 10px;
+	order: 1;
+}
+
+.searchButton {
+	margin-left: 16px;
+	height: 20px;
+	order: 2;
+}
+
+.searchLoading {
+	float: left;
+	color: #fff;
+	order: 3;
+	margin-left: 12px;
+}
+
+.deckContent {
+	border-color: var(--secondary-color);
+	background-color: var(--backdrop-color);
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 10px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 16px;
+	width: 70%;
+	height: 900px;
+}
+
+.deckList li {
+	display: inline;
+	padding-right: 12px;
+	margin: 36px;
+}
+
+.cardContainer {
+	color: #fff;
+	display: flex;
+	align-items: center;
+	margin: 16px;
+}
+
+.cardName {
+	margin: 16px;
+}
+
+.cardImage {
+	display: block;
+	width: 5%;
+	height: auto;
+}
