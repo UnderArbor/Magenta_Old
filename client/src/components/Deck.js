@@ -29,6 +29,7 @@ class Deck extends Component {
 	async componentDidMount() {
 		if (this.state.isLoading) {
 			await axios.get('/api/deck/testDeck').then((res) => {
+				console.log('Success');
 				const cards = res.data.cards;
 				this.setState({ cards });
 				this.setState({ isLoading: false });
