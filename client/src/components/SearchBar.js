@@ -41,6 +41,9 @@ class SearchBar extends Component {
 									this.setState({ loading: false, userQuery: '' });
 									this.focus();
 									this.props.searched();
+								})
+								.catch((error) => {
+									console.log(error.reponse);
 								});
 						}
 					}}

@@ -28,23 +28,33 @@ class Deck extends Component {
 
 	async componentDidMount() {
 		if (this.state.isLoading) {
-			await axios.get('/api/deck/testDeck').then((res) => {
-				console.log('Success');
-				const cards = res.data.cards;
-				this.setState({ cards });
-				this.setState({ isLoading: false });
-			});
+			await axios
+				.get('/api/deck/testDeck')
+				.then((res) => {
+					console.log('Success');
+					const cards = res.data.cards;
+					this.setState({ cards });
+					this.setState({ isLoading: false });
+				})
+				.catch((error) => {
+					console.log(error.reponse);
+				});
 		}
 	}
 
 	async componentDidUpdate() {
 		if (this.state.searched) {
 			this.setState({ searched: false });
-			await axios.get('/api/deck/testDeck').then((res) => {
-				const cards = res.data.cards;
-				this.setState({ cards });
-				this.setState({ isLoading: false });
-			});
+			await axios
+				.get('/api/deck/testDeck')
+				.then((res) => {
+					const cards = res.data.cards;
+					this.setState({ cards });
+					this.setState({ isLoading: false });
+				})
+				.catch((error) => {
+					console.log(error.reponse);
+				});
 		}
 	}
 
