@@ -3,17 +3,6 @@ import SearchBar from './SearchBar';
 import axios from 'axios';
 import CardList from './CardList';
 
-axios.defaults.baseURL =
-	window.location.protocol + '//' + window.location.hostname + ':4000';
-
-// function Cards({ cards }) {
-// 	if (cards.length > 0) {
-// 		return cards.map((card) => <img key={card.name} src={card.image} />);
-// 	}
-
-// 	return null;
-// }
-
 class Deck extends Component {
 	constructor(props) {
 		super(props);
@@ -44,8 +33,8 @@ class Deck extends Component {
 	}
 
 	async componentDidUpdate() {
-		console.log('Going in, again...');
 		if (this.state.searched) {
+			console.log('Going in, again...');
 			this.setState({ searched: false });
 			await axios
 				.get('/api/deck/testDeck')

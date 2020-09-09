@@ -1,9 +1,6 @@
 import React, { Component, useState } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL =
-	window.location.protocol + '//' + window.location.hostname + ':4000';
-
 class SearchBar extends Component {
 	constructor(props) {
 		super(props);
