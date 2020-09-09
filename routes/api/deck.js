@@ -29,7 +29,7 @@ router.post('/:deckName', async (req, res) => {
 });
 
 router.get('/:deckName', async (req, res) => {
-	console.log('0');
+	alert('0');
 	try {
 		const deck = await Deck.findOne({ name: req.params.deckName });
 		console.log('1');

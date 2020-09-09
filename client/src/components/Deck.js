@@ -28,6 +28,7 @@ class Deck extends Component {
 
 	async componentDidMount() {
 		if (this.state.isLoading) {
+			console.log('Going in...');
 			await axios
 				.get('/api/deck/testDeck')
 				.then((res) => {
@@ -43,6 +44,7 @@ class Deck extends Component {
 	}
 
 	async componentDidUpdate() {
+		console.log('Going in, again...');
 		if (this.state.searched) {
 			this.setState({ searched: false });
 			await axios
