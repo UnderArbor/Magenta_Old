@@ -1,8 +1,8 @@
-import { ADD_CARD } from './types';
+import { BAD_CARD } from './types';
 
-export const addCard = (deck, card) => (dispatch) => {
+export const badCard = (deck, card) => (dispatch) => {
 	dispatch({
-		type: ADD_CARD,
-		payload: { deck, card },
+		type: BAD_CARD,
+		payload: { error: 'bad_card' },
 	});
 };

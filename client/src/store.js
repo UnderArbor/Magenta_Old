@@ -6,14 +6,14 @@ import rootReducer from './reducers';
 console.log('__dirname:');
 console.log(__dirname);
 
-// const initialState = {};
+const initialState = {};
 
-// const middleware = [thunk];
+const middleware = [thunk];
 
-// const store = createStore(
-// 	// rootReducer,
-// 	initialState,
-// 	composeWithDevTools(applyMiddleware(...middleware))
-// );
+const store = createStore(
+	rootReducer,
+	initialState,
+	composeWithDevTools(applyMiddleware(...middleware))
+);
 
-// export default store;
+export default store;

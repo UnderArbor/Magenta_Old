@@ -107,6 +107,14 @@ ul li {
 	margin-left: 12px;
 }
 
+.cardError {
+	float: left;
+	color: #fff;
+	background-color: red;
+	order: 4;
+	margin-left: 12px;
+}
+
 .deckContent {
 	border-color: var(--secondary-color);
 	background-color: var(--backdrop-color);

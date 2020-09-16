@@ -1,8 +1,11 @@
 import React, { Component, useState } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { badCard } from '../actions/index';
+import store from '../store.js';
 
 // axios.defaults.baseURL =
-// 	process.env.baseURL ||
 // 	window.location.protocol + '//' + window.location.hostname + ':4000';
 
 class SearchBar extends Component {
@@ -19,6 +22,33 @@ class SearchBar extends Component {
 	state = {
 		userQuery: '',
 		loading: false,
+		error: false,
+	};
+
+	searchCard = async () => {
+		if (this.state.userQuery !== '') {
+			this.setState({ loading: true });
+			axios
+				.put(`/api/deck/cards/testDeck/${this.state.userQuery}`)
+				.then((response) => {
+					this.setState({
+						loading: false,
+						userQuery: '',
+					});
+					this.focus();
+					this.props.searched();
+				})
+				.catch((error) => {
+					this.setState({ error: true, loading: false });
+				});
+		}
+	};
+
+	keyPress = (e) => {
+		this.setState({ error: false });
+		if (e.key === 'Enter') {
+			this.searchCard();
+		}
 	};
 
 	render() {
@@ -30,29 +60,23 @@ class SearchBar extends Component {
 					className="searchBar"
 					value={this.state.userQuery}
 					onChange={(e) => this.setState({ userQuery: e.target.value })}
+					onKeyPress={(e) => {
+						this.keyPress(e);
+					}}
 				></input>
 				<button
 					className="searchButton"
 					onClick={() => {
-						if (this.state.userQuery !== '') {
-							this.setState({ loading: true });
-							axios
-								.put(`/api/deck/cards/testDeck/${this.state.userQuery}`)
-								.then((response) => {
-									this.setState({ loading: false, userQuery: '' });
-									this.focus();
-									this.props.searched();
-								})
-								.catch((error) => {
-									console.log(error.reponse);
-								});
-						}
+						this.searchCard();
 					}}
 				>
 					Search Card
 				</button>
 				{this.state.loading ? (
 					<h3 className="searchLoading">Loading...</h3>
+				) : null}
+				{this.state.error ? (
+					<h3 className="cardError">Cannot find card</h3>
 				) : null}
 				<hr />
 			</div>

@@ -94,16 +94,11 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 				.then((response) => response.json())
 				.then((json) => {
 					imageURL = json.image_uris.art_crop;
-				})
-				.catch(
-					(error) =>
-						(imageURL =
-							'https://i.pinimg.com/236x/19/f1/03/19f10331ba104183b0a3b43f5ec8822c--cards.jpg')
-				);
+				});
 
 			//Create new card
 			const card = {
-				name: name || 'Dude, you fucked up',
+				name: name,
 				quantity: 1,
 				image: imageURL,
 			};
