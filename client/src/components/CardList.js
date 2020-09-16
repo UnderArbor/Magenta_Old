@@ -8,7 +8,8 @@ export const CardList = ({ cards, changed }) => {
 				key={card.name}
 				name={card.name}
 				quantity={card.quantity}
-				src={card.image}
+				src={card.cardArt}
+				src2={card.cardImage}
 				changed={changed}
 			/>
 		));

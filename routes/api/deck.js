@@ -52,19 +52,7 @@ router.delete('/:deckName', async (req, res) => {
 
 router.put('/cards/:deckName/:cardName', async (req, res) => {
 	try {
-		//Fetch Full Card Name
-		let name = '';
-		await fetch('https://api.scryfall.com/catalog/card-names')
-			.then((response) => response.json())
-			.then((json) => {
-				var cardQuery = req.params.cardName.toUpperCase();
-				for (var index = 0; index < json.total_values; ++index) {
-					if (json.data[index].toUpperCase().startsWith(cardQuery)) {
-						name = json.data[index];
-						break;
-					}
-				}
-			});
+		const cardName = req.params.cardName;
 
 		//Find Correct Deck
 		const deck = await Deck.findOne({ name: req.params.deckName });
@@ -74,10 +62,12 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 
 		//If Card Exists, Increment It
 		if (
-			(await deck.cards.filter((card) => card.name.toString() === name)
+			(await deck.cards.filter((card) => card.name.toString() === cardName)
 				.length) > 0
 		) {
-			const incrementIndex = deck.cards.map((card) => card.name).indexOf(name);
+			const incrementIndex = deck.cards
+				.map((card) => card.name)
+				.indexOf(cardName);
 
 			if (deck.cards[incrementIndex].quantity < 4) {
 				deck.cards[incrementIndex].quantity++;
@@ -88,19 +78,36 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 			await deck.save();
 			return res.json(deck);
 		} else {
+			//Fetch Full Card Name
+			let name = '';
+			await fetch('https://api.scryfall.com/catalog/card-names')
+				.then((response) => response.json())
+				.then((json) => {
+					const cardQuery = cardName.toUpperCase();
+					for (var index = 0; index < json.total_values; ++index) {
+						if (json.data[index].toUpperCase().startsWith(cardQuery)) {
+							name = json.data[index];
+							break;
+						}
+					}
+				});
+
 			//Else, Fetch Image URL & Create Card
 			let imageURL = '';
+			let cardImageURL = '';
 			await fetch(`${SCRYFALL_API}/cards/named?exact=${name}`)
 				.then((response) => response.json())
 				.then((json) => {
 					imageURL = json.image_uris.art_crop;
+					cardImageURL = json.image_uris.normal;
 				});
 
 			//Create new card
 			const card = {
 				name: name,
 				quantity: 1,
-				image: imageURL,
+				cardArt: imageURL,
+				cardImage: cardImageURL,
 			};
 
 			deck.cards.unshift(card);
@@ -115,18 +122,7 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 
 router.delete('/cards/:deckName/:cardName', async (req, res) => {
 	try {
-		let name = '';
-		await fetch('https://api.scryfall.com/catalog/card-names')
-			.then((response) => response.json())
-			.then((json) => {
-				var cardQuery = req.params.cardName.toUpperCase();
-				for (var index = 0; index < json.total_values; ++index) {
-					if (json.data[index].toUpperCase().startsWith(cardQuery)) {
-						name = json.data[index];
-						break;
-					}
-				}
-			});
+		const cardName = req.params.cardName;
 
 		const deck = await Deck.findOne({ name: req.params.deckName });
 		if (!deck) {
@@ -134,10 +130,12 @@ router.delete('/cards/:deckName/:cardName', async (req, res) => {
 		}
 
 		if (
-			(await deck.cards.filter((card) => card.name.toString() === name)
+			(await deck.cards.filter((card) => card.name.toString() === cardName)
 				.length) > 0
 		) {
-			const decrementIndex = deck.cards.map((card) => card.name).indexOf(name);
+			const decrementIndex = deck.cards
+				.map((card) => card.name)
+				.indexOf(cardName);
 			if (deck.cards[decrementIndex].quantity > 1) {
 				deck.cards[decrementIndex].quantity--;
 			} else {

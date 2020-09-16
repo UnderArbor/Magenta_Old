@@ -13,7 +13,7 @@ export const DeckList = () => {
 					className="createDeckButton"
 					onClick={() => setDeckLoader(!deckLoader)}
 				>
-					Create Deck
+					+
 				</button>
 				<hr />
 			</div>

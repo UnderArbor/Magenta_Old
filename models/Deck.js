@@ -17,7 +17,10 @@ const DeckSchema = new Schema({
 			quantity: {
 				type: Number,
 			},
-			image: {
+			cardArt: {
+				type: String,
+			},
+			cardImage: {
 				type: String,
 			},
 		},

@@ -76,7 +76,20 @@ ul li {
 }
 
 .createDeckButton {
+	border: 1px outset;
+	font-size: 60px;
+	color: var(--main-bg-color);
+	background-color: var(--backdrop-color);
 	margin: 16px;
+	opacity: 40%;
+	width: 200px;
+	height: 200px;
+	cursor: pointer;
+	border-radius: 15px;
+}
+
+.createDeckButton:hover {
+	opacity: 60%;
 }
 
 .searchArea {
@@ -140,22 +153,66 @@ ul li {
 	display: flex;
 	align-items: center;
 	margin: 16px;
+	z-index: 1;
+}
+
+.arrowContainer {
+	display: flex;
+	flex-direction: column;
 }
 
 .upArrow {
 	margin: 8px;
+	border: solid green;
+	border-width: 0 3px 3px 0;
+	display: inline-block;
+	padding: 3px;
+	background-color: var(--backdrop-color);
+	transform: rotate(-135deg);
+	-webkit-transform: rotate(-135deg);
+}
+
+.upArrow:hover {
+	border: solid lightgreen;
+	border-width: 0 3px 3px 0;
+}
+
+.upArrow:focus {
+	outline: 0;
 }
 
 .downArrow {
 	margin: 8px;
+	border: solid red;
+	border-width: 0 3px 3px 0;
+	display: inline-block;
+	padding: 3px;
+	background-color: var(--backdrop-color);
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+}
+
+.downArrow:hover {
+	border: solid lightcoral;
+	border-width: 0 3px 3px 0;
+}
+
+.downArrow:focus {
+	outline: 0;
 }
 
 .cardName {
 	margin: 16px;
 }
 
-.cardImage {
+.cardArt {
 	display: block;
-	width: 16%;
+	width: 8%;
 	height: auto;
+}
+
+.cardImage {
+	display: none;
+	width: 16%;
+	z-index: 2;
 }
