@@ -3,9 +3,9 @@ import SearchBar from './SearchBar';
 import axios from 'axios';
 import CardList from './CardList';
 
-axios.defaults.baseURL =
-	process.env.baseURL ||
-	window.location.protocol + '//' + window.location.hostname + ':4000';
+// axios.defaults.baseURL =
+// 	process.env.baseURL ||
+// 	window.location.protocol + '//' + window.location.hostname + ':4000';
 
 class Deck extends Component {
 	constructor(props) {
