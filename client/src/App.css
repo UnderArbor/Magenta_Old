@@ -134,12 +134,20 @@ ul li {
 	margin: 16px;
 }
 
+.upArrow {
+	margin: 8px;
+}
+
+.downArrow {
+	margin: 8px;
+}
+
 .cardName {
 	margin: 16px;
 }
 
 .cardImage {
 	display: block;
-	width: 5%;
+	width: 16%;
 	height: auto;
 }

@@ -29,10 +29,8 @@ router.post('/:deckName', async (req, res) => {
 });
 
 router.get('/:deckName', async (req, res) => {
-	console.log('0');
 	try {
 		const deck = await Deck.findOne({ name: req.params.deckName });
-		console.log('1');
 		if (deck) {
 			return res.json(deck);
 		} else {
@@ -105,7 +103,7 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 
 			//Create new card
 			const card = {
-				name: name,
+				name: name || 'Dude, you fucked up',
 				quantity: 1,
 				image: imageURL,
 			};
