@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { badCard } from '../actions/index';
 import store from '../store.js';
 
-axios.defaults.baseURL =
-	window.location.protocol + '//' + window.location.hostname + ':4000';
+// axios.defaults.baseURL =
+// 	window.location.protocol + '//' + window.location.hostname + ':4000';
 
 class SearchBar extends Component {
 	constructor(props) {

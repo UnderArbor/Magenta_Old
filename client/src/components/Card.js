@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL =
-	window.location.protocol + '//' + window.location.hostname + ':4000';
+// axios.defaults.baseURL =
+// 	window.location.protocol + '//' + window.location.hostname + ':4000';
 
 export const Card = ({ name, quantity, src, src2, changed }) => {
 	const addCard = async () => {
