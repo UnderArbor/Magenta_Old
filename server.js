@@ -1,5 +1,4 @@
 const express = require('express');
-const proxy = require('http-proxy-middleware');
 const cors = require('cors');
 const connectDB = require('./config/db.js');
 const path = require('path');
@@ -31,7 +30,3 @@ if (process.env.NODE_ENV === 'production') {
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-
-module.exports = function (app) {
-	app.use(proxy(['/api'], { target: 'http://localhost:4000' }));
-};
