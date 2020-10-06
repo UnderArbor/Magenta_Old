@@ -75,7 +75,7 @@ export const Header = ({ isAuthenticated, logout, openModalAuth }) => {
 							flexGrow: '2',
 						}}
 					>
-						Magenta
+						Magenta 0.1
 					</div>
 				)}
 			</div>
