@@ -1,13 +1,8 @@
-import { BAD_CARD } from '../actions/types';
+import { combineReducers } from 'redux';
+import auth from './auth';
+import deck from './deck';
 
-const initialState = [];
-
-export default function (state = initialState, action) {
-	const { type, payload } = action;
-	switch (type) {
-		case BAD_CARD:
-			return { ...state, payload };
-		default:
-			return;
-	}
-}
+export default combineReducers({
+	auth,
+	deck,
+});

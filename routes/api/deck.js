@@ -1,11 +1,14 @@
 const express = require('express');
 const config = require('config');
 const fetch = require('node-fetch');
+const auth = require('../../middleware/auth');
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
 
 const SCRYFALL_API = config.get('ScryFallAPI');
 
 const Deck = require('../../models/Deck');
+const User = require('../../models/User');
 
 router.get('/', async (req, res) => {
 	try {
@@ -16,21 +19,9 @@ router.get('/', async (req, res) => {
 	}
 });
 
-router.post('/:deckName', async (req, res) => {
+router.get('/:deckId', async (req, res) => {
 	try {
-		const newDeck = new Deck({ name: req.params.deckName });
-
-		await newDeck.save();
-
-		res.json(newDeck);
-	} catch (error) {
-		res.status(500).send('Server Error');
-	}
-});
-
-router.get('/:deckName', async (req, res) => {
-	try {
-		const deck = await Deck.findOne({ name: req.params.deckName });
+		const deck = await Deck.findOne({ _id: req.params.deckId });
 		if (deck) {
 			return res.json(deck);
 		} else {
@@ -41,21 +32,53 @@ router.get('/:deckName', async (req, res) => {
 	}
 });
 
-router.delete('/:deckName', async (req, res) => {
+router.put('/:deckId/:name', async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() });
+	}
+
 	try {
-		await Deck.findOneAndDelete({ name: req.params.deckName });
-		res.json({ msg: 'Deck deleted!' });
+		const deck = await Deck.findOne({ _id: req.params.deckId });
+		deck.name = req.params.name;
+		await deck.save();
+		res.json(deck);
+	} catch (error) {}
+});
+
+router.post('/:deckName', async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() });
+	}
+
+	const { user, cards } = req.body;
+	try {
+		var newDeck = new Deck({
+			name: req.params.deckName,
+			cards: cards,
+			user: user,
+		});
+
+		await newDeck.save();
+
+		var thisUser = await User.findById(user).select('-password');
+		thisUser.decks.unshift(newDeck.id);
+
+		await thisUser.save();
+
+		res.json(newDeck);
 	} catch (error) {
 		res.status(500).send('Server Error');
 	}
 });
 
-router.put('/cards/:deckName/:cardName', async (req, res) => {
+router.put('/cards/:deckId/:cardName', async (req, res) => {
 	try {
 		const cardName = req.params.cardName;
 
 		//Find Correct Deck
-		const deck = await Deck.findOne({ name: req.params.deckName });
+		const deck = await Deck.findOne({ _id: req.params.deckId });
 		if (!deck) {
 			return res.json('Deck does not exist');
 		}
@@ -78,24 +101,10 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 			await deck.save();
 			return res.json(deck);
 		} else {
-			//Fetch Full Card Name
-			let name = '';
-			await fetch('https://api.scryfall.com/catalog/card-names')
-				.then((response) => response.json())
-				.then((json) => {
-					const cardQuery = cardName.toUpperCase();
-					for (var index = 0; index < json.total_values; ++index) {
-						if (json.data[index].toUpperCase().startsWith(cardQuery)) {
-							name = json.data[index];
-							break;
-						}
-					}
-				});
-
-			//Else, Fetch Image URL & Create Card
+			//Fetch Image URL & Create Card
 			let imageURL = '';
 			let cardImageURL = '';
-			await fetch(`${SCRYFALL_API}/cards/named?exact=${name}`)
+			await fetch(`${SCRYFALL_API}/cards/named?exact=${cardName}`)
 				.then((response) => response.json())
 				.then((json) => {
 					imageURL = json.image_uris.art_crop;
@@ -104,7 +113,7 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 
 			//Create new card
 			const card = {
-				name: name,
+				name: cardName,
 				quantity: 1,
 				cardArt: imageURL,
 				cardImage: cardImageURL,
@@ -112,7 +121,7 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 
 			deck.cards.unshift(card);
 			await deck.save();
-			return res.json(deck);
+			return res.json(card);
 		}
 	} catch (error) {
 		console.error(error.message);
@@ -120,11 +129,11 @@ router.put('/cards/:deckName/:cardName', async (req, res) => {
 	}
 });
 
-router.delete('/cards/:deckName/:cardName', async (req, res) => {
+router.delete('/cards/:deckId/:cardName', async (req, res) => {
 	try {
 		const cardName = req.params.cardName;
 
-		const deck = await Deck.findOne({ name: req.params.deckName });
+		const deck = await Deck.findOne({ _id: req.params.deckId });
 		if (!deck) {
 			return res.json('Deck does not exist');
 		}
@@ -149,6 +158,32 @@ router.delete('/cards/:deckName/:cardName', async (req, res) => {
 		return res.json(deck);
 	} catch (error) {
 		res.status(500).send('Server Error');
+	}
+});
+
+router.delete('/single/:deckName', async (req, res) => {
+	try {
+		await Deck.findOneAndDelete({ name: req.params.deckName });
+		res.json({ msg: 'Deck deleted!' });
+	} catch (error) {
+		res.status(500).send('Server Error');
+	}
+});
+
+router.delete('/deleteAll', async (req, res) => {
+	try {
+		Deck.deleteMany({}, function (err) {
+			if (err) {
+				res.status(500).send({ error: 'Could not clear deck database...' });
+			} else {
+				res
+					.status(200)
+					.send({ message: 'All user info was deleted succesfully...' });
+			}
+		});
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send('Server error');
 	}
 });
 

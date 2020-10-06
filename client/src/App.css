@@ -13,22 +13,39 @@
 
 body {
 	background-color: var(--main-bg-color);
-	width: 100%;
+	width: 80%;
 	margin: auto;
-	border-color: var(--backdrop-color);
 	border-style: solid;
 	border-width: 3px;
 }
 
 hr {
 	height: 1px;
-	background-color: var(--secondary-color);
 	border: none;
+}
+
+hr.normal {
+	background-color: var(--secondary-color);
+}
+
+hr.unsaved {
+	background-color: red;
 }
 
 ul li {
 	color: #fff;
 	background-color: #fff;
+}
+
+/* TO DO: Make buttons accessible: https://www.eventbrite.com/engineering/how-to-fix-the-ugly-focus-ring-and-not-break-accessibility-in-react/ */
+button {
+	outline: none;
+}
+
+a.linkRouter {
+	text-decoration: none;
+	color: var(--header-text-color);
+	margin: 16px;
 }
 
 .header {
@@ -37,7 +54,7 @@ ul li {
 	font-size: 36px;
 	padding-left: 16px;
 	display: flex;
-	justify-content: space-between;
+	/* justify-content: space-between; */
 	align-items: center;
 	color: var(--header-text-color);
 }
@@ -46,16 +63,39 @@ ul li {
 	border-right: 2px solid var(--header-text-color);
 	padding-right: 30px;
 	align-items: center;
+	flex-grow: 1;
 }
 
-.colorButton {
+.headerButton {
+	border-right: 2px solid var(--header-text-color);
+	align-items: center;
+	flex-grow: 1;
+}
+
+button.colorButton {
 	margin: 16px;
 	size: 20px;
 	align-items: center;
+	background-color: var(--header-color);
+	color: var(--header-text-color);
+	font-size: 36px;
+	border: 0;
+}
+
+button.login,
+button.logout {
+	background-color: var(--header-color);
+	color: var(--header-text-color);
+	font-size: 36px;
+	size: 20px;
+	margin: 16px;
+	align-items: center;
+	border: 0;
 }
 
 .colorSelection {
 	display: flex;
+	flex-grow: 2;
 }
 
 .color {
@@ -70,22 +110,33 @@ ul li {
 	background-color: var(--main-bg-color);
 }
 
+.deckSlots {
+	display: flex;
+}
+
+.deckSlot {
+	margin: 12px;
+}
+
+.selectedDeck {
+	margin: 12px;
+	background-image: linear-gradient(var(--secondary-color), rgba(0, 0, 0, 0));
+	border-top: double 4px transparent;
+	border-top-right-radius: 12px;
+	border-top-left-radius: 12px;
+	background-origin: border-box;
+	background-clip: content-box, border-box;
+}
+
+.deckImg {
+	margin: 26px;
+	width: 180px;
+	border-radius: 100%;
+}
+
 .ownerName {
 	font-size: 28px;
 	padding: 16px;
-}
-
-.createDeckButton {
-	border: 1px outset;
-	font-size: 60px;
-	color: var(--main-bg-color);
-	background-color: var(--backdrop-color);
-	margin: 16px;
-	opacity: 40%;
-	width: 200px;
-	height: 200px;
-	cursor: pointer;
-	border-radius: 15px;
 }
 
 .createDeckButton:hover {
@@ -98,11 +149,14 @@ ul li {
 }
 
 .searchBar {
-	background-color: #fff;
+	outline: none;
+	background-color: var(--main-bg-color);
+	color: #ddd;
+	font-size: 32px;
 	margin: 16px;
 	text-align: left;
 	padding-left: 8px;
-	height: 20px;
+	height: 32px;
 	border-radius: 10px;
 	order: 1;
 }
@@ -111,6 +165,14 @@ ul li {
 	margin-left: 16px;
 	height: 20px;
 	order: 2;
+	background-color: var(--header-color);
+	color: var(--secondary-color);
+	font-size: 24px;
+	align-items: center;
+	padding: 8px;
+	height: 32px;
+	display: flex;
+	flex-direction: row;
 }
 
 .searchLoading {
@@ -142,6 +204,20 @@ ul li {
 	height: 900px;
 }
 
+.unsavedContent {
+	border-color: red;
+	background-color: var(--backdrop-color);
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 10px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 16px;
+	width: 70%;
+	height: 900px;
+}
+
 .deckList li {
 	display: inline;
 	padding-right: 12px;
@@ -150,15 +226,25 @@ ul li {
 
 .cardContainer {
 	color: #fff;
+	width: 40%;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
 	margin: 16px;
-	z-index: 1;
+}
+
+.quantContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .arrowContainer {
 	display: flex;
 	flex-direction: column;
+	z-index: 0;
+	margin: 8px;
 }
 
 .upArrow {
@@ -177,10 +263,6 @@ ul li {
 	border-width: 0 3px 3px 0;
 }
 
-.upArrow:focus {
-	outline: 0;
-}
-
 .downArrow {
 	margin: 8px;
 	border: solid red;
@@ -197,22 +279,98 @@ ul li {
 	border-width: 0 3px 3px 0;
 }
 
-.downArrow:focus {
-	outline: 0;
-}
-
 .cardName {
 	margin: 16px;
 }
 
 .cardArt {
 	display: block;
-	width: 8%;
+	width: 24%;
 	height: auto;
+	float: right;
 }
 
 .cardImage {
-	display: none;
+	visibility: hidden;
+	position: absolute;
 	width: 16%;
 	z-index: 2;
+	float: right;
+}
+
+.cardContainer:hover > .cardImage {
+	visibility: visible;
+}
+
+.modal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-box {
+	position: absolute;
+	background: var(--main-bg-color);
+	border: 3px solid var(--backdrop-color);
+	display: flex;
+	justify-content: space-between;
+	width: 80%;
+	height: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 10;
+	text-align: center;
+}
+
+.display-block {
+	display: block;
+}
+
+.display-none {
+	display: none;
+}
+
+.authHeader {
+	color: var(--header-text-color);
+	background-color: var(--header-color);
+	text-align: center;
+	font-size: 48px;
+}
+
+.form-group {
+	margin: 16px;
+	align-items: center;
+}
+
+.authInput {
+	font-size: 36px;
+	height: 36px;
+	margin: 16px;
+}
+
+.login-form {
+	float: left;
+	width: 50%;
+	border-right: 2px solid var(--backdrop-color);
+}
+
+.register-form {
+	float: right;
+	width: 50%;
+}
+
+.authButton {
+	font-size: 28px;
+	height: 48px;
+	align-items: center;
+	margin: 16px;
+}
+
+.deckNameField::placeholder {
+	opacity: 1;
+	color: var(--main-bg-color);
 }

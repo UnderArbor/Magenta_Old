@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const DeckSchema = new Schema({
 	user: {
 		type: Schema.Types.ObjectId,
-		ref: 'users',
+		ref: 'User',
 	},
 	name: {
 		type: String,
@@ -27,4 +27,4 @@ const DeckSchema = new Schema({
 	],
 });
 
-module.exports = Deck = mongoose.model('deck', DeckSchema);
+module.exports = Deck = mongoose.model('Deck', DeckSchema);

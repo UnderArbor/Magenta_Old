@@ -3,9 +3,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 
-console.log('__dirname:');
-console.log(__dirname);
-
 const initialState = {};
 
 const middleware = [thunk];
