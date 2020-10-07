@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { incrementCard, decrementCard } from '../../actions/deck';
@@ -16,6 +16,17 @@ export const Card = ({
 	deckId,
 	saved,
 }) => {
+	const [ghostCoords, setGhostCoords] = useState({ leftCoord: 0, topCoord: 0 });
+
+	const { leftCoord, topCoord } = ghostCoords;
+
+	const handleMouseMove = (e) => {
+		setGhostCoords({
+			leftCoord: e.nativeEvent.pageX + 1 + 'px',
+			topCoord: e.nativeEvent.pageY + 1 + 'px',
+		});
+	};
+
 	return (
 		<div className="cardContainer">
 			<div className="quantContainer">
@@ -41,9 +52,15 @@ export const Card = ({
 				</div>
 				<p className="cardQuantity">{`${quantity}x `}</p>
 			</div>
-			<a className="cardName">{name}</a>
-			<img className="cardArt" src={src}></img>
-			<img className="cardImage" src={src2}></img>
+			<div className="cardInfo" onMouseMove={(e) => handleMouseMove(e)}>
+				<a className="cardName">{name}</a>
+				<img className="cardArt" src={src}></img>
+				<img
+					className="cardImage"
+					style={{ left: leftCoord, top: topCoord }}
+					src={src2}
+				></img>
+			</div>
 		</div>
 	);
 };

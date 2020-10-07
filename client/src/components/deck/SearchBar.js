@@ -3,11 +3,18 @@ import axios from 'axios';
 import fetch from 'node-fetch';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveDeck, addCard, incrementCard } from '../../actions/deck';
+import { closeDeck, addCard, incrementCard } from '../../actions/deck';
 
 const SCRYFALL_API = 'https://api.scryfall.com';
 
-const SearchBar = ({ deckId, saved, addCard, cards, incrementCard }) => {
+const SearchBar = ({
+	deckId,
+	saved,
+	addCard,
+	cards,
+	incrementCard,
+	closeDeck,
+}) => {
 	const [query, setQuery] = useState({
 		userQuery: '',
 		loading: false,
@@ -124,7 +131,33 @@ const SearchBar = ({ deckId, saved, addCard, cards, incrementCard }) => {
 			</button>
 			{loading ? <h3 className="searchLoading">Loading...</h3> : null}
 			{error ? <h3 className="cardError">Cannot find card</h3> : null}
-			<hr />
+			{saved ? (
+				<div
+					style={{
+						display: 'inline-block',
+						order: '5',
+						marginLeft: 'auto',
+						marginRight: '12px',
+					}}
+				>
+					<button
+						style={{
+							border: '0',
+							backgroundColor: 'red',
+							color: 'white',
+							fontSize: '24px',
+							padding: '0 12px',
+						}}
+						onClick={async () => {
+							await axios
+								.delete(`api/deck/single/${deckId}`)
+								.then(() => closeDeck());
+						}}
+					>
+						Delete Deck
+					</button>
+				</div>
+			) : null}
 		</div>
 	);
 };
@@ -132,9 +165,9 @@ const SearchBar = ({ deckId, saved, addCard, cards, incrementCard }) => {
 SearchBar.propTypes = {
 	saved: PropTypes.bool,
 	cards: PropTypes.array,
-	saveDeck: PropTypes.func.isRequired,
 	addCard: PropTypes.func.isRequired,
 	incrementCard: PropTypes.func.isRequired,
+	closeDeck: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -142,6 +175,6 @@ const mapStateToProps = (state) => ({
 	cards: state.deck.cards,
 });
 
-export default connect(mapStateToProps, { saveDeck, addCard, incrementCard })(
+export default connect(mapStateToProps, { addCard, incrementCard, closeDeck })(
 	SearchBar
 );

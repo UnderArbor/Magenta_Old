@@ -6,15 +6,19 @@ export const ColorPicker = ({ title, color, cssVar }) => {
 
 	function changeColor(event) {
 		if (event.keyCode === 13) {
-			const newColor = event.target.value;
-			document.documentElement.style.setProperty(cssVar, newColor);
-			setCurrentColor(newColor);
+			if (event.target.value !== '') {
+				const newColor = event.target.value;
+				document.documentElement.style.setProperty(cssVar, newColor);
+				setCurrentColor(newColor);
+			}
 			setChoosingColor(false);
 		}
 	}
 
 	return (
-		<div>
+		<div
+			style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+		>
 			<div
 				className="color"
 				style={{ color: currentColor }}
@@ -23,7 +27,11 @@ export const ColorPicker = ({ title, color, cssVar }) => {
 				{title}
 			</div>
 			{choosingColor ? (
-				<input placeholder={currentColor} onKeyDown={changeColor}></input>
+				<input
+					style={{ width: '50%', float: 'right', margin: '0 -36px' }}
+					placeholder={currentColor}
+					onKeyDown={changeColor}
+				></input>
 			) : null}
 		</div>
 	);

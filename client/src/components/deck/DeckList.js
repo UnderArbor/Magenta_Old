@@ -15,6 +15,9 @@ export const DeckList = ({ user, isAuthenticated }) => {
 				<hr className="normal" />
 				<div className="deckSlots">
 					<NewDeckButton />
+					<div
+						style={{ borderRight: '2px solid var(--secondary-color)' }}
+					></div>
 					<DeckSlotList />
 				</div>
 				<hr className="normal" />

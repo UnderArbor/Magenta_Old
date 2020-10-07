@@ -14,6 +14,7 @@
 body {
 	background-color: var(--main-bg-color);
 	width: 80%;
+	height: 1350px;
 	margin: auto;
 	border-style: solid;
 	border-width: 3px;
@@ -46,6 +47,7 @@ a.linkRouter {
 	text-decoration: none;
 	color: var(--header-text-color);
 	margin: 16px;
+	font-size: 36px;
 }
 
 .header {
@@ -54,14 +56,12 @@ a.linkRouter {
 	font-size: 36px;
 	padding-left: 16px;
 	display: flex;
-	/* justify-content: space-between; */
 	align-items: center;
 	color: var(--header-text-color);
 }
 
 .home {
 	border-right: 2px solid var(--header-text-color);
-	padding-right: 30px;
 	align-items: center;
 	flex-grow: 1;
 }
@@ -102,7 +102,7 @@ button.logout {
 	-webkit-text-stroke-width: 0.3px;
 	-webkit-text-stroke-color: black;
 	font-weight: bold;
-	padding-right: 10px;
+	padding: 0 16px;
 }
 
 .deckList {
@@ -112,6 +112,9 @@ button.logout {
 
 .deckSlots {
 	display: flex;
+	flex-direction: row;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 
 .deckSlot {
@@ -145,6 +148,7 @@ button.logout {
 
 .searchArea {
 	display: flex;
+	flex-direction: 'row';
 	align-items: center;
 }
 
@@ -226,12 +230,17 @@ button.logout {
 
 .cardContainer {
 	color: #fff;
-	width: 40%;
+	width: 36%;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	margin: 16px;
+	margin: 0 16px;
+}
+
+.cardContainer:hover {
+	background-color: rgb(0, 0, 0, 0.4);
+	border-radius: 12px;
 }
 
 .quantContainer {
@@ -279,6 +288,13 @@ button.logout {
 	border-width: 0 3px 3px 0;
 }
 
+.cardInfo {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .cardName {
 	margin: 16px;
 }
@@ -286,20 +302,22 @@ button.logout {
 .cardArt {
 	display: block;
 	width: 24%;
+	margin-right: 12px;
 	height: auto;
 	float: right;
 }
 
 .cardImage {
 	visibility: hidden;
+	display: none;
 	position: absolute;
 	width: 16%;
 	z-index: 2;
-	float: right;
 }
 
-.cardContainer:hover > .cardImage {
+.cardInfo:hover > .cardImage {
 	visibility: visible;
+	display: block;
 }
 
 .modal {

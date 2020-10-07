@@ -161,9 +161,22 @@ router.delete('/cards/:deckId/:cardName', async (req, res) => {
 	}
 });
 
-router.delete('/single/:deckName', async (req, res) => {
+router.delete('/single/:deckId', async (req, res) => {
 	try {
-		await Deck.findOneAndDelete({ name: req.params.deckName });
+		const deck = await Deck.findOneAndDelete({ _id: req.params.deckId });
+
+		const user = await User.findById(deck.user);
+
+		const removeIndex = user.decks
+			.map((deckId) => deckId)
+			.indexOf(req.params.deckId);
+
+		user.decks.splice(removeIndex, 1);
+
+		await console.log('New User: ', user);
+
+		await user.save();
+
 		res.json({ msg: 'Deck deleted!' });
 	} catch (error) {
 		res.status(500).send('Server Error');

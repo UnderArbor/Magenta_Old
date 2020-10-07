@@ -34,7 +34,7 @@ const Deck = ({
 	}
 
 	const keyPress = async (e) => {
-		if (e.key === 'Enter' && tempName !== '') {
+		if (tempName !== '' && (e.key === 'Enter' || e === 'blur')) {
 			if (saved) {
 				await axios
 					.put(`/api/deck/${deckId}/${tempName}`)

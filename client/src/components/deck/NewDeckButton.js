@@ -16,7 +16,9 @@ const NewDeckButton = ({ showDeck, saved, openDeck, closeDeck }) => {
 					margin: '16px',
 					opacity: '40%',
 					width: '200px',
+					minWidth: '200px',
 					height: '200px',
+					minHeight: '100%',
 					cursor: 'pointer',
 					borderRadius: '15px',
 				}}

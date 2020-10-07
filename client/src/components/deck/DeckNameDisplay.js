@@ -14,6 +14,7 @@ const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 			}}
 		>
 			<input
+				onBlur={() => keyPress('blur')}
 				className="deckNameField"
 				placeholder={deckName}
 				style={{
@@ -29,6 +30,7 @@ const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 					borderTopLeftRadius: '10px',
 				}}
 				name="deckName"
+				type="deckName"
 				value={tempName}
 				onChange={(e) => setTempName(e.target.value)}
 				onKeyPress={(e) => keyPress(e)}

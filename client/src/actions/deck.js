@@ -44,6 +44,8 @@ export const openDeck = (deckId) => async (dispatch) => {
 export const closeDeck = () => async (dispatch) => {
 	try {
 		dispatch({ type: CLOSE_DECK });
+
+		dispatch(loadUser());
 	} catch (error) {
 		dispatch({ type: DECK_ERROR });
 	}
