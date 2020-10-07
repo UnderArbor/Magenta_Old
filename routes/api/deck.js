@@ -173,8 +173,6 @@ router.delete('/single/:deckId', async (req, res) => {
 
 		user.decks.splice(removeIndex, 1);
 
-		await console.log('New User: ', user);
-
 		await user.save();
 
 		res.json({ msg: 'Deck deleted!' });

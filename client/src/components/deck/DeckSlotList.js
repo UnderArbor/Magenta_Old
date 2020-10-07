@@ -6,7 +6,6 @@ import DeckSlot from './DeckSlot';
 
 const DeckSlotList = ({ user, isAuthenticated }) => {
 	if (isAuthenticated && user && user.decks.length > 0) {
-		console.log('Load Deck List');
 		return user.decks.map(({ _id }) => <DeckSlot key={_id} id={_id} />);
 	}
 

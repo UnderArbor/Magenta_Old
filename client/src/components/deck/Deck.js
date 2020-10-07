@@ -25,7 +25,6 @@ const Deck = ({
 	const [tempName, setTempName] = useState('');
 
 	useEffect(() => {
-		console.log('Hi');
 		setTempName('');
 	}, [deckId]);
 
