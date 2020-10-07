@@ -148,10 +148,8 @@ const SearchBar = ({
 							fontSize: '24px',
 							padding: '0 12px',
 						}}
-						onClick={async () => {
-							await axios
-								.delete(`api/deck/single/${deckId}`)
-								.then(() => closeDeck());
+						onClick={() => {
+							axios.delete(`api/deck/single/${deckId}`).then(() => closeDeck());
 						}}
 					>
 						Delete Deck

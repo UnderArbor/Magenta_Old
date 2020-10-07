@@ -9,6 +9,7 @@ const SCRYFALL_API = config.get('ScryFallAPI');
 
 const Deck = require('../../models/Deck');
 const User = require('../../models/User');
+const { remove } = require('../../models/Deck');
 
 router.get('/', async (req, res) => {
 	try {
@@ -92,11 +93,7 @@ router.put('/cards/:deckId/:cardName', async (req, res) => {
 				.map((card) => card.name)
 				.indexOf(cardName);
 
-			if (deck.cards[incrementIndex].quantity < 4) {
-				deck.cards[incrementIndex].quantity++;
-			} else {
-				return res.json('TOO MANY CARDS!!!');
-			}
+			deck.cards[incrementIndex].quantity++;
 
 			await deck.save();
 			return res.json(deck);
@@ -167,11 +164,11 @@ router.delete('/single/:deckId', async (req, res) => {
 
 		const user = await User.findById(deck.user);
 
-		const removeIndex = user.decks
-			.map((deckId) => deckId)
+		const removeIndex = await user.decks
+			.map((deck) => deck._id)
 			.indexOf(req.params.deckId);
 
-		user.decks.splice(removeIndex, 1);
+		await user.decks.splice(removeIndex, 1);
 
 		await user.save();
 

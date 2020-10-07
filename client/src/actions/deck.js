@@ -62,9 +62,7 @@ export const saveDeck = (cards, deckName) => async (dispatch) => {
 		const user = res.data._id;
 
 		const body = JSON.stringify({ user, cards });
-		console.log('Saving deck...');
 		const deck = await axios.post(`api/deck/${deckName}`, body, config);
-		console.log(deck.data._id);
 		dispatch({ type: SAVE_DECK, payload: deck.data._id });
 
 		dispatch(loadUser());

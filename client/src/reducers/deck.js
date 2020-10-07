@@ -53,7 +53,7 @@ export default function (state = initialState, action) {
 		case SAVE_NAME:
 			return { ...state, deckName: payload };
 		case SAVE_DECK:
-			return { ...state, saved: true, deckId: payload };
+			return { ...state, saved: true, deckId: payload, deckName: 'New Deck' };
 		case CLOSE_DECK:
 			return {
 				...state,

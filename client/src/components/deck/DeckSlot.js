@@ -9,9 +9,13 @@ const DeckSlot = ({ id, deckId, openDeck, closeDeck, globalDeckName }) => {
 	const [deckName, setDeckName] = useState('loading...');
 
 	const getName = async () => {
-		await axios.get(`/api/deck/${id}`).then((res) => {
-			setDeckName(res.data.name);
-		});
+		try {
+			await axios.get(`/api/deck/${id}`).then((res) => {
+				setDeckName(res.data.name);
+			});
+		} catch (error) {
+			console.log('Deck not found');
+		}
 	};
 
 	var slotFormat;
