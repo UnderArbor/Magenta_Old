@@ -154,7 +154,6 @@ button.logout {
 
 .searchBar {
 	outline: none;
-	opacity: 70%;
 	background-color: var(--main-bg-color);
 	color: #ddd;
 	font-size: 32px;
@@ -171,7 +170,6 @@ button.logout {
 	position: absolute;
 	outline: none;
 	background-color: black;
-	opacity: 50%;
 	color: silver;
 	font-size: 32px;
 	margin-left: 16px;

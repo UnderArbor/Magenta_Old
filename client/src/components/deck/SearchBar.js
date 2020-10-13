@@ -128,6 +128,7 @@ const SearchBar = ({
 			<input
 				className="searchBar"
 				value={userQuery}
+				style={{ opacity: '70%' }}
 				onChange={(e) => {
 					setQuery({ ...query, userQuery: e.target.value, resIndex: 0 });
 					var recommendArray = [];
@@ -160,6 +161,7 @@ const SearchBar = ({
 			></input>
 			<input
 				className="ghostBar"
+				style={{ opacity: '50%' }}
 				placeholder={
 					!error
 						? userQuery.concat(results[resIndex].slice(userQuery.length))
