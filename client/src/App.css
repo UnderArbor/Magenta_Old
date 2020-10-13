@@ -163,14 +163,15 @@ button.logout {
 	padding-left: 8px;
 	height: 32px;
 	border-radius: 10px;
-	order: 2;
+	order: 1;
 	z-index: 2;
 }
 
 .ghostBar {
 	position: absolute;
 	outline: none;
-	background-color: silver;
+	background-color: black;
+	opacity: 50%;
 	color: silver;
 	font-size: 32px;
 	margin-left: 16px;
