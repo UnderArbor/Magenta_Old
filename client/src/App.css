@@ -154,6 +154,7 @@ button.logout {
 
 .searchBar {
 	outline: none;
+	opacity: 70%;
 	background-color: var(--main-bg-color);
 	color: #ddd;
 	font-size: 32px;
@@ -162,7 +163,23 @@ button.logout {
 	padding-left: 8px;
 	height: 32px;
 	border-radius: 10px;
+	order: 2;
+	z-index: 2;
+}
+
+.ghostBar {
+	position: absolute;
+	outline: none;
+	background-color: silver;
+	color: silver;
+	font-size: 32px;
+	margin-left: 16px;
+	text-align: left;
+	padding-left: 8px;
+	height: 32px;
+	border-radius: 10px;
 	order: 1;
+	z-index: 1;
 }
 
 .searchButton {
@@ -311,7 +328,7 @@ button.logout {
 	visibility: hidden;
 	display: none;
 	position: absolute;
-	width: 16%;
+	width: 28%;
 	z-index: 2;
 }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 	return (
@@ -39,7 +38,5 @@ const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 		</div>
 	);
 };
-
-DeckNameDisplay.propTypes = {};
 
 export default DeckNameDisplay;

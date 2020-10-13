@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { closeDeck, addCard, incrementCard } from '../../actions/deck';
 
+import jsonNames from '../../utils/json/names.json';
+
 const SCRYFALL_API = 'https://api.scryfall.com';
 
 const SearchBar = ({
@@ -19,14 +21,27 @@ const SearchBar = ({
 		userQuery: '',
 		loading: false,
 		error: false,
+		resIndex: 0,
 	});
 
-	const { userQuery, loading, error } = query;
+	const [results, setResults] = useState(['']);
+
+	const { userQuery, loading, error, resIndex } = query;
 
 	const keyPress = (e) => {
 		setQuery({ ...query, error: false });
 		if (e.key === 'Enter') {
 			searchCard();
+		} else if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			if (resIndex < results.length - 1) {
+				setQuery({ ...query, resIndex: resIndex + 1 });
+			}
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			if (resIndex > 0) {
+				setQuery({ ...query, resIndex: resIndex - 1 });
+			}
 		}
 	};
 
@@ -35,21 +50,17 @@ const SearchBar = ({
 			setQuery({ ...query, loading: true });
 
 			let name = '';
-			await fetch(`${SCRYFALL_API}/catalog/card-names`)
-				.then((response) => response.json())
-				.then((json) => {
-					const cardQuery = userQuery.toUpperCase();
-					for (var index = 0; index < json.total_values; ++index) {
-						if (json.data[index].toUpperCase().startsWith(cardQuery)) {
-							name = json.data[index];
-							break;
-						}
+
+			const cardQuery = userQuery.toUpperCase();
+			for (var index = 0; index < jsonNames.length; ++index) {
+				if (jsonNames[index].toUpperCase().startsWith(cardQuery)) {
+					if (name === '') {
+						name = jsonNames[index];
 					}
-				})
-				.catch((error) => {
-					setQuery({ ...query, error: true, loading: false });
-					return;
-				});
+					var tempName = jsonNames[index];
+					setResults((resultList) => [...resultList, tempName]);
+				}
+			}
 			//Full Name Available
 
 			//If saved, save card to database
@@ -108,6 +119,7 @@ const SearchBar = ({
 			} else {
 				setQuery({ ...query, error: true, loading: false });
 			}
+			setResults(['']);
 		}
 	};
 
@@ -116,19 +128,53 @@ const SearchBar = ({
 			<input
 				className="searchBar"
 				value={userQuery}
-				onChange={(e) => setQuery({ ...query, userQuery: e.target.value })}
-				onKeyPress={(e) => {
+				onChange={(e) => {
+					setQuery({ ...query, userQuery: e.target.value, resIndex: 0 });
+					var recommendArray = [];
+
+					if (e.target.value !== '') {
+						let name = '';
+						const cardQuery = e.target.value.toUpperCase();
+
+						for (var index = 0; index < jsonNames.length; ++index) {
+							if (jsonNames[index].toUpperCase().startsWith(cardQuery)) {
+								if (name === '') {
+									name = jsonNames[index];
+								}
+								var tempName = jsonNames[index];
+								recommendArray.push(tempName);
+							}
+						}
+						if (recommendArray.length > 0) {
+							setResults(recommendArray);
+						} else {
+							setQuery({ ...query, error: true, userQuery: e.target.value });
+						}
+					} else {
+						setResults(['']);
+					}
+				}}
+				onKeyDown={(e) => {
 					keyPress(e);
 				}}
 			></input>
-			<button
+			<input
+				className="ghostBar"
+				placeholder={
+					!error
+						? userQuery.concat(results[resIndex].slice(userQuery.length))
+						: null
+				}
+				disabled
+			></input>
+			{/* <button
 				className="searchButton"
 				onClick={() => {
 					searchCard();
 				}}
 			>
 				Search Card
-			</button>
+			</button> */}
 			{loading ? <h3 className="searchLoading">Loading...</h3> : null}
 			{error ? <h3 className="cardError">Cannot find card</h3> : null}
 			{saved ? (

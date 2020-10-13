@@ -5,10 +5,11 @@ import Card from './Card';
 
 export const CardList = ({ cards }) => {
 	if (cards.length > 0) {
-		return cards.map((card) => (
+		return cards.map((card, index) => (
 			<Card
 				key={card.name}
 				name={card.name}
+				index={index}
 				quantity={card.quantity}
 				src={card.cardArt}
 				src2={card.cardImage}

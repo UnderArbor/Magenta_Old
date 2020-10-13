@@ -18,6 +18,5 @@ export const DECK_ERROR = 'DECK_ERROR';
 
 export const ADD_CARD = 'ADD_CARD';
 export const INCREMENT_CARD = 'INCREMENT_CARD';
-export const REMOVE_CARD = 'REMOVE_CARD';
 export const DECREMENT_CARD = 'DECREMENT_CARD';
 export const CARD_ERROR = 'CARD_ERROR';

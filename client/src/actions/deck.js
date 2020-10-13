@@ -9,7 +9,6 @@ import {
 	DECK_ERROR,
 	ADD_CARD,
 	INCREMENT_CARD,
-	REMOVE_CARD,
 	DECREMENT_CARD,
 	CARD_ERROR,
 } from './types';

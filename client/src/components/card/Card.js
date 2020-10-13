@@ -6,6 +6,7 @@ import { incrementCard, decrementCard } from '../../actions/deck';
 import axios from 'axios';
 
 export const Card = ({
+	index,
 	name,
 	quantity,
 	src,
@@ -16,15 +17,42 @@ export const Card = ({
 	deckId,
 	saved,
 }) => {
-	const [ghostCoords, setGhostCoords] = useState({ leftCoord: 0, topCoord: 0 });
+	const [ghostCoords, setGhostCoords] = useState({
+		leftCoord: 0,
+		topCoord: 0,
+		flipped: false,
+	});
 
-	const { leftCoord, topCoord } = ghostCoords;
+	const { leftCoord, topCoord, flipped } = ghostCoords;
 
 	const handleMouseMove = (e) => {
-		setGhostCoords({
-			leftCoord: e.nativeEvent.pageX + 1 + 'px',
-			topCoord: e.nativeEvent.pageY + 1 + 'px',
-		});
+		// const windowWidth =
+		// 	window.innerWidth || document.documentElement.clientWidth;
+		const windowHeight =
+			window.innerHeight || document.documentElement.clientHeight;
+
+		const image = document.getElementsByClassName('cardImage');
+		const bounding = image[index].getBoundingClientRect();
+
+		if (
+			(bounding.bottom > windowHeight && flipped === false) ||
+			(flipped === true && bounding.bottom + bounding.height > windowHeight)
+		) {
+			setGhostCoords({
+				leftCoord: e.nativeEvent.pageX + 1 + 'px',
+				topCoord: e.nativeEvent.pageY + 1 - bounding.height + 'px',
+				flipped: true,
+			});
+		} else if (
+			flipped === false ||
+			(flipped === true && bounding.bottom + bounding.height < windowHeight)
+		) {
+			setGhostCoords({
+				leftCoord: e.nativeEvent.pageX + 1 + 'px',
+				topCoord: e.nativeEvent.pageY + 1 + 'px',
+				flipped: false,
+			});
+		}
 	};
 
 	return (
@@ -53,7 +81,7 @@ export const Card = ({
 				<p className="cardQuantity">{`${quantity}x `}</p>
 			</div>
 			<div className="cardInfo" onMouseMove={(e) => handleMouseMove(e)}>
-				<a className="cardName">{name}</a>
+				<p className="cardName">{name}</p>
 				<img className="cardArt" src={src}></img>
 				<img
 					className="cardImage"
