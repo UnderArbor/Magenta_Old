@@ -9,6 +9,9 @@ const DeckSchema = new Schema({
 	name: {
 		type: String,
 	},
+	modelCardImage: {
+		type: String,
+	},
 	cards: [
 		{
 			name: {
@@ -23,6 +26,24 @@ const DeckSchema = new Schema({
 			cardImage: {
 				type: String,
 			},
+			cmc: {
+				type: Number,
+			},
+			types: [
+				{
+					type: String,
+				},
+			],
+			subtypes: [
+				{
+					type: String,
+				},
+			],
+			colors: [
+				{
+					type: String,
+				},
+			],
 		},
 	],
 });

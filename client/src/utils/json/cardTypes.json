@@ -1,0 +1,15 @@
+[
+	"Creature",
+	"Enchantment",
+	"Artifact",
+	"Planeswalker",
+	"Instant",
+	"Sorcery",
+	"Land",
+	"Hero",
+	"Vanguard",
+	"Conspiracy",
+	"Scheme",
+	"Plane",
+	"Phenomenon"
+]

@@ -8,8 +8,6 @@ const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 				width: '100%',
 				height: '48px',
 				backgroundColor: 'var(--secondary-color)',
-				borderTopRightRadius: '10px',
-				borderTopLeftRadius: '10px',
 			}}
 		>
 			<input

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import fetch from 'node-fetch';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { closeDeck, addCard, incrementCard } from '../../actions/deck';
+import getCardInfo from '../../utils/functions/getCardInfo';
 
 import jsonNames from '../../utils/json/names.json';
-
-const SCRYFALL_API = 'https://api.scryfall.com';
 
 const SearchBar = ({
 	deckId,
@@ -49,76 +47,43 @@ const SearchBar = ({
 		if (userQuery !== '') {
 			setQuery({ ...query, loading: true });
 
-			let name = '';
-
-			const cardQuery = userQuery.toUpperCase();
-			for (var index = 0; index < jsonNames.length; ++index) {
-				if (jsonNames[index].toUpperCase().startsWith(cardQuery)) {
-					if (name === '') {
-						name = jsonNames[index];
-					}
-					var tempName = jsonNames[index];
-					setResults((resultList) => [...resultList, tempName]);
-				}
-			}
-			//Full Name Available
-
 			//If saved, save card to database
-			if (name !== '') {
+			if (results.length > 0) {
+				const name = results[resIndex];
+				const card = await getCardInfo(name);
+
+				if (cards.filter((card) => card.name.toString() === name).length > 0) {
+					incrementCard(name);
+				} else {
+					await addCard(card);
+				}
+
 				if (saved) {
+					const config = {
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					};
+
+					const body = await JSON.stringify({ card });
+
 					await axios
-						.put(`/api/deck/cards/${deckId}/${name}`)
-						.then((res) => {
-							//If card already exists in deck, Increment
-							if (
-								cards.filter((card) => card.name.toString() === name).length > 0
-							) {
-								incrementCard(name);
-							} else {
-								addCard(res.data);
-							}
-						})
+						.put(`/api/deck/cards/${deckId}/${name}`, body, config)
 						.then(() => {
 							setQuery({ ...query, loading: false, userQuery: '' });
 						})
 						.catch(() => {
 							setQuery({ ...query, error: true, loading: false });
 						});
-				} else {
-					//Else, just add card to current deck state
-					let imageURL = '';
-					let cardImageURL = '';
-					await fetch(`${SCRYFALL_API}/cards/named?exact=${name}`)
-						.then((response) => response.json())
-						.then((json) => {
-							imageURL = json.image_uris.art_crop;
-							cardImageURL = json.image_uris.normal;
-						})
-						.catch((error) => {
-							setQuery({ ...query, error: true, loading: false });
-						});
-
-					//Create new card
-					const card = {
-						name: name,
-						quantity: 1,
-						cardArt: imageURL,
-						cardImage: cardImageURL,
-					};
-					//If card already exists in deck, Increment
-					if (
-						cards.filter((card) => card.name.toString() === name).length > 0
-					) {
-						incrementCard(name);
-					} else {
-						addCard(card);
-					}
 				}
-
-				setQuery({ ...query, loading: false, userQuery: '' });
-			} else {
-				setQuery({ ...query, error: true, loading: false });
 			}
+			setQuery({
+				...query,
+				resIndex: 0,
+				userQuery: '',
+				loading: false,
+				error: false,
+			});
 			setResults(['']);
 		}
 	};
@@ -128,7 +93,7 @@ const SearchBar = ({
 			<input
 				className="searchBar"
 				value={userQuery}
-				style={{ opacity: '70%' }}
+				style={{ opacity: '70%', color: error ? 'red' : null }}
 				onChange={(e) => {
 					setQuery({ ...query, userQuery: e.target.value, resIndex: 0 });
 					var recommendArray = [];
@@ -169,16 +134,7 @@ const SearchBar = ({
 				}
 				disabled
 			></input>
-			{/* <button
-				className="searchButton"
-				onClick={() => {
-					searchCard();
-				}}
-			>
-				Search Card
-			</button> */}
 			{loading ? <h3 className="searchLoading">Loading...</h3> : null}
-			{error ? <h3 className="cardError">Cannot find card</h3> : null}
 			{saved ? (
 				<div
 					style={{

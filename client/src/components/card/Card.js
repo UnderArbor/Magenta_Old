@@ -26,8 +26,6 @@ export const Card = ({
 	const { leftCoord, topCoord, flipped } = ghostCoords;
 
 	const handleMouseMove = (e) => {
-		// const windowWidth =
-		// 	window.innerWidth || document.documentElement.clientWidth;
 		const windowHeight =
 			window.innerHeight || document.documentElement.clientHeight;
 
@@ -82,11 +80,12 @@ export const Card = ({
 			</div>
 			<div className="cardInfo" onMouseMove={(e) => handleMouseMove(e)}>
 				<p className="cardName">{name}</p>
-				<img className="cardArt" src={src}></img>
+				<img className="cardArt" src={src} alt="Whoopsie"></img>
 				<img
 					className="cardImage"
 					style={{ left: leftCoord, top: topCoord }}
 					src={src2}
+					alt="Doopsie"
 				></img>
 			</div>
 		</div>

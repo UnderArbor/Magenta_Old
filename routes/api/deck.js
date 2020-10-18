@@ -9,7 +9,6 @@ const SCRYFALL_API = config.get('ScryFallAPI');
 
 const Deck = require('../../models/Deck');
 const User = require('../../models/User');
-const { remove } = require('../../models/Deck');
 
 router.get('/', async (req, res) => {
 	try {
@@ -77,6 +76,7 @@ router.post('/:deckName', async (req, res) => {
 router.put('/cards/:deckId/:cardName', async (req, res) => {
 	try {
 		const cardName = req.params.cardName;
+		const { card } = await req.body;
 
 		//Find Correct Deck
 		const deck = await Deck.findOne({ _id: req.params.deckId });
@@ -98,24 +98,6 @@ router.put('/cards/:deckId/:cardName', async (req, res) => {
 			await deck.save();
 			return res.json(deck);
 		} else {
-			//Fetch Image URL & Create Card
-			let imageURL = '';
-			let cardImageURL = '';
-			await fetch(`${SCRYFALL_API}/cards/named?exact=${cardName}`)
-				.then((response) => response.json())
-				.then((json) => {
-					imageURL = json.image_uris.art_crop;
-					cardImageURL = json.image_uris.normal;
-				});
-
-			//Create new card
-			const card = {
-				name: cardName,
-				quantity: 1,
-				cardArt: imageURL,
-				cardImage: cardImageURL,
-			};
-
 			deck.cards.unshift(card);
 			await deck.save();
 			return res.json(card);

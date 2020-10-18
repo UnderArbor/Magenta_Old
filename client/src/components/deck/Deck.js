@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import CardList from '../card/CardList';
 import SearchBar from './SearchBar';
 import DeckNameDisplay from './DeckNameDisplay';
+import MetaTools from '../MetaTools/MetaTools';
 
 import { openModalAuth } from '../../actions/auth';
 import { saveName, saveDeck } from '../../actions/deck';
@@ -29,7 +30,24 @@ const Deck = ({
 	}, [deckId]);
 
 	if (!showDeck) {
-		return null;
+		return (
+			<div
+				className="wholeDeck"
+				style={{
+					color: 'lightgray',
+					textAlign: 'center',
+					display: 'block',
+					fontSize: '32px',
+					alignItems: 'center',
+					margin: '0',
+					paddingTop: '25%',
+					// opacity: '60%',
+					height: '1000px',
+				}}
+			>
+				No Deck Loaded<div style={{ fontSize: '16px' }}>Import deck here</div>
+			</div>
+		);
 	}
 
 	const keyPress = async (e) => {
@@ -49,53 +67,54 @@ const Deck = ({
 
 	return (
 		<Fragment>
-			<div className={deckContent}>
-				{!isAuthenticated ? (
-					<div>
-						<button
-							style={{
-								backgroundColor: '#d44',
-								color: 'white',
-								width: '100%',
-								borderTopRightRadius: '10px',
-								borderTopLeftRadius: '10px',
-								fontSize: '36px',
-							}}
-							onClick={() => openModalAuth()}
-						>
-							Must have account to save deck. Click here to register
-						</button>
+			<div className="wholeDeck">
+				<div className={deckContent}>
+					{!isAuthenticated ? (
+						<div>
+							<button
+								style={{
+									backgroundColor: '#d44',
+									color: 'white',
+									width: '100%',
+									fontSize: '36px',
+								}}
+								onClick={() => openModalAuth()}
+							>
+								Must have account to save deck. Click here to register
+							</button>
+						</div>
+					) : !saved ? (
+						<div>
+							<button
+								style={{
+									backgroundColor: '#d44',
+									color: 'white',
+									width: '100%',
+									fontSize: '36px',
+								}}
+								onClick={async () => await saveDeck(cards, deckName)}
+							>
+								New Deck. Click to Save
+							</button>
+						</div>
+					) : (
+						<DeckNameDisplay
+							deckName={deckName}
+							tempName={tempName}
+							setTempName={setTempName}
+							keyPress={keyPress}
+						/>
+					)}
+
+					<SearchBar deckId={deckId} />
+
+					{saved ? <hr className="normal" /> : <hr className="unsaved" />}
+
+					<div className="cardArea">
+						{!loading ? <CardList /> : <div>Loading...</div>}
 					</div>
-				) : !saved ? (
-					<div>
-						<button
-							style={{
-								backgroundColor: '#d44',
-								color: 'white',
-								width: '100%',
-								borderTopRightRadius: '10px',
-								borderTopLeftRadius: '10px',
-								fontSize: '36px',
-							}}
-							onClick={async () => await saveDeck(cards, deckName)}
-						>
-							New Deck. Click to Save
-						</button>
-					</div>
-				) : (
-					<DeckNameDisplay
-						deckName={deckName}
-						tempName={tempName}
-						setTempName={setTempName}
-						keyPress={keyPress}
-					/>
-				)}
-
-				<SearchBar deckId={deckId} />
-
-				{saved ? <hr className="normal" /> : <hr className="unsaved" />}
-
-				{!loading ? <CardList /> : <div>Loading...</div>}
+				</div>
+				<MetaTools />
 			</div>
 		</Fragment>
 	);

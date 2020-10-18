@@ -12,12 +12,12 @@ export const Header = ({ isAuthenticated, logout, openModalAuth }) => {
 	return (
 		<div className="header">
 			<div className="home">
-				<a className="linkRouter" href="#">
+				{/* <a className="linkRouter" href="#">
 					Home
 				</a>
 				<a className="linkRouter" href="#">
 					Social
-				</a>
+				</a> */}
 			</div>
 			<div className="headerButton">
 				{!isAuthenticated ? (
