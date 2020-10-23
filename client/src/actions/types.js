@@ -9,11 +9,13 @@ export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDE_MODAL = 'HIDE_MODAL';
 
 export const LOAD_DECK = 'LOAD_DECK';
+export const LOAD_DECK_LIST = 'LOAD_DECK_LIST';
 export const OPEN_DECK = 'OPEN_DECK';
 export const NEW_DECK = 'NEW_DECK';
 export const SAVE_NAME = 'SAVE_NAME';
 export const CLOSE_DECK = 'CLOSE_DECK';
 export const SAVE_DECK = 'SAVE_DECK';
+export const DELETE_DECK = 'DELETE_DECK';
 export const DECK_ERROR = 'DECK_ERROR';
 
 export const ADD_CARD = 'ADD_CARD';

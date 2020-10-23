@@ -1,9 +1,15 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { openDeck, closeDeck } from '../../actions/deck';
+import { openDeck, closeDeck, saveDeck } from '../../actions/deck';
 
-const NewDeckButton = ({ showDeck, saved, openDeck, closeDeck }) => {
+const NewDeckButton = ({
+	isAuthenticated,
+	decks,
+	openDeck,
+	closeDeck,
+	saveDeck,
+}) => {
 	return (
 		<Fragment>
 			<button
@@ -12,7 +18,7 @@ const NewDeckButton = ({ showDeck, saved, openDeck, closeDeck }) => {
 					border: '1px outset',
 					fontSize: '60px',
 					color: 'var(--main-bg-color)',
-					backgroundColor: 'var(--backdrop-color)',
+					backgroundColor: 'black',
 					margin: '16px',
 					opacity: '40%',
 					width: '200px',
@@ -23,15 +29,10 @@ const NewDeckButton = ({ showDeck, saved, openDeck, closeDeck }) => {
 					borderRadius: '15px',
 				}}
 				onClick={() => {
-					if (!showDeck) {
-						openDeck(-1);
-					} else {
-						if (saved) {
-							closeDeck();
-							openDeck(-1);
-						} else {
-							closeDeck();
-						}
+					closeDeck();
+					openDeck(-1);
+					if (isAuthenticated) {
+						saveDeck([], `untitled ${decks.length + 1}`);
 					}
 				}}
 			>
@@ -43,14 +44,21 @@ const NewDeckButton = ({ showDeck, saved, openDeck, closeDeck }) => {
 
 NewDeckButton.propTypes = {
 	showDeck: PropTypes.bool,
+	decks: PropTypes.array,
 	saved: PropTypes.bool,
+	isAuthenticated: PropTypes.bool,
 	openDeck: PropTypes.func.isRequired,
 	closeDeck: PropTypes.func.isRequired,
+	saveDeck: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	showDeck: state.deck.showDeck,
+	decks: state.deck.decks,
 	saved: state.deck.saved,
+	isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { openDeck, closeDeck })(NewDeckButton);
+export default connect(mapStateToProps, { openDeck, closeDeck, saveDeck })(
+	NewDeckButton
+);

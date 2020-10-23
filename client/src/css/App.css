@@ -111,6 +111,14 @@ button.logout {
 	background-color: var(--main-bg-color);
 }
 
+.blockedDeckList {
+	opacity: 0;
+}
+
+.blockedDeckList:hover {
+	opacity: 0.5;
+}
+
 .deckSlots {
 	display: flex;
 	flex-direction: row;
@@ -217,13 +225,8 @@ button.logout {
 	border-width: 1px;
 	border-style: solid;
 	border-right: 2px solid var(--header-text-color);
-	display: block;
-	width: 70%;
+	/* display: block; */
 	min-height: 1000px;
-}
-
-.cardArea {
-	margin: 12px;
 }
 
 .unsavedContent {
@@ -232,8 +235,11 @@ button.logout {
 	border-width: 1px;
 	border-style: solid;
 	display: block;
-	width: 70%;
 	min-height: 1000px;
+}
+
+.cardArea {
+	margin: 12px;
 }
 
 .deckList li {
@@ -321,8 +327,7 @@ button.logout {
 
 .cardArt {
 	display: block;
-	width: 16%;
-	margin: 4px;
+	width: 21%;
 	height: auto;
 	float: right;
 	border-radius: 12px;
@@ -420,19 +425,21 @@ button.logout {
 	flex-flow: row nowrap;
 	padding: 16px;
 	background-color: var(--main-bg-color);
+	order: 1;
 }
 
 .metaTools {
+	display: 'inline-block';
 	background-color: var(--main-bg-color);
-	width: 30%;
+	width: 100%;
+	order: 2;
 }
 
 .metaHeader {
-	width: 100%;
+	width: 97.75%;
 	height: 50px;
 	font-size: 36px;
 	padding-left: 12px;
-	width: 97.2%;
 	background-color: var(--header-color);
 	color: var(--header-text-color);
 }
@@ -440,3 +447,25 @@ button.logout {
 .manaCurve {
 	background-color: #fdf;
 }
+
+.registerPulse {
+	background-color: 'blue';
+	width: '100%';
+	font-size: '600px';
+	color: 'black';
+	/* animation: 1s ease-in 0s 1 pulse; */
+}
+
+.registerContainer {
+	background-color: 'blue';
+	padding: '16px';
+}
+
+/* @keyframes pulse {
+	from {
+		background-color: 'red';
+	}
+	to {
+		background-color: 'blue';
+	}
+} */

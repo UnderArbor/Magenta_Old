@@ -128,38 +128,13 @@ const SearchBar = ({
 				className="ghostBar"
 				style={{ opacity: '50%' }}
 				placeholder={
-					!error
+					userQuery !== ''
 						? userQuery.concat(results[resIndex].slice(userQuery.length))
-						: null
+						: 'Search Card Name'
 				}
 				disabled
 			></input>
 			{loading ? <h3 className="searchLoading">Loading...</h3> : null}
-			{saved ? (
-				<div
-					style={{
-						display: 'inline-block',
-						order: '5',
-						marginLeft: 'auto',
-						marginRight: '12px',
-					}}
-				>
-					<button
-						style={{
-							border: '0',
-							backgroundColor: 'red',
-							color: 'white',
-							fontSize: '24px',
-							padding: '0 12px',
-						}}
-						onClick={() => {
-							axios.delete(`api/deck/single/${deckId}`).then(() => closeDeck());
-						}}
-					>
-						Delete Deck
-					</button>
-				</div>
-			) : null}
 		</div>
 	);
 };

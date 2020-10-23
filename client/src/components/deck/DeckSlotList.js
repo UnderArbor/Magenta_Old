@@ -2,24 +2,56 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { openModalAuth } from '../../actions/auth';
+
 import DeckSlot from './DeckSlot';
 
-const DeckSlotList = ({ user, isAuthenticated }) => {
-	if (isAuthenticated && user && user.decks.length > 0) {
-		return user.decks.map(({ _id }) => <DeckSlot key={_id} id={_id} />);
+const DeckSlotList = ({ decks, isAuthenticated, openModalAuth }) => {
+	if (isAuthenticated && decks.length > 0) {
+		return decks.map(({ _id }) => <DeckSlot key={_id} id={_id} />);
+	} else if (!isAuthenticated) {
+		return (
+			<div
+				className="blockedDeckList"
+				style={{
+					backgroundColor: 'black',
+					width: '100%',
+				}}
+			>
+				<button
+					onClick={() => {
+						openModalAuth();
+					}}
+					style={{
+						width: '100%',
+						height: '100%',
+						border: 'none',
+						backgroundColor: 'black',
+						top: '50%',
+						textAlign: 'center',
+						color: 'white',
+						fontSize: '24px',
+						cursor: 'pointer',
+					}}
+				>
+					Must register or login to access saved decks
+				</button>
+			</div>
+		);
 	}
 
 	return null;
 };
 
 DeckSlotList.propTypes = {
-	user: PropTypes.object,
+	decks: PropTypes.array,
 	isAuthenticated: PropTypes.bool,
+	openModalAuth: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	user: state.auth.user,
+	decks: state.deck.decks,
 	isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps)(DeckSlotList);
+export default connect(mapStateToProps, { openModalAuth })(DeckSlotList);

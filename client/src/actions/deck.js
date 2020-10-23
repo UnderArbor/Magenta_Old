@@ -6,6 +6,7 @@ import {
 	SAVE_NAME,
 	CLOSE_DECK,
 	SAVE_DECK,
+	DELETE_DECK,
 	DECK_ERROR,
 	ADD_CARD,
 	INCREMENT_CARD,
@@ -70,10 +71,20 @@ export const saveDeck = (cards, deckName) => async (dispatch) => {
 	}
 };
 
+export const deleteDeck = (deckId) => async (dispatch) => {
+	try {
+		await axios.delete(`api/deck/single/${deckId}`);
+		dispatch({ type: DELETE_DECK, payload: deckId });
+		dispatch(closeDeck());
+	} catch (error) {
+		dispatch({ type: DECK_ERROR });
+	}
+};
+
 export const saveName = (name) => async (dispatch) => {
 	try {
-		dispatch({ type: SAVE_NAME, payload: name });
 		dispatch(loadUser());
+		dispatch({ type: SAVE_NAME, payload: name });
 	} catch (error) {
 		dispatch({ type: DECK_ERROR });
 	}

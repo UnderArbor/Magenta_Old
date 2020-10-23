@@ -10,6 +10,7 @@ import {
 	SHOW_MODAL,
 	HIDE_MODAL,
 	CLOSE_DECK,
+	LOAD_DECK_LIST,
 } from './types';
 import setAuthToken from '../utils/functions/setAuthToken';
 
@@ -23,6 +24,11 @@ export const loadUser = () => async (dispatch) => {
 		dispatch({
 			type: USER_LOADED,
 			payload: res.data,
+		});
+
+		dispatch({
+			type: LOAD_DECK_LIST,
+			payload: res.data.decks,
 		});
 	} catch (error) {
 		dispatch({
