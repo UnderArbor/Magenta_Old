@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './css/App.css';
@@ -18,13 +18,20 @@ const App = () => {
 	useEffect(() => {
 		store.dispatch(loadUser());
 	}, []);
+
+	const scrollRef = useRef(null);
+
+	const executeScroll = () => scrollRef.current.scrollIntoView();
+
 	return (
 		<Provider store={store}>
 			<Fragment>
 				<ModalAuthenticator />
 				<Header />
-				<DeckList />
-				<Deck />
+				<div ref={scrollRef} className="deckbuilderZone">
+					<DeckList func={executeScroll} />
+					<Deck />
+				</div>
 			</Fragment>
 		</Provider>
 	);

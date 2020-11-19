@@ -69,7 +69,7 @@ export const Header = ({ isAuthenticated, logout, openModalAuth }) => {
 					<div
 						style={{
 							float: 'left',
-							fontSize: '64px',
+							fontSize: '24px',
 							marginRight: '434px',
 							paddingLeft: '16px',
 							flexGrow: '2',

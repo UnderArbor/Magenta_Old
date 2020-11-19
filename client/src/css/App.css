@@ -13,11 +13,31 @@
 
 body {
 	background-color: #212;
-	width: 80%;
-	min-height: 1350px;
+	width: 85%;
+
 	margin: auto;
 	border-style: solid;
 	border-width: 3px;
+	scrollbar-width: thin;
+	scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+body::-webkit-scrollbar {
+	width: 11px;
+}
+body::-webkit-scrollbar-track {
+	background: var(--scrollbarBG);
+}
+body::-webkit-scrollbar-thumb {
+	background-color: var(--thumbBG);
+	border-radius: 6px;
+	border: 3px solid var(--scrollbarBG);
+}
+
+html {
+	height: 100%;
+	scroll-behavior: smooth;
+	--scrollbarBG: #cfd8dc;
+	--thumbBG: #90a4ae;
 }
 
 hr {
@@ -27,6 +47,7 @@ hr {
 
 hr.normal {
 	background-color: var(--secondary-color);
+	/* width: 100%; */
 }
 
 hr.unsaved {
@@ -41,6 +62,7 @@ ul li {
 /* TO DO: Make buttons accessible: https://www.eventbrite.com/engineering/how-to-fix-the-ugly-focus-ring-and-not-break-accessibility-in-react/ */
 button {
 	outline: none;
+	cursor: pointer;
 }
 
 a.linkRouter {
@@ -52,8 +74,8 @@ a.linkRouter {
 
 .header {
 	background-color: var(--header-color);
-	height: 84px;
-	font-size: 36px;
+	height: 48px;
+	font-size: 24px;
 	padding-left: 16px;
 	display: flex;
 	align-items: center;
@@ -79,19 +101,19 @@ button.colorButton {
 	align-items: center;
 	background-color: var(--header-color);
 	color: var(--header-text-color);
-	font-size: 36px;
 	border: 0;
+	font-size: 24px;
 }
 
 button.login,
 button.logout {
 	background-color: var(--header-color);
 	color: var(--header-text-color);
-	font-size: 36px;
 	size: 20px;
 	margin: 16px;
 	align-items: center;
 	border: 0;
+	font-size: 24px;
 }
 
 .colorSelection {
@@ -106,12 +128,24 @@ button.logout {
 	padding: 0 16px;
 }
 
+.deckbuilderZone {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	min-height: 1000px;
+}
+
 .deckList {
-	color: var(--secondary-color);
+	display: flex;
+	flex-direction: column;
+	height: inherit;
 	background-color: var(--main-bg-color);
+	width: 24%;
+	border-right: 1px solid var(--secondary-color);
 }
 
 .blockedDeckList {
+	width: 100%;
 	opacity: 0;
 }
 
@@ -121,34 +155,113 @@ button.logout {
 
 .deckSlots {
 	display: flex;
-	flex-direction: row;
-	overflow-y: hidden;
-	overflow-x: auto;
+	flex-direction: column;
+	float: right;
+	overflow-x: hidden;
+	overflow-y: auto;
+	height: inherit;
 }
 
 .deckSlot {
-	margin: 12px;
+	margin: 0 12px;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.deckContainer {
+	position: relative;
+	height: 90%;
+	margin: 0 16px;
+}
+
+.slotNameDisplay {
+	position: absolute;
+	width: calc(100% - 8px);
+	top: 0;
+	left: 0;
+	padding: 4px;
+	color: white;
+	text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
+		0.5px 0.5px 0 #000;
+	background: transparent;
+	background-color: rgba(0, 0, 0, 0.5);
+	font-size: 16px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	z-index: 0;
+	pointer-events: none;
+}
+
+.colorContainer {
+	pointer-events: none;
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	justify-content: 'flex-end';
+	bottom: 0;
+	left: 0;
+	align-items: center;
+	padding: 4px;
+	width: calc(100% - 8px);
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.colorDot {
+	height: 12px;
+	width: 12px;
+	margin: auto 0;
+	border-radius: 100%;
+	display: inline-block;
+	background: transparent;
+	border: 1px solid black;
+	margin-right: 4px;
+}
+
+.U {
+	background-color: blue;
+}
+.B {
+	background-color: black;
+}
+.G {
+	background-color: green;
+}
+.R {
+	background-color: red;
+}
+.W {
+	background-color: white;
 }
 
 .selectedDeck {
-	margin: 12px;
-	background-image: linear-gradient(var(--secondary-color), rgba(0, 0, 0, 0));
+	background-image: linear-gradient(
+		to right,
+		var(--secondary-color),
+		rgba(0, 0, 0, 0)
+	);
 	border-top: double 4px transparent;
-	border-top-right-radius: 12px;
+	border-bottom-left-radius: 12px;
 	border-top-left-radius: 12px;
 	background-origin: border-box;
 	background-clip: content-box, border-box;
 }
 
-.deckImg {
-	margin: 26px;
-	width: 180px;
-	border-radius: 100%;
+.featuredDeck {
+	margin: 6px -6px;
+	padding-top: 10px;
 }
 
-.ownerName {
-	font-size: 28px;
-	padding: 16px;
+div.featuredDeck .colorContainer {
+	bottom: 4px;
+}
+
+div.featuredDeck .slotNameDisplay {
+	font-size: 24px;
+}
+
+.newArtDeck {
+	opacity: 0.4;
 }
 
 .createDeckButton:hover {
@@ -224,8 +337,6 @@ button.logout {
 	background-color: var(--backdrop-color);
 	border-width: 1px;
 	border-style: solid;
-	border-right: 2px solid var(--header-text-color);
-	/* display: block; */
 	min-height: 1000px;
 }
 
@@ -238,99 +349,184 @@ button.logout {
 	min-height: 1000px;
 }
 
-.cardArea {
-	margin: 12px;
+.cardArea1 {
+	-moz-column-count: 1;
+	-webkit-column-count: 1;
+	column-count: 1;
+	-moz-column-gap: 1em;
+	-webkit-column-gap: 1em;
+	column-gap: 1em;
 }
 
-.deckList li {
-	display: inline;
-	padding-right: 12px;
-	margin: 36px;
+.cardArea2 {
+	-moz-column-count: 2;
+	-webkit-column-count: 2;
+	column-count: 2;
+	-moz-column-gap: 1em;
+	-webkit-column-gap: 1em;
+	column-gap: 1em;
+}
+
+.cardArea3 {
+	-moz-column-count: 3;
+	-webkit-column-count: 3;
+	column-count: 3;
+	-moz-column-gap: 1em;
+	-webkit-column-gap: 1em;
+	column-gap: 1em;
+}
+
+.typeArea {
+	display: inline-block;
+	-webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
+	page-break-inside: avoid; /* Firefox */
+}
+
+.typeHeader {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.typeName {
+	color: var(--secondary-color);
+	font-size: 24px;
+}
+
+.toggleArea {
+	visibility: hidden;
+	margin: 0 8px;
+	height: 80%;
+}
+
+.typeHeader:hover {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.typeHeader:hover > .toggleArea {
+	visibility: visible;
+}
+
+.typeGroupContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 
 .cardContainer {
 	color: #fff;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	margin: 4px 0;
+	flex-direction: column;
+	margin: 6px 4.5%;
+	width: 15%;
 }
 
 .quantContainer {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
-	font-size: 20px;
+	width: 100%;
+	position: absolute;
+	z-index: 5;
+	bottom: 0;
+	left: 2px;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 .arrowContainer {
-	display: flex;
 	visibility: hidden;
-	flex-direction: column;
-	z-index: 1;
-	margin: 8px;
+	z-index: 5;
+	height: 20px;
+	width: 80%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
-.cardContainer:hover .arrowContainer {
+.quantContainer:hover .arrowContainer {
 	visibility: visible;
 }
 
-.cardContainer:hover {
-	background-color: rgb(0, 0, 0, 0.4);
-	border-radius: 12px;
+.quantContainer:hover {
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
-.upArrow {
+.arrow {
 	margin: 4px;
-	border: solid green;
-	border-width: 0 3px 3px 0;
+	font-size: 28px;
+	background: transparent;
+	border: none;
 	display: inline-block;
 	padding: 3px;
-	background-color: var(--backdrop-color);
-	transform: rotate(-135deg);
-	-webkit-transform: rotate(-135deg);
+	margin: -8px 0;
 }
 
-.upArrow:hover {
-	border: solid lightgreen;
-	border-width: 0 3px 3px 0;
+.up {
+	color: green;
 }
 
-.downArrow {
-	margin: 4px;
-	border: solid red;
-	border-width: 0 3px 3px 0;
-	display: inline-block;
-	padding: 3px;
-	background-color: var(--backdrop-color);
-	transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
+.up:hover {
+	color: lightgreen;
 }
 
-.downArrow:hover {
-	border: solid lightcoral;
-	border-width: 0 3px 3px 0;
+.down {
+	color: red;
+}
+
+.down:hover {
+	color: lightcoral;
 }
 
 .cardInfo {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+	width: 130%;
+}
+
+.infoContainer {
+	position: relative;
+	word-wrap: break-word;
 }
 
 .cardName {
-	margin: 16px;
-	font-size: 24px;
+	margin: 6px 0;
+	width: 100%;
+	font-size: 16px;
+	word-wrap: break-word;
+	text-align: center;
+}
+
+.cardQuantity {
+	font-size: 20px;
+	color: white;
+	text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
+		0.5px 0.5px 0 #000;
+	text-indent: -2px;
+	/* margin: 16px 0;
+	text-indent: 80%; */
+}
+
+.cardArtContainer {
+	position: relative;
+	height: inherit;
 }
 
 .cardArt {
 	display: block;
-	width: 21%;
-	height: auto;
-	float: right;
-	border-radius: 12px;
+	width: 100%;
+	cursor: move;
+	border-radius: 6px;
+	border: 2px solid black;
+	background-color: black;
+}
+
+.moreCards {
+	display: block;
+	opacity: 0.5;
+	width: 100%;
+	cursor: move;
+	border-radius: 6px;
+	border: 2px dashed grey;
+	background-color: black;
 }
 
 .cardImage {
@@ -338,7 +534,7 @@ button.logout {
 	display: none;
 	position: absolute;
 	width: 19%;
-	z-index: 2;
+	z-index: 8;
 	border-radius: 20px;
 }
 
@@ -421,16 +617,15 @@ button.logout {
 }
 
 .wholeDeck {
-	display: flex;
-	flex-flow: row nowrap;
-	padding: 16px;
+	padding: 8px;
 	background-color: var(--main-bg-color);
-	order: 1;
+	float: right;
+	width: 84%;
 }
 
 .metaTools {
 	display: 'inline-block';
-	background-color: var(--main-bg-color);
+	background-color: var(--header-text-color);
 	width: 100%;
 	order: 2;
 }
@@ -448,24 +643,45 @@ button.logout {
 	background-color: #fdf;
 }
 
-.registerPulse {
-	background-color: 'blue';
-	width: '100%';
-	font-size: '600px';
-	color: 'black';
-	/* animation: 1s ease-in 0s 1 pulse; */
-}
-
 .registerContainer {
 	background-color: 'blue';
 	padding: '16px';
 }
 
-/* @keyframes pulse {
-	from {
-		background-color: 'red';
-	}
-	to {
-		background-color: 'blue';
-	}
-} */
+.columnContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	padding: 16px 0;
+}
+
+.toolsContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	margin: 16px 0;
+}
+
+.tools {
+	all: unset;
+	cursor: pointer;
+	text-align: center;
+	width: 128px;
+	height: 32px;
+	font-size: 24px;
+	border-radius: 35%;
+	border: 2px solid var(--secondary-color);
+}
+
+.inactiveTools {
+	cursor: not-allowed;
+	color: darkgray;
+	border: 2px solid black;
+	background-color: gray;
+}
+
+.activeTools {
+	background-color: var(--secondary-color);
+	color: var(--main-bg-color);
+	border: 2px solid var(--backdrop-color);
+}

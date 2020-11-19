@@ -5,8 +5,9 @@ import TypeArea from './TypeArea';
 
 import cardTypes from '../../utils/json/cardTypes.json';
 
-export const CardList = ({ cards }) => {
+export const CardList = ({ cards, columnCount }) => {
 	if (cards.length > 0) {
+		var cardAreaName = 'cardArea2';
 		var indexBuffer = 0;
 		var cardStorage = cards.map((card) => ({ ...card }));
 
@@ -14,15 +15,20 @@ export const CardList = ({ cards }) => {
 			return a.name > b.name ? 1 : -1;
 		});
 
+		if (columnCount === 1) {
+			cardAreaName = 'cardArea1';
+		} else if (columnCount === 2) {
+			cardAreaName = 'cardArea2';
+		} else if (columnCount === 3) {
+			cardAreaName = 'cardArea3';
+		}
+
 		return (
 			<div
+				// className="cardArea2"
+				className={cardAreaName}
 				style={{
-					display: 'flex',
-					flexWrap: 'wrap',
-					flexDirection: 'row',
-					flexBasis: 'auto',
-					alignContent: 'flex-start',
-					alignItems: 'flex-start',
+					padding: '8px',
 				}}
 			>
 				{cardTypes.map((type) => {
@@ -57,10 +63,12 @@ export const CardList = ({ cards }) => {
 
 CardList.propTypes = {
 	cards: PropTypes.array,
+	columnCount: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	cards: state.deck.cards,
+	columnCount: state.tools.columnCount,
 });
 
 export default connect(mapStateToProps)(CardList);

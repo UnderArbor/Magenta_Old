@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeDeck, addCard, incrementCard } from '../../actions/deck';
+import { addCard, incrementCard, changeImage } from '../../actions/deck';
 import getCardInfo from '../../utils/functions/getCardInfo';
 
 import jsonNames from '../../utils/json/names.json';
 
 const SearchBar = ({
 	deckId,
-	saved,
 	addCard,
 	cards,
+	isAuthenticated,
 	incrementCard,
-	closeDeck,
+	changeImage,
 }) => {
 	const [query, setQuery] = useState({
 		userQuery: '',
@@ -56,9 +56,12 @@ const SearchBar = ({
 					incrementCard(name);
 				} else {
 					await addCard(card);
+					if (cards.length === 0 && isAuthenticated) {
+						changeImage(card.cardArt, deckId);
+					}
 				}
 
-				if (saved) {
+				if (isAuthenticated) {
 					const config = {
 						headers: {
 							'Content-Type': 'application/json',
@@ -140,18 +143,20 @@ const SearchBar = ({
 };
 
 SearchBar.propTypes = {
-	saved: PropTypes.bool,
 	cards: PropTypes.array,
 	addCard: PropTypes.func.isRequired,
 	incrementCard: PropTypes.func.isRequired,
-	closeDeck: PropTypes.func.isRequired,
+	changeImage: PropTypes.func.isRequired,
+	isAuthenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	saved: state.deck.saved,
 	cards: state.deck.cards,
+	isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { addCard, incrementCard, closeDeck })(
-	SearchBar
-);
+export default connect(mapStateToProps, {
+	addCard,
+	incrementCard,
+	changeImage,
+})(SearchBar);

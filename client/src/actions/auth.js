@@ -11,6 +11,7 @@ import {
 	HIDE_MODAL,
 	CLOSE_DECK,
 	LOAD_DECK_LIST,
+	CLOSE_TOOLS,
 } from './types';
 import setAuthToken from '../utils/functions/setAuthToken';
 
@@ -92,12 +93,12 @@ export const login = (email, password) => async (dispatch) => {
 	const body = JSON.stringify({ email, password });
 	try {
 		const res = await axios.post('api/auth', body, config);
-		console.log('res: ', res);
 		dispatch({
 			type: LOGIN_SUCCESS,
 			payload: res.data,
 		});
 		dispatch(loadUser());
+		dispatch({ type: CLOSE_TOOLS });
 	} catch (error) {
 		const errors = error.response.data.errors;
 		console.log(error.msg);
@@ -114,6 +115,7 @@ export const login = (email, password) => async (dispatch) => {
 
 // Logout / Clear Profile
 export const logout = () => (dispatch) => {
+	setAuthToken(null);
 	dispatch({ type: CLOSE_DECK });
 	dispatch({
 		type: LOGOUT,

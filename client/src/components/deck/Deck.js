@@ -1,14 +1,13 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import CardList from '../card/CardList';
 import SearchBar from './SearchBar';
 import DeckNameDisplay from './DeckNameDisplay';
-import MetaTools from '../MetaTools/MetaTools';
 
 import { openModalAuth } from '../../actions/auth';
-import { saveName, saveDeck } from '../../actions/deck';
+import { saveName, heightChange } from '../../actions/deck';
 import axios from 'axios';
 
 const Deck = ({
@@ -18,19 +17,27 @@ const Deck = ({
 	deckId,
 	saveName,
 	deckName,
+	cards,
+	heightChange,
 }) => {
 	const [tempName, setTempName] = useState('');
-
-	const [openTools, setOpenTools] = useState(false);
 
 	useEffect(() => {
 		setTempName('');
 	}, [deckId]);
 
+	useLayoutEffect(() => {
+		setTimeout(function () {
+			const element = document.querySelector('div.deckbuilderZone');
+			heightChange(element);
+		}, 1000);
+	}, [cards, heightChange]);
+
 	if (!showDeck) {
 		return (
 			<div
 				className="wholeDeck"
+				id="wholeDeck"
 				style={{
 					color: 'lightgray',
 					textAlign: 'center',
@@ -39,17 +46,12 @@ const Deck = ({
 					alignItems: 'center',
 					margin: '0',
 					paddingTop: '25%',
-					height: '1000px',
 				}}
 			>
 				No Deck Loaded<div style={{ fontSize: '16px' }}>Import deck here</div>
 			</div>
 		);
 	}
-
-	const toggleTool = () => {
-		setOpenTools(!openTools);
-	};
 
 	const keyPress = async (e) => {
 		if (tempName !== '' && (e.key === 'Enter' || e === 'blur')) {
@@ -78,19 +80,13 @@ const Deck = ({
 						tempName={tempName}
 						setTempName={setTempName}
 						keyPress={keyPress}
-						openTools={openTools}
-						toggleTool={toggleTool}
 					/>
 
 					<SearchBar deckId={deckId} />
 
 					<hr className="normal" />
-
-					<div className="cardArea">
-						{!loading ? <CardList /> : <div>Loading...</div>}
-					</div>
+					{!loading ? <CardList /> : <div>Loading...</div>}
 				</div>
-				<MetaTools toggleTool={toggleTool} openTools={openTools} />
 			</div>
 		</Fragment>
 	);
@@ -103,8 +99,9 @@ Deck.propTypes = {
 	openModalAuth: PropTypes.func.isRequired,
 	saveName: PropTypes.func.isRequired,
 	deckId: PropTypes.string,
-	saved: PropTypes.bool,
 	deckName: PropTypes.string,
+	cards: PropTypes.array,
+	heightChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -112,10 +109,12 @@ const mapStateToProps = (state) => ({
 	loading: state.deck.loading,
 	isAuthenticated: state.auth.isAuthenticated,
 	deckId: state.deck.deckId,
-	saved: state.deck.saved,
 	deckName: state.deck.deckName,
+	cards: state.deck.cards,
 });
 
-export default connect(mapStateToProps, { openModalAuth, saveName, saveDeck })(
-	Deck
-);
+export default connect(mapStateToProps, {
+	openModalAuth,
+	saveName,
+	heightChange,
+})(Deck);

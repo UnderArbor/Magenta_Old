@@ -1,35 +1,45 @@
 import React from 'react';
-import Notification from '../util-component/Notification';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const ToggleTools = ({ toggleTool, character, openTools }) => {
-	var corners = '0';
-	if (character === 62) {
-		corners = '10%';
-	}
+import { openTools, closeTools } from '../../actions/tools';
+
+const ToggleTools = ({ tools, deckName, openTools, closeTools }) => {
+	const deckStyle = tools ? 'tools' : 'tools activeTools';
+
+	const toolsStyle =
+		deckName === ''
+			? 'tools inactiveTools'
+			: !tools
+			? 'tools'
+			: 'tools activeTools';
 
 	return (
-		<div style={{ position: 'relative' }}>
-			<button
-				onClick={() => toggleTool()}
-				style={{
-					display: 'inline-block',
-					position: 'relative',
-					width: '48px',
-					border: 'none',
-					height: '47px',
-					backgroundColor: 'gray',
-					color: 'var(--secondary-color)',
-					fontSize: '22px',
-					margin: '1px',
-					borderTopRightRadius: `${corners}`,
-					borderBottomRightRadius: `${corners}`,
-				}}
-			>
-				{String.fromCharCode(character)}
+		<div className="toolsContainer">
+			<button className={deckStyle} onClick={() => closeTools()}>
+				Decks
 			</button>
-			{openTools ? null : <Notification />}
+			<button
+				className={toolsStyle}
+				disabled={!deckName}
+				onClick={() => openTools()}
+			>
+				Tools
+			</button>
 		</div>
 	);
 };
 
-export default ToggleTools;
+ToggleTools.propTypes = {
+	tools: PropTypes.bool.isRequired,
+	deckName: PropTypes.string,
+	openTools: PropTypes.func.isRequired,
+	closeTools: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+	tools: state.tools.tools,
+	deckName: state.deck.deckName,
+});
+
+export default connect(mapStateToProps, { openTools, closeTools })(ToggleTools);

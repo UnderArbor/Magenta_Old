@@ -1,39 +1,46 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import NewDeckButton from './NewDeckButton';
 import DeckSlotList from './DeckSlotList';
+import ToggleTools from '../MetaTools/ToggleTools';
+import MetaTools from '../MetaTools/MetaTools';
 
-export const DeckList = ({ user, isAuthenticated }) => {
+export const DeckList = ({ tools, height, func }) => {
+	useEffect(() => {}, [height]);
+
 	return (
 		<Fragment>
-			<div className="deckList">
-				<p className="ownerName">
-					{isAuthenticated && user ? `${user.name}'s` : 'Your'} Decks
-				</p>
-				<hr className="normal" />
-				<div className="deckSlots">
+			{!tools ? (
+				<div className="deckList" style={{ height: `${height}px` }}>
+					<ToggleTools />
+					<hr className="normal" />
 					<NewDeckButton />
-					<div
-						style={{ borderRight: '2px solid var(--secondary-color)' }}
-					></div>
-					<DeckSlotList />
+					<hr style={{ backgroundColor: 'var(--secondary-color' }} />
+					<div className="deckSlots">
+						<DeckSlotList func={func} />
+					</div>
+					<hr className="normal" />
 				</div>
-				<hr className="normal" />
-			</div>
+			) : (
+				<div className="deckList">
+					<ToggleTools />
+					<MetaTools />
+				</div>
+			)}
 		</Fragment>
 	);
 };
 
 DeckList.propTypes = {
-	user: PropTypes.object,
-	isAuthenticated: PropTypes.bool,
+	tools: PropTypes.bool,
+	height: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
-	user: state.auth.user,
-	isAuthenticated: state.auth.isAuthenticated,
+	tools: state.tools.tools,
+	height: state.deck.height,
 });
 
 export default connect(mapStateToProps)(DeckList);

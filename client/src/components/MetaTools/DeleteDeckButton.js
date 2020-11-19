@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 import { deleteDeck } from '../../actions/deck';
 
-const DeleteDeckButton = ({ saved, deckId, deleteDeck }) => {
+const DeleteDeckButton = ({ isAuthenticated, deckId, deleteDeck }) => {
 	const [reconfirm, setReconfirm] = useState(false);
 
-	if (saved) {
+	if (isAuthenticated) {
 		return (
 			<div
 				style={{
@@ -68,13 +68,13 @@ const DeleteDeckButton = ({ saved, deckId, deleteDeck }) => {
 };
 
 DeleteDeckButton.propTypes = {
-	saved: PropTypes.bool,
+	isAuthenticated: PropTypes.bool,
 	deckId: PropTypes.string,
 	deleteDeck: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	saved: state.deck.saved,
+	isAuthenticated: state.auth.isAuthenticated,
 	deckId: state.deck.deckId,
 });
 

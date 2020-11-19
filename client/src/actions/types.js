@@ -17,6 +17,13 @@ export const CLOSE_DECK = 'CLOSE_DECK';
 export const SAVE_DECK = 'SAVE_DECK';
 export const DELETE_DECK = 'DELETE_DECK';
 export const DECK_ERROR = 'DECK_ERROR';
+export const HEIGHT_CHANGE = 'HEIGHT_CHANGE';
+export const CHANGE_IMAGE = 'CHANGE_IMAGE';
+
+export const OPEN_TOOLS = 'OPEN_TOOLS';
+export const CLOSE_TOOLS = 'CLOSE_TOOLS';
+export const COLUMN_CHANGE = 'COLUMN_CHANGE';
+export const TOOLS_ERROR = 'TOOLS_ERROR';
 
 export const ADD_CARD = 'ADD_CARD';
 export const INCREMENT_CARD = 'INCREMENT_CARD';

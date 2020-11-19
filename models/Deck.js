@@ -9,9 +9,6 @@ const DeckSchema = new Schema({
 	name: {
 		type: String,
 	},
-	modelCardImage: {
-		type: String,
-	},
 	cards: [
 		{
 			name: {
@@ -44,6 +41,26 @@ const DeckSchema = new Schema({
 					type: String,
 				},
 			],
+		},
+	],
+	types: [
+		{
+			type: {
+				type: String,
+			},
+			open: {
+				type: Boolean,
+			},
+		},
+	],
+	picture: {
+		type: String,
+	},
+	colors: [
+		{
+			color: {
+				type: String,
+			},
 		},
 	],
 });

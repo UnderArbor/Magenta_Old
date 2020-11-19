@@ -3,7 +3,7 @@ import React from 'react';
 const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 	return (
 		<div
-			className="deckNamedDisplay"
+			className="deckNameDisplay"
 			style={{
 				width: '100%',
 				height: '48px',

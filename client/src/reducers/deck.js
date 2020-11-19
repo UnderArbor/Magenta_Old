@@ -11,7 +11,10 @@ import {
 	ADD_CARD,
 	INCREMENT_CARD,
 	DECREMENT_CARD,
+	HEIGHT_CHANGE,
+	CHANGE_IMAGE,
 	CARD_ERROR,
+	LOGOUT,
 } from '../actions/types';
 
 const initialState = {
@@ -19,9 +22,13 @@ const initialState = {
 	loading: false,
 	decks: [],
 	cards: [],
+	types: [],
 	deckId: '',
 	deckName: '',
-	saved: true,
+	openTools: false,
+	deckImage:
+		'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
+	height: 1000,
 };
 
 export default function (state = initialState, action) {
@@ -29,6 +36,16 @@ export default function (state = initialState, action) {
 	let index = 0;
 
 	switch (type) {
+		case LOGOUT:
+			return {
+				...state,
+				showDeck: false,
+				loading: false,
+				decks: [],
+				cards: [],
+				deckId: '',
+				deckName: '',
+			};
 		case LOAD_DECK:
 			return {
 				...state,
@@ -48,16 +65,17 @@ export default function (state = initialState, action) {
 				...state,
 				loading: false,
 				cards: payload,
-				saved: true,
 				deckId: action.deckId,
 				deckName: action.deckName,
+				deckImage:
+					action.deckImage ||
+					'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
 			};
 		case NEW_DECK:
 			return {
 				...state,
 				loading: false,
 				cards: [],
-				saved: false,
 				deckName: `untitled ${state.decks.length + 1}`,
 			};
 		case SAVE_NAME:
@@ -66,14 +84,16 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				showDeck: false,
-				saved: true,
 				cards: [],
 				deckId: '',
 				deckName: '',
+				deckImage:
+					'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
 				loading: false,
+				height: 1000,
 			};
 		case SAVE_DECK:
-			return { ...state, saved: true, deckId: payload };
+			return { ...state, deckId: payload };
 		case DELETE_DECK:
 			if (state.decks.length > 0) {
 				const index = state.decks.map((deck) => deck._id).indexOf(payload);
@@ -125,6 +145,10 @@ export default function (state = initialState, action) {
 					],
 				};
 			}
+		case HEIGHT_CHANGE:
+			return { ...state, height: payload };
+		case CHANGE_IMAGE:
+			return { ...state, deckImage: payload };
 		case CARD_ERROR:
 		case DECK_ERROR:
 		default:

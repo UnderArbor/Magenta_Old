@@ -12,6 +12,8 @@ import {
 	INCREMENT_CARD,
 	DECREMENT_CARD,
 	CARD_ERROR,
+	HEIGHT_CHANGE,
+	CHANGE_IMAGE,
 } from './types';
 
 import { loadUser } from './auth';
@@ -22,14 +24,16 @@ export const openDeck = (deckId) => async (dispatch) => {
 		dispatch({
 			type: LOAD_DECK,
 		});
-
 		if (deckId !== -1) {
 			const res = await axios.get(`api/deck/${deckId}`);
+			var types = [];
+
 			dispatch({
 				type: OPEN_DECK,
 				payload: res.data.cards,
 				deckId,
 				deckName: res.data.name,
+				deckImage: res.data.picture,
 			});
 		} else {
 			dispatch({ type: NEW_DECK, payload: null });
@@ -109,6 +113,30 @@ export const incrementCard = (name) => async (dispatch) => {
 export const decrementCard = (name) => async (dispatch) => {
 	try {
 		dispatch({ type: DECREMENT_CARD, payload: name });
+	} catch (error) {
+		dispatch({ type: CARD_ERROR });
+	}
+};
+
+export const heightChange = (element) => async (dispatch) => {
+	try {
+		dispatch({ type: HEIGHT_CHANGE, payload: element.clientHeight });
+	} catch (error) {
+		dispatch({ type: CARD_ERROR });
+	}
+};
+
+export const changeImage = (imageURL, deckId) => async (dispatch) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const body = JSON.stringify({ imageURL });
+		await axios.post(`/api/deck/image/${deckId}`, body, config);
+		dispatch({ type: CHANGE_IMAGE, payload: imageURL });
 	} catch (error) {
 		dispatch({ type: CARD_ERROR });
 	}

@@ -16,15 +16,13 @@ const NewDeckButton = ({
 				className="createDeckButton"
 				style={{
 					border: '1px outset',
-					fontSize: '60px',
+					fontSize: '36px',
 					color: 'var(--main-bg-color)',
 					backgroundColor: 'black',
-					margin: '16px',
+					margin: '20px',
 					opacity: '40%',
-					width: '200px',
-					minWidth: '200px',
-					height: '200px',
-					minHeight: '100%',
+					width: '80%',
+					height: '100px',
 					cursor: 'pointer',
 					borderRadius: '15px',
 				}}
@@ -36,7 +34,7 @@ const NewDeckButton = ({
 					}
 				}}
 			>
-				+
+				New Deck
 			</button>
 		</Fragment>
 	);

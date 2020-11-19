@@ -84,6 +84,10 @@ router.put('/cards/:deckId/:cardName', async (req, res) => {
 			return res.json('Deck does not exist');
 		}
 
+		if (!deck.picture) {
+			deck.picture = card.cardArt;
+		}
+
 		//If Card Exists, Increment It
 		if (
 			(await deck.cards.filter((card) => card.name.toString() === cardName)
@@ -99,6 +103,23 @@ router.put('/cards/:deckId/:cardName', async (req, res) => {
 			return res.json(deck);
 		} else {
 			deck.cards.unshift(card);
+
+			//FIND COLORS
+			var colors = [];
+			deck.colors = [];
+
+			const cards = deck.cards;
+			for (var i = 0; i < cards.length; ++i) {
+				for (var j = 0; j < cards[i].colors.length; ++j) {
+					if (!colors.includes(cards[i].colors[j])) {
+						const newColor = cards[i].colors[j];
+						colors.unshift(cards[i].colors[j]);
+						deck.colors.push({ color: newColor });
+					}
+				}
+			}
+			//END COLOR FINDING
+
 			await deck.save();
 			return res.json(card);
 		}
@@ -128,6 +149,22 @@ router.delete('/cards/:deckId/:cardName', async (req, res) => {
 				deck.cards[decrementIndex].quantity--;
 			} else {
 				deck.cards.splice(decrementIndex, 1);
+
+				//FIND COLORS
+				var colors = [];
+				deck.colors = [];
+
+				const cards = deck.cards;
+				for (var i = 0; i < cards.length; ++i) {
+					for (var j = 0; j < cards[i].colors.length; ++j) {
+						if (!colors.includes(cards[i].colors[j])) {
+							const newColor = cards[i].colors[j];
+							colors.unshift(cards[i].colors[j]);
+							deck.colors.push({ color: newColor });
+						}
+					}
+				}
+				//END COLOR FINDING
 			}
 		} else {
 			return res.json('WRONG CARD, IDIOT!!!');
@@ -135,6 +172,21 @@ router.delete('/cards/:deckId/:cardName', async (req, res) => {
 
 		await deck.save();
 		return res.json(deck);
+	} catch (error) {
+		res.status(500).send('Server Error');
+	}
+});
+
+router.post('/image/:deckId', async (req, res) => {
+	try {
+		const deck = await Deck.findOne({ _id: req.params.deckId });
+
+		const { imageURL } = req.body;
+
+		deck.picture = imageURL;
+		await deck.save();
+
+		res.json(deck);
 	} catch (error) {
 		res.status(500).send('Server Error');
 	}

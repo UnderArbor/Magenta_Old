@@ -1,17 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import DeckColors from './DeckColors';
+
 import { openDeck, closeDeck } from '../../actions/deck';
 
-const DeckSlot = ({ id, deckId, openDeck, closeDeck, globalDeckName }) => {
+const DeckSlot = ({
+	id,
+	deckId,
+	cards,
+	openDeck,
+	closeDeck,
+	globalDeckImage,
+	globalDeckName,
+	func,
+}) => {
 	const [deckName, setDeckName] = useState('loading...');
 
-	const getName = async () => {
+	const [deckImage, setDeckImage] = useState(
+		'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+	);
+
+	const [deckColors, setDeckColors] = useState([]);
+
+	const [pulled, setPulled] = useState(0);
+
+	useEffect(() => {
+		if (id === deckId) {
+			var colors = [];
+			for (var i = 0; i < cards.length; ++i) {
+				for (var j = 0; j < cards[i].colors.length; ++j) {
+					const newColor = cards[i].colors[j];
+					if (!colors.includes(newColor)) {
+						colors.unshift(newColor);
+					}
+				}
+			}
+			setDeckColors(colors);
+		}
+	}, [cards]);
+
+	const getInfo = async () => {
 		try {
 			await axios.get(`/api/deck/${id}`).then((res) => {
 				setDeckName(res.data.name);
+				if (res.data.picture) {
+					setDeckImage(res.data.picture);
+				}
+
+				if (pulled === 0) {
+					setPulled(1);
+
+					var colors = [];
+					for (var i = 0; i < res.data.colors.length; ++i) {
+						const color = res.data.colors[i].color;
+						colors.unshift(color);
+					}
+					setDeckColors(colors);
+				}
 			});
 		} catch (error) {
 			console.log('Deck not found');
@@ -19,39 +67,52 @@ const DeckSlot = ({ id, deckId, openDeck, closeDeck, globalDeckName }) => {
 	};
 
 	var slotFormat;
-
-	if (id === deckId) {
-		slotFormat = 'selectedDeck';
+	if (id !== deckId) {
+		slotFormat = 'deckSlot';
+		getInfo();
+	} else {
+		if (func === 'Nothing') {
+			slotFormat = 'deckSlot featuredDeck';
+		} else {
+			slotFormat = 'deckSlot selectedDeck';
+		}
 		if (deckName !== globalDeckName) {
 			setDeckName(globalDeckName);
 		}
-	} else {
-		slotFormat = 'deckSlot';
-		getName();
+		if (deckImage !== globalDeckImage) {
+			setDeckImage(globalDeckImage);
+		}
 	}
 
 	return (
 		<div className={slotFormat}>
-			<button
-				style={{
-					margin: '16px 24px',
-					width: '160px',
-					height: '160px',
-					cursor: 'pointer',
-					borderRadius: '15px',
-					border: '1px outset',
-				}}
-				onClick={() => {
-					if (id === deckId) {
-						closeDeck();
-					} else {
-						openDeck(id);
-					}
-				}}
-			>
-				Open Deck
-			</button>
-			<center>{deckName}</center>
+			<div className="deckContainer">
+				<input
+					type="image"
+					className="deckButton"
+					data-id={id}
+					src={deckImage}
+					alt="made an oopsie"
+					style={{
+						width: '100%',
+						height: '100%',
+						margin: '0 auto',
+						cursor: 'pointer',
+						borderRadius: '2px',
+						border: '1px',
+					}}
+					onClick={() => {
+						if (id === deckId && func !== 'Nothing') {
+							closeDeck();
+						} else if (func !== 'Nothing') {
+							openDeck(id);
+							func();
+						}
+					}}
+				/>
+				<p className="slotNameDisplay">{deckName}</p>
+				<DeckColors colors={deckColors} />
+			</div>
 		</div>
 	);
 };
@@ -59,12 +120,16 @@ const DeckSlot = ({ id, deckId, openDeck, closeDeck, globalDeckName }) => {
 DeckSlot.propTypes = {
 	openDeck: PropTypes.func.isRequired,
 	closeDeck: PropTypes.func.isRequired,
+	cards: PropTypes.array,
 	deckId: PropTypes.string,
+	globalDeckImage: PropTypes.string,
 	globalDeckName: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
+	cards: state.deck.cards,
 	deckId: state.deck.deckId,
+	globalDeckImage: state.deck.deckImage,
 	globalDeckName: state.deck.deckName,
 });
 

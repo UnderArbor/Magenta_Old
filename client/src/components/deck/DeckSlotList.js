@@ -6,9 +6,9 @@ import { openModalAuth } from '../../actions/auth';
 
 import DeckSlot from './DeckSlot';
 
-const DeckSlotList = ({ decks, isAuthenticated, openModalAuth }) => {
+const DeckSlotList = ({ decks, isAuthenticated, openModalAuth, func }) => {
 	if (isAuthenticated && decks.length > 0) {
-		return decks.map(({ _id }) => <DeckSlot key={_id} id={_id} />);
+		return decks.map(({ _id }) => <DeckSlot func={func} key={_id} id={_id} />);
 	} else if (!isAuthenticated) {
 		return (
 			<div
@@ -16,6 +16,7 @@ const DeckSlotList = ({ decks, isAuthenticated, openModalAuth }) => {
 				style={{
 					backgroundColor: 'black',
 					width: '100%',
+					height: '100%',
 				}}
 			>
 				<button
