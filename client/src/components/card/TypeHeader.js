@@ -27,7 +27,6 @@ export const TypeHeader = ({ type, deckId, isAuthenticated, toggleType }) => {
 
 	function handleDragEnter(e) {
 		e.stopPropagation();
-		this.style.height = '48px';
 		this.style.border = '1px solid white';
 	}
 
