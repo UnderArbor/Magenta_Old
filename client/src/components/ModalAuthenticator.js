@@ -13,7 +13,7 @@ const ModalAuthenticator = ({
 	closeModalAuth,
 	saveDeck,
 	deckName,
-	cards,
+	types,
 	loadUser,
 }) => {
 	const showHideClassName = modalAuth
@@ -47,7 +47,7 @@ const ModalAuthenticator = ({
 			console.log('Passwords do not match', 'danger');
 		} else {
 			await register({ name, email, password });
-			await saveDeck(cards, deckName);
+			await saveDeck(types, deckName);
 			await loadUser();
 		}
 	};
@@ -173,7 +173,7 @@ ModalAuthenticator.propTypes = {
 	isAuthenticated: PropTypes.bool,
 	user: PropTypes.object,
 	modalAuth: PropTypes.bool.isRequired,
-	cards: PropTypes.array,
+	types: PropTypes.array,
 	deckName: PropTypes.string,
 };
 
@@ -181,7 +181,7 @@ const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 	user: state.auth.user,
 	modalAuth: state.auth.modalAuth,
-	cards: state.deck.cards,
+	types: state.deck.types,
 	deckName: state.deck.deckName,
 });
 

@@ -5,9 +5,15 @@ import { connect } from 'react-redux';
 import CardList from '../card/CardList';
 import SearchBar from './SearchBar';
 import DeckNameDisplay from './DeckNameDisplay';
+import FileUpload from './FileUpload';
 
 import { openModalAuth } from '../../actions/auth';
-import { saveName, heightChange } from '../../actions/deck';
+import {
+	saveName,
+	heightChange,
+	importDeck,
+	openDeck,
+} from '../../actions/deck';
 import axios from 'axios';
 
 const Deck = ({
@@ -16,6 +22,8 @@ const Deck = ({
 	isAuthenticated,
 	deckId,
 	saveName,
+	importDeck,
+	openDeck,
 	deckName,
 	cards,
 	heightChange,
@@ -41,14 +49,17 @@ const Deck = ({
 				style={{
 					color: 'lightgray',
 					textAlign: 'center',
-					display: 'block',
 					fontSize: '32px',
 					alignItems: 'center',
-					margin: '0',
 					paddingTop: '25%',
 				}}
 			>
-				No Deck Loaded<div style={{ fontSize: '16px' }}>Import deck here</div>
+				No Deck Loaded
+				<FileUpload
+					importDeck={importDeck}
+					openDeck={openDeck}
+					isAuthenticated={isAuthenticated}
+				/>
 			</div>
 		);
 	}
@@ -85,7 +96,21 @@ const Deck = ({
 					<SearchBar deckId={deckId} />
 
 					<hr className="normal" />
-					{!loading ? <CardList /> : <div>Loading...</div>}
+					{!loading ? (
+						<CardList />
+					) : (
+						<div
+							style={{
+								textAlign: 'center',
+								margin: 'auto',
+								alignItems: 'center',
+								color: 'white',
+								fontSize: '36px',
+							}}
+						>
+							Loading...
+						</div>
+					)}
 				</div>
 			</div>
 		</Fragment>
@@ -98,6 +123,8 @@ Deck.propTypes = {
 	isAuthenticated: PropTypes.bool,
 	openModalAuth: PropTypes.func.isRequired,
 	saveName: PropTypes.func.isRequired,
+	importDeck: PropTypes.func.isRequired,
+	openDeck: PropTypes.func.isRequired,
 	deckId: PropTypes.string,
 	deckName: PropTypes.string,
 	cards: PropTypes.array,
@@ -116,5 +143,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
 	openModalAuth,
 	saveName,
+	importDeck,
+	openDeck,
 	heightChange,
 })(Deck);

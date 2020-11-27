@@ -10,10 +10,11 @@ import jsonNames from '../../utils/json/names.json';
 const SearchBar = ({
 	deckId,
 	addCard,
-	cards,
+	types,
 	isAuthenticated,
 	incrementCard,
 	changeImage,
+	deckImage,
 }) => {
 	const [query, setQuery] = useState({
 		userQuery: '',
@@ -52,11 +53,22 @@ const SearchBar = ({
 				const name = results[resIndex];
 				const card = await getCardInfo(name);
 
-				if (cards.filter((card) => card.name.toString() === name).length > 0) {
-					incrementCard(name);
-				} else {
+				var exists = false;
+				for (var i = 0; i < types.length; ++i) {
+					for (var j = 0; j < types[i].cards.length; ++j) {
+						if (types[i].cards[j].name.toString() === name) {
+							incrementCard(name);
+							exists = true;
+							break;
+						}
+					}
+				}
+				if (!exists) {
 					await addCard(card);
-					if (cards.length === 0 && isAuthenticated) {
+					if (
+						deckImage ===
+						'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+					) {
 						changeImage(card.cardArt, deckId);
 					}
 				}
@@ -71,7 +83,7 @@ const SearchBar = ({
 					const body = await JSON.stringify({ card });
 
 					await axios
-						.put(`/api/deck/cards/${deckId}/${name}`, body, config)
+						.put(`/api/deck/types/${deckId}/${name}`, body, config)
 						.then(() => {
 							setQuery({ ...query, loading: false, userQuery: '' });
 						})
@@ -79,15 +91,16 @@ const SearchBar = ({
 							setQuery({ ...query, error: true, loading: false });
 						});
 				}
+
+				setQuery({
+					...query,
+					resIndex: 0,
+					userQuery: '',
+					loading: false,
+					error: false,
+				});
+				setResults(['']);
 			}
-			setQuery({
-				...query,
-				resIndex: 0,
-				userQuery: '',
-				loading: false,
-				error: false,
-			});
-			setResults(['']);
 		}
 	};
 
@@ -143,16 +156,18 @@ const SearchBar = ({
 };
 
 SearchBar.propTypes = {
-	cards: PropTypes.array,
+	types: PropTypes.array,
 	addCard: PropTypes.func.isRequired,
 	incrementCard: PropTypes.func.isRequired,
 	changeImage: PropTypes.func.isRequired,
-	isAuthenticated: PropTypes.bool.isRequired,
+	deckImage: PropTypes.string,
+	isAuthenticated: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
-	cards: state.deck.cards,
+	types: state.deck.types,
 	isAuthenticated: state.auth.isAuthenticated,
+	deckImage: state.deck.deckImage,
 });
 
 export default connect(mapStateToProps, {

@@ -15,13 +15,15 @@ import {
 	CHANGE_IMAGE,
 	CARD_ERROR,
 	LOGOUT,
+	CLOSE_TYPE,
+	OPEN_TYPE,
+	MOVE_TYPE,
 } from '../actions/types';
 
 const initialState = {
 	showDeck: false,
 	loading: false,
 	decks: [],
-	cards: [],
 	types: [],
 	deckId: '',
 	deckName: '',
@@ -34,6 +36,7 @@ const initialState = {
 export default function (state = initialState, action) {
 	const { type, payload } = action;
 	let index = 0;
+	let index2 = 0;
 
 	switch (type) {
 		case LOGOUT:
@@ -42,7 +45,7 @@ export default function (state = initialState, action) {
 				showDeck: false,
 				loading: false,
 				decks: [],
-				cards: [],
+				types: [],
 				deckId: '',
 				deckName: '',
 			};
@@ -51,7 +54,7 @@ export default function (state = initialState, action) {
 				...state,
 				showDeck: true,
 				loading: true,
-				cards: [],
+				types: [],
 				deckId: '',
 				deckName: '',
 			};
@@ -64,7 +67,7 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				loading: false,
-				cards: payload,
+				types: payload,
 				deckId: action.deckId,
 				deckName: action.deckName,
 				deckImage:
@@ -75,8 +78,23 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				loading: false,
-				cards: [],
-				deckName: `untitled ${state.decks.length + 1}`,
+
+				types: [
+					{ name: 'Creature', open: true, cards: [] },
+					{ name: 'Enchantment', open: true, cards: [] },
+					{ name: 'Artifact', open: true, cards: [] },
+					{ name: 'Planeswalker', open: true, cards: [] },
+					{ name: 'Instant', open: true, cards: [] },
+					{ name: 'Sorcery', open: true, cards: [] },
+					{ name: 'Land', open: true, cards: [] },
+					{ name: 'Hero', open: true, cards: [] },
+					{ name: 'Vanguard', open: true, cards: [] },
+					{ name: 'Conspiracy', open: true, cards: [] },
+					{ name: 'Scheme', open: true, cards: [] },
+					{ name: 'Plane', open: true, cards: [] },
+					{ name: 'Phenomenon', open: true, cards: [] },
+				],
+				deckName: `untitled`,
 			};
 		case SAVE_NAME:
 			return { ...state, deckName: payload };
@@ -84,7 +102,7 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				showDeck: false,
-				cards: [],
+				types: [],
 				deckId: '',
 				deckName: '',
 				deckImage:
@@ -107,44 +125,135 @@ export default function (state = initialState, action) {
 			} else {
 				return { ...state };
 			}
-		case ADD_CARD:
-			return { ...state, cards: [...state.cards, payload] };
-		case INCREMENT_CARD:
-			index = state.cards.map((card) => card.name).indexOf(payload);
+		case CLOSE_TYPE:
+			index = state.types.map((type) => type.name).indexOf(payload);
 			return {
 				...state,
-				cards: [
-					...state.cards.slice(0, index),
+				types: [
+					...state.types.slice(0, index),
 					{
-						...state.cards[index],
-						quantity: state.cards[index].quantity + 1,
+						...state.types[index],
+						open: false,
 					},
-					...state.cards.slice(index + 1),
+					...state.types.slice(index + 1),
 				],
 			};
-		case DECREMENT_CARD:
-			index = state.cards.map((card) => card.name).indexOf(payload);
-			if (state.cards[index].quantity > 1) {
+		case OPEN_TYPE:
+			index = state.types.map((type) => type.name).indexOf(payload);
+			return {
+				...state,
+				types: [
+					...state.types.slice(0, index),
+					{
+						...state.types[index],
+						open: true,
+					},
+					...state.types.slice(index + 1),
+				],
+			};
+		case MOVE_TYPE:
+			return null;
+		case ADD_CARD:
+			var exists = false;
+			for (index = 0; index < state.types.length; ++index) {
+				if (action.cardType === state.types[index].name) {
+					return {
+						...state,
+						types: [
+							...state.types.slice(0, index),
+							{
+								...state.types[index],
+								cards: [...state.types[index].cards, payload],
+							},
+							...state.types.slice(index + 1),
+						],
+					};
+				}
+			}
+			if (!exists) {
 				return {
 					...state,
-					cards: [
-						...state.cards.slice(0, index),
+					types: [
+						...state.types,
 						{
-							...state.cards[index],
-							quantity: state.cards[index].quantity - 1,
+							name: action.cardType,
+							open: true,
+							cards: [payload],
 						},
-						...state.cards.slice(index + 1),
-					],
-				};
-			} else {
-				return {
-					...state,
-					cards: [
-						...state.cards.slice(0, index),
-						...state.cards.slice(index + 1),
 					],
 				};
 			}
+			break;
+
+		case INCREMENT_CARD:
+			for (index = 0; index < state.types.length; ++index) {
+				for (index2 = 0; index2 < state.types[index].cards.length; ++index2) {
+					if (payload === state.types[index].cards[index2].name) {
+						return {
+							...state,
+							types: [
+								...state.types.slice(0, index),
+								{
+									...state.types[index],
+									cards: [
+										...state.types[index].cards.slice(0, index2),
+										{
+											...state.types[index].cards[index2],
+											quantity: state.types[index].cards[index2].quantity + 1,
+										},
+										...state.types[index].cards.slice(index2 + 1),
+									],
+								},
+								...state.types.slice(index + 1),
+							],
+						};
+					}
+				}
+			}
+			break;
+		case DECREMENT_CARD:
+			for (index = 0; index < state.types.length; ++index) {
+				for (index2 = 0; index2 < state.types[index].cards.length; ++index2) {
+					if (payload === state.types[index].cards[index2].name) {
+						if (state.types[index].cards[index2].quantity > 1) {
+							return {
+								...state,
+								types: [
+									...state.types.slice(0, index),
+									{
+										...state.types[index],
+										cards: [
+											...state.types[index].cards.slice(0, index2),
+											{
+												...state.types[index].cards[index2],
+												quantity: state.types[index].cards[index2].quantity - 1,
+											},
+											...state.types[index].cards.slice(index2 + 1),
+										],
+									},
+									...state.types.slice(index + 1),
+								],
+							};
+						} else {
+							return {
+								...state,
+								types: [
+									...state.types.slice(0, index),
+									{
+										...state.types[index],
+										cards: [
+											...state.types[index].cards.slice(0, index2),
+											...state.types[index].cards.slice(index2 + 1),
+										],
+									},
+									...state.types.slice(index + 1),
+								],
+							};
+						}
+					}
+				}
+			}
+			break;
 		case HEIGHT_CHANGE:
 			return { ...state, height: payload };
 		case CHANGE_IMAGE:

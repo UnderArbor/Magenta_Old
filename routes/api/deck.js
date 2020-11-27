@@ -52,19 +52,40 @@ router.post('/:deckName', async (req, res) => {
 		return res.status(400).json({ errors: errors.array() });
 	}
 
-	const { user, cards } = req.body;
+	const { user, types, picture } = req.body;
+
 	try {
 		var newDeck = new Deck({
 			name: req.params.deckName,
-			cards: cards,
+			types: types,
 			user: user,
+			picture: picture,
 		});
+
+		//FIND COLORS
+		var colors = [];
+		const currentTypes = newDeck.types;
+		for (var i = 0; i < currentTypes.length; ++i) {
+			for (var j = 0; j < currentTypes[i].cards.length; ++j) {
+				const currentCard = currentTypes[i].cards[j];
+				if (!newDeck.picture) {
+					newDeck.picture = currentCard.cardArt;
+				}
+				for (var k = 0; k < currentCard.colors.length; ++k) {
+					const newColor = currentCard.colors[k];
+					if (newColor && !colors.includes(newColor)) {
+						colors.unshift(newColor);
+						newDeck.colors.push({ color: newColor });
+					}
+				}
+			}
+		}
+		//END COLOR FINDING
 
 		await newDeck.save();
 
 		var thisUser = await User.findById(user).select('-password');
 		thisUser.decks.unshift(newDeck.id);
-
 		await thisUser.save();
 
 		res.json(newDeck);
@@ -73,7 +94,34 @@ router.post('/:deckName', async (req, res) => {
 	}
 });
 
-router.put('/cards/:deckId/:cardName', async (req, res) => {
+router.put('/types/typeChange/:deckId', async (req, res) => {
+	try {
+		const deck = await Deck.findOne({ _id: req.params.deckId });
+		const { id, kind, shape } = await req.body;
+
+		var index = -1;
+		for (var i = 0; i < deck.types.length; ++i) {
+			if (deck.types[i].id === id) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index !== -1) {
+			switch (kind) {
+				case 'open':
+					deck.types[index].open = shape;
+					await deck.save();
+					res.json(deck);
+					return;
+			}
+		}
+	} catch (error) {
+		res.status(500).send('Server Error');
+	}
+});
+
+router.put('/types/:deckId/:cardName', async (req, res) => {
 	try {
 		const cardName = req.params.cardName;
 		const { card } = await req.body;
@@ -84,37 +132,66 @@ router.put('/cards/:deckId/:cardName', async (req, res) => {
 			return res.json('Deck does not exist');
 		}
 
-		if (!deck.picture) {
+		if (!deck.picture && card) {
 			deck.picture = card.cardArt;
 		}
 
 		//If Card Exists, Increment It
-		if (
-			(await deck.cards.filter((card) => card.name.toString() === cardName)
-				.length) > 0
-		) {
-			const incrementIndex = deck.cards
-				.map((card) => card.name)
-				.indexOf(cardName);
+		var exists = false;
+		for (var i = 0; i < deck.types.length; ++i) {
+			for (var j = 0; j < deck.types[i].cards.length; ++j) {
+				const name = deck.types[i].cards[j].name.toString();
+				if (name === cardName.toString()) {
+					exists = true;
 
-			deck.cards[incrementIndex].quantity++;
+					deck.types[i].cards[j].quantity++;
 
-			await deck.save();
-			return res.json(deck);
-		} else {
-			deck.cards.unshift(card);
+					await deck.save();
+					return res.json(deck);
+				}
+			}
+		}
+
+		if (!exists && card) {
+			var existingType;
+			for (var i = 0; i < deck.types.length; ++i) {
+				if (card.types.includes(deck.types[i].name)) {
+					deck.types[i].cards.unshift(card);
+					existingType = true;
+					break;
+				}
+			}
+			if (!existingType) {
+				deck.types.unshift({
+					name: card.types[card.types.length - 1],
+					open: true,
+					cards: card,
+				});
+			}
 
 			//FIND COLORS
-			var colors = [];
 			deck.colors = [];
 
-			const cards = deck.cards;
-			for (var i = 0; i < cards.length; ++i) {
-				for (var j = 0; j < cards[i].colors.length; ++j) {
-					if (!colors.includes(cards[i].colors[j])) {
-						const newColor = cards[i].colors[j];
-						colors.unshift(cards[i].colors[j]);
-						deck.colors.push({ color: newColor });
+			const types = deck.types;
+			for (var i = 0; i < types.length; ++i) {
+				for (var j = 0; j < types[i].cards.length; ++j) {
+					const card = types[i].cards[j];
+					for (var k = 0; k < card.colors.length; ++k) {
+						const newColor = card.colors[k];
+						if (deck.colors.length > 0) {
+							var exists = false;
+							for (var l = 0; l < deck.colors.length; ++l) {
+								if (deck.colors[l].color === newColor) {
+									exists = true;
+									break;
+								}
+							}
+							if (!exists) {
+								deck.colors.push({ color: newColor });
+							}
+						} else {
+							deck.colors.push({ color: newColor });
+						}
 					}
 				}
 			}
@@ -123,13 +200,16 @@ router.put('/cards/:deckId/:cardName', async (req, res) => {
 			await deck.save();
 			return res.json(card);
 		}
+
+		await deck.save();
+		return res.json(card);
 	} catch (error) {
 		console.error(error.message);
 		res.status(500).send('Server Error');
 	}
 });
 
-router.delete('/cards/:deckId/:cardName', async (req, res) => {
+router.delete('/types/:deckId/:cardName', async (req, res) => {
 	try {
 		const cardName = req.params.cardName;
 
@@ -138,36 +218,52 @@ router.delete('/cards/:deckId/:cardName', async (req, res) => {
 			return res.json('Deck does not exist');
 		}
 
-		if (
-			(await deck.cards.filter((card) => card.name.toString() === cardName)
-				.length) > 0
-		) {
-			const decrementIndex = deck.cards
-				.map((card) => card.name)
-				.indexOf(cardName);
-			if (deck.cards[decrementIndex].quantity > 1) {
-				deck.cards[decrementIndex].quantity--;
-			} else {
-				deck.cards.splice(decrementIndex, 1);
+		//If Card Exists, Decrement It
 
-				//FIND COLORS
-				var colors = [];
-				deck.colors = [];
+		for (var i = 0; i < deck.types.length; ++i) {
+			for (var j = 0; j < deck.types[i].cards.length; ++j) {
+				if (deck.types[i].cards[j].name.toString() === cardName) {
+					if (deck.types[i].cards[j].quantity > 1) {
+						deck.types[i].cards[j].quantity--;
 
-				const cards = deck.cards;
-				for (var i = 0; i < cards.length; ++i) {
-					for (var j = 0; j < cards[i].colors.length; ++j) {
-						if (!colors.includes(cards[i].colors[j])) {
-							const newColor = cards[i].colors[j];
-							colors.unshift(cards[i].colors[j]);
-							deck.colors.push({ color: newColor });
+						await deck.save();
+						return res.json(deck);
+					} else {
+						deck.types[i].cards.splice(j, 1);
+
+						//FIND COLORS
+						deck.colors = [];
+
+						const types = deck.types;
+						for (var i = 0; i < types.length; ++i) {
+							for (var j = 0; j < types[i].cards.length; ++j) {
+								const card = types[i].cards[j];
+								for (var k = 0; k < card.colors.length; ++k) {
+									const newColor = card.colors[k];
+									if (deck.colors.length > 0) {
+										var exists = false;
+										for (var l = 0; l < deck.colors.length; ++l) {
+											if (deck.colors[l].color === newColor) {
+												exists = true;
+												break;
+											}
+										}
+										if (!exists) {
+											deck.colors.push({ color: newColor });
+										}
+									} else {
+										deck.colors.push({ color: newColor });
+									}
+								}
+							}
 						}
+						//END COLOR FINDING
+
+						await deck.save();
+						return res.json(deck);
 					}
 				}
-				//END COLOR FINDING
 			}
-		} else {
-			return res.json('WRONG CARD, IDIOT!!!');
 		}
 
 		await deck.save();

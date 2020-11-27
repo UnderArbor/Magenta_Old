@@ -9,48 +9,54 @@ const DeckSchema = new Schema({
 	name: {
 		type: String,
 	},
-	cards: [
-		{
-			name: {
-				type: String,
-			},
-			quantity: {
-				type: Number,
-			},
-			cardArt: {
-				type: String,
-			},
-			cardImage: {
-				type: String,
-			},
-			cmc: {
-				type: Number,
-			},
-			types: [
-				{
-					type: String,
-				},
-			],
-			subtypes: [
-				{
-					type: String,
-				},
-			],
-			colors: [
-				{
-					type: String,
-				},
-			],
-		},
-	],
 	types: [
 		{
-			type: {
+			name: {
 				type: String,
 			},
 			open: {
 				type: Boolean,
 			},
+			length: {
+				type: Number,
+			},
+			cards: [
+				{
+					name: {
+						type: String,
+					},
+					quantity: {
+						type: Number,
+					},
+					cardArt: {
+						type: String,
+					},
+					cardImage: {
+						type: String,
+					},
+					cmc: {
+						type: Number,
+					},
+					mainType: {
+						type: String,
+					},
+					types: [
+						{
+							type: String,
+						},
+					],
+					subtypes: [
+						{
+							type: String,
+						},
+					],
+					colors: [
+						{
+							type: String,
+						},
+					],
+				},
+			],
 		},
 	],
 	picture: {

@@ -14,30 +14,53 @@ import {
 	CARD_ERROR,
 	HEIGHT_CHANGE,
 	CHANGE_IMAGE,
+	OPEN_TOOLS,
+	CLOSE_TOOLS,
+	CLOSE_TYPE,
+	OPEN_TYPE,
+	MOVE_TYPE,
 } from './types';
 
 import { loadUser } from './auth';
 
-export const openDeck = (deckId) => async (dispatch) => {
+export const openDeck = (deckId, types) => async (dispatch) => {
 	try {
 		closeDeck();
 		dispatch({
 			type: LOAD_DECK,
 		});
-		if (deckId !== -1) {
+		if (deckId !== -1 && deckId !== -2) {
 			const res = await axios.get(`api/deck/${deckId}`);
-			var types = [];
 
 			dispatch({
 				type: OPEN_DECK,
-				payload: res.data.cards,
+				payload: res.data.types,
 				deckId,
 				deckName: res.data.name,
 				deckImage: res.data.picture,
 			});
-		} else {
-			dispatch({ type: NEW_DECK, payload: null });
+		} else if (deckId === -1) {
+			dispatch({ type: NEW_DECK });
+		} else if (deckId === -2) {
+			var deckImage =
+				'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
+			for (var i = 0; i < types.length; ++i) {
+				if (types[i].cards.length > 0) {
+					deckImage = types[i].cards[types[i].cards.length - 1].cartArt;
+				}
+			}
+			dispatch({
+				type: OPEN_DECK,
+				payload: types,
+				deckId: 'importdeck',
+				deckName: 'import deck',
+				deckImage,
+			});
 		}
+
+		dispatch({
+			type: OPEN_TOOLS,
+		});
 	} catch (error) {
 		dispatch({
 			type: DECK_ERROR,
@@ -45,9 +68,15 @@ export const openDeck = (deckId) => async (dispatch) => {
 	}
 };
 
+export const importDeck = (cards, name) => async (dispatch) => {
+	await dispatch(changeImage(cards[cards.length - 1].cardArt, null));
+	await dispatch(saveDeck(cards, name));
+};
+
 export const closeDeck = () => async (dispatch) => {
 	try {
 		dispatch({ type: CLOSE_DECK });
+		dispatch({ type: CLOSE_TOOLS });
 
 		dispatch(loadUser());
 	} catch (error) {
@@ -55,7 +84,7 @@ export const closeDeck = () => async (dispatch) => {
 	}
 };
 
-export const saveDeck = (cards, deckName) => async (dispatch) => {
+export const saveDeck = (types, deckName) => async (dispatch, getState) => {
 	try {
 		const config = {
 			headers: {
@@ -65,11 +94,15 @@ export const saveDeck = (cards, deckName) => async (dispatch) => {
 		const res = await axios.get('/api/auth');
 		const user = res.data._id;
 
-		const body = JSON.stringify({ user, cards });
-		const deck = await axios.post(`api/deck/${deckName}`, body, config);
-		dispatch({ type: SAVE_DECK, payload: deck.data._id });
+		const picture = getState().deck.deckImage;
 
+		const body = JSON.stringify({ user, types, picture });
+		const deck = await axios.post(`api/deck/${deckName}`, body, config);
+		await dispatch({ type: SAVE_DECK, payload: deck.data._id });
+		await dispatch(openDeck(deck.data._id, types));
 		dispatch(loadUser());
+
+		return deck.data_id;
 	} catch (error) {
 		dispatch({ type: DECK_ERROR });
 	}
@@ -79,6 +112,7 @@ export const deleteDeck = (deckId) => async (dispatch) => {
 	try {
 		await axios.delete(`api/deck/single/${deckId}`);
 		dispatch({ type: DELETE_DECK, payload: deckId });
+		dispatch({ type: CLOSE_TOOLS });
 		dispatch(closeDeck());
 	} catch (error) {
 		dispatch({ type: DECK_ERROR });
@@ -94,9 +128,30 @@ export const saveName = (name) => async (dispatch) => {
 	}
 };
 
+export const toggleType = (typeName, status) => async (dispatch) => {
+	try {
+		if (status) {
+			dispatch({ type: CLOSE_TYPE, payload: typeName });
+		} else {
+			dispatch({ type: OPEN_TYPE, payload: typeName });
+		}
+	} catch (error) {
+		dispatch({ type: DECK_ERROR });
+	}
+};
+
+export const moveType = () => async (dispatch) => {
+	try {
+		console.log('Hi');
+		dispatch({ type: MOVE_TYPE });
+	} catch (error) {
+		dispatch({ type: DECK_ERROR });
+	}
+};
+
 export const addCard = (card) => async (dispatch) => {
 	try {
-		dispatch({ type: ADD_CARD, payload: card });
+		dispatch({ type: ADD_CARD, payload: card, cardType: card.mainType });
 	} catch (error) {
 		dispatch({ type: CARD_ERROR });
 	}
@@ -135,7 +190,9 @@ export const changeImage = (imageURL, deckId) => async (dispatch) => {
 		};
 
 		const body = JSON.stringify({ imageURL });
-		await axios.post(`/api/deck/image/${deckId}`, body, config);
+		if (deckId) {
+			await axios.post(`/api/deck/image/${deckId}`, body, config);
+		}
 		dispatch({ type: CHANGE_IMAGE, payload: imageURL });
 	} catch (error) {
 		dispatch({ type: CARD_ERROR });

@@ -20,6 +20,10 @@ export const DECK_ERROR = 'DECK_ERROR';
 export const HEIGHT_CHANGE = 'HEIGHT_CHANGE';
 export const CHANGE_IMAGE = 'CHANGE_IMAGE';
 
+export const CLOSE_TYPE = 'CLOSE_TYPE';
+export const OPEN_TYPE = 'OPEN_TYPE';
+export const MOVE_TYPE = 'MOVE_TYPE';
+
 export const OPEN_TOOLS = 'OPEN_TOOLS';
 export const CLOSE_TOOLS = 'CLOSE_TOOLS';
 export const COLUMN_CHANGE = 'COLUMN_CHANGE';

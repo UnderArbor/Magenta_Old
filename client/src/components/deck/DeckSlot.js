@@ -6,13 +6,15 @@ import PropTypes from 'prop-types';
 import DeckColors from './DeckColors';
 
 import { openDeck, closeDeck } from '../../actions/deck';
+import { closeTools } from '../../actions/tools';
 
 const DeckSlot = ({
 	id,
 	deckId,
-	cards,
+	types,
 	openDeck,
 	closeDeck,
+	closeTools,
 	globalDeckImage,
 	globalDeckName,
 	func,
@@ -30,17 +32,19 @@ const DeckSlot = ({
 	useEffect(() => {
 		if (id === deckId) {
 			var colors = [];
-			for (var i = 0; i < cards.length; ++i) {
-				for (var j = 0; j < cards[i].colors.length; ++j) {
-					const newColor = cards[i].colors[j];
-					if (!colors.includes(newColor)) {
-						colors.unshift(newColor);
+			for (var i = 0; i < types.length; ++i) {
+				for (var j = 0; j < types[i].cards.length; ++j) {
+					for (var k = 0; k < types[i].cards[j].colors.length; ++k) {
+						const newColor = types[i].cards[j].colors[k];
+						if (!colors.includes(newColor)) {
+							colors.unshift(newColor);
+						}
 					}
 				}
 			}
 			setDeckColors(colors);
 		}
-	}, [cards]);
+	}, [types, id, deckId]);
 
 	const getInfo = async () => {
 		try {
@@ -100,13 +104,16 @@ const DeckSlot = ({
 						cursor: 'pointer',
 						borderRadius: '2px',
 						border: '1px',
+						filter: 'saturate(140%) contrast (140%)',
 					}}
 					onClick={() => {
 						if (id === deckId && func !== 'Nothing') {
 							closeDeck();
 						} else if (func !== 'Nothing') {
-							openDeck(id);
+							openDeck(id, null);
 							func();
+						} else if (func === 'Nothing') {
+							closeTools();
 						}
 					}}
 				/>
@@ -120,17 +127,20 @@ const DeckSlot = ({
 DeckSlot.propTypes = {
 	openDeck: PropTypes.func.isRequired,
 	closeDeck: PropTypes.func.isRequired,
-	cards: PropTypes.array,
+	closeTools: PropTypes.func.isRequired,
+	types: PropTypes.array,
 	deckId: PropTypes.string,
 	globalDeckImage: PropTypes.string,
 	globalDeckName: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
-	cards: state.deck.cards,
+	types: state.deck.types,
 	deckId: state.deck.deckId,
 	globalDeckImage: state.deck.deckImage,
 	globalDeckName: state.deck.deckName,
 });
 
-export default connect(mapStateToProps, { openDeck, closeDeck })(DeckSlot);
+export default connect(mapStateToProps, { openDeck, closeDeck, closeTools })(
+	DeckSlot
+);

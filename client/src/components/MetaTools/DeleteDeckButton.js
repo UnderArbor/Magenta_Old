@@ -16,47 +16,73 @@ const DeleteDeckButton = ({ isAuthenticated, deckId, deleteDeck }) => {
 					width: '100%',
 				}}
 			>
-				<h3 style={{ display: 'inline-block', margin: '16px 0' }}>
-					Delete Deck
-				</h3>
 				{!reconfirm ? (
 					<div>
 						<button
 							style={{
 								display: 'inline-block',
-								height: '16px',
-								color: 'red',
+								color: 'darkRed',
+								fontSize: '16px',
+								fontWeight: 'bold',
+								backgroundColor: 'lightPink',
+								border: '1px solid black',
+								borderRadius: '4px',
+								width: '90%',
+								height: 'auto',
+								padding: '4px',
 							}}
 							onClick={() => setReconfirm(true)}
 						>
-							Delete
+							DELETE DECK
 						</button>
 					</div>
 				) : (
 					<div>
-						<p style={{ display: 'inline-block' }}>Are you sure?</p>
+						<p
+							style={{
+								display: 'inline-block',
+								fontWeight: 'bold',
+								fontSize: '24px',
+								textDecoration: 'underline',
+							}}
+						>
+							Delete Deck?
+						</p>
 						<button
 							style={{
 								display: 'inline-block',
+								width: '20%',
 								marginLeft: '16px',
-								width: '10%',
-								height: '16px',
+								color: 'green',
+								backgroundColor: 'lightgreen',
+								fontSize: '16px',
+								height: 'auto',
+								border: '1px solid black',
+								borderRadius: '4px',
+								fontWeight: 'bold',
+								padding: '4px',
 							}}
 							onClick={() => setReconfirm(false)}
 						>
-							No
+							NO
 						</button>
 						<button
 							style={{
 								display: 'inline-block',
-								width: '10%',
-								height: '16px',
+								width: '20%',
 								marginLeft: '24px',
 								color: 'red',
+								backgroundColor: 'lightPink',
+								fontSize: '16px',
+								height: 'auto',
+								border: '1px solid black',
+								borderRadius: '4px',
+								fontWeight: 'bold',
+								padding: '4px',
 							}}
 							onClick={() => deleteDeck(deckId)}
 						>
-							Yes
+							YES
 						</button>
 					</div>
 				)}

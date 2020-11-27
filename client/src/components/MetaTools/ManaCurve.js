@@ -3,23 +3,22 @@ import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 
-const ManaCurve = ({ cards }) => {
+const ManaCurve = ({ types }) => {
 	var cmcArray = [];
-	if (cards.length > 0) {
-		cards.map((card) => {
-			if (!card.types.includes('Land')) {
-				if (cmcArray[card.cmc] === undefined) {
-					return (cmcArray[card.cmc] = card.quantity);
+	types.map((type) => {
+		if (!type.name.includes('Land')) {
+			for (var i = 0; i < type.cards.length; ++i) {
+				if (cmcArray[type.cards[i].cmc] === undefined) {
+					return (cmcArray[type.cards[i].cmc] = type.cards[i].quantity);
 				} else {
-					return (cmcArray[card.cmc] = cmcArray[card.cmc] + card.quantity);
+					return (cmcArray[type.cards[i].cmc] =
+						cmcArray[type.cards[i].cmc] + type.cards[i].quantity);
 				}
-			} else {
-				return null;
 			}
-		});
-	} else {
-		cmcArray[0] = 0;
-	}
+		} else {
+			return null;
+		}
+	});
 
 	for (var i = 0; i < cmcArray.length; ++i) {
 		if (cmcArray[i] === undefined) {
@@ -80,11 +79,11 @@ const ManaCurve = ({ cards }) => {
 };
 
 ManaCurve.propTypes = {
-	cards: PropTypes.array,
+	types: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
-	cards: state.deck.cards,
+	types: state.deck.types,
 });
 
 export default connect(mapStateToProps)(ManaCurve);

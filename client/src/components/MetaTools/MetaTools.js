@@ -10,8 +10,6 @@ import DeckSlot from '../deck/DeckSlot';
 import PropTypes from 'prop-types';
 
 const MetaTools = ({ deckId, isAuthenticated }) => {
-	const doNothing = null;
-
 	return (
 		<div>
 			<div className="metaTools">

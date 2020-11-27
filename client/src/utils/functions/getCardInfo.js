@@ -1,35 +1,62 @@
 import fetch from 'node-fetch';
 
+import cardTypes from '../json/cardTypes.json';
+
 const SCRYFALL_API = 'https://api.scryfall.com';
 
-const getCardInfo = async (name) => {
+const getCardInfo = async (name, quantity) => {
+	if (!quantity) {
+		quantity = 1;
+	}
 	let imageURL = '';
 	let cardImageURL = '';
 	let cmc = '';
-	let types = '';
+	let types = ['', ''];
 	let colors = '';
-	await fetch(`${SCRYFALL_API}/cards/named?exact=${name}`)
-		.then((response) => response.json())
-		.then((json) => {
-			imageURL = json.image_uris.art_crop;
-			cardImageURL = json.image_uris.normal;
-			cmc = json.cmc;
-			types = json.type_line.split('—');
-			colors = json.colors;
-		});
+	try {
+		await fetch(`${SCRYFALL_API}/cards/named?exact=${name}`)
+			.then((response) => {
+				return response.json();
+			})
+			.then((json) => {
+				if (!json.image_uris) {
+					json = json.card_faces[0];
+				}
+				imageURL = json.image_uris.art_crop;
+				cardImageURL = json.image_uris.normal;
+				cmc = json.cmc;
+				types = json.type_line.split('—');
+				colors = json.colors;
+			});
+	} catch (err) {
+		console.log('Error: ', err);
+		return null;
+	}
 
 	if (!types[1]) {
 		types[1] = '';
 	}
 
+	const mainTypeList = types[0].trim().split(' ');
+
+	var mainType = '';
+
+	for (var i = 0; i < cardTypes.length; ++i) {
+		if (mainTypeList.includes(cardTypes[i])) {
+			mainType = cardTypes[i];
+			break;
+		}
+	}
+
 	//Create new card
 	const card = {
-		name,
-		quantity: 1,
+		name: name.replace(/\s*$/, ''),
+		quantity: quantity,
 		cardArt: imageURL,
 		cardImage: cardImageURL,
 		cmc,
-		types: types[0].trim().split(' '),
+		mainType,
+		types: mainTypeList,
 		subtypes: types[1].trim().split(' '),
 		colors,
 	};

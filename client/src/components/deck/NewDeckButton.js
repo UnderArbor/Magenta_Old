@@ -5,7 +5,7 @@ import { openDeck, closeDeck, saveDeck } from '../../actions/deck';
 
 const NewDeckButton = ({
 	isAuthenticated,
-	decks,
+	types,
 	openDeck,
 	closeDeck,
 	saveDeck,
@@ -30,7 +30,24 @@ const NewDeckButton = ({
 					closeDeck();
 					openDeck(-1);
 					if (isAuthenticated) {
-						saveDeck([], `untitled ${decks.length + 1}`);
+						saveDeck(
+							[
+								{ name: 'Creature', open: true, cards: [] },
+								{ name: 'Enchantment', open: true, cards: [] },
+								{ name: 'Artifact', open: true, cards: [] },
+								{ name: 'Planeswalker', open: true, cards: [] },
+								{ name: 'Instant', open: true, cards: [] },
+								{ name: 'Sorcery', open: true, cards: [] },
+								{ name: 'Land', open: true, cards: [] },
+								{ name: 'Hero', open: true, cards: [] },
+								{ name: 'Vanguard', open: true, cards: [] },
+								{ name: 'Conspiracy', open: true, cards: [] },
+								{ name: 'Scheme', open: true, cards: [] },
+								{ name: 'Plane', open: true, cards: [] },
+								{ name: 'Phenomenon', open: true, cards: [] },
+							],
+							`untitled`
+						);
 					}
 				}}
 			>
@@ -42,9 +59,9 @@ const NewDeckButton = ({
 
 NewDeckButton.propTypes = {
 	showDeck: PropTypes.bool,
-	decks: PropTypes.array,
 	saved: PropTypes.bool,
 	isAuthenticated: PropTypes.bool,
+	types: PropTypes.array,
 	openDeck: PropTypes.func.isRequired,
 	closeDeck: PropTypes.func.isRequired,
 	saveDeck: PropTypes.func.isRequired,
@@ -52,9 +69,9 @@ NewDeckButton.propTypes = {
 
 const mapStateToProps = (state) => ({
 	showDeck: state.deck.showDeck,
-	decks: state.deck.decks,
 	saved: state.deck.saved,
 	isAuthenticated: state.auth.isAuthenticated,
+	types: state.deck.types,
 });
 
 export default connect(mapStateToProps, { openDeck, closeDeck, saveDeck })(

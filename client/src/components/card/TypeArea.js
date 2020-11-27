@@ -2,7 +2,7 @@ import React from 'react';
 import Card from './Card';
 import TypeHeader from './TypeHeader';
 
-const TypeArea = ({ type, cards, indexBuffer }) => {
+const TypeArea = ({ type, cards, indexBuffer, index }) => {
 	return (
 		<div className="typeArea" style={{ width: '100%', float: 'left' }}>
 			<TypeHeader type={type} />
@@ -19,6 +19,7 @@ const TypeArea = ({ type, cards, indexBuffer }) => {
 					/>
 				))}
 			</div>
+			<div className="dropZone" data-id={index}></div>
 		</div>
 	);
 };

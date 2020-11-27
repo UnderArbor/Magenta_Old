@@ -117,6 +117,7 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
 	setAuthToken(null);
 	dispatch({ type: CLOSE_DECK });
+	dispatch({ type: CLOSE_TOOLS });
 	dispatch({
 		type: LOGOUT,
 	});

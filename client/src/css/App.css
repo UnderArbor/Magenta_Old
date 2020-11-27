@@ -11,6 +11,10 @@
 	padding: 0px;
 }
 
+[draggable='true'] {
+	cursor: move;
+}
+
 body {
 	background-color: #212;
 	width: 85%;
@@ -167,6 +171,7 @@ button.logout {
 	display: flex;
 	align-items: center;
 	position: relative;
+	height: 220px;
 }
 
 .deckContainer {
@@ -186,7 +191,7 @@ button.logout {
 		0.5px 0.5px 0 #000;
 	background: transparent;
 	background-color: rgba(0, 0, 0, 0.5);
-	font-size: 16px;
+	font-size: 24px;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 	z-index: 0;
@@ -198,9 +203,8 @@ button.logout {
 	position: absolute;
 	display: flex;
 	flex-direction: row;
-	justify-content: 'flex-end';
-	bottom: 0;
 	left: 0;
+	bottom: 0;
 	align-items: center;
 	padding: 4px;
 	width: calc(100% - 8px);
@@ -208,30 +212,36 @@ button.logout {
 }
 
 .colorDot {
-	height: 12px;
-	width: 12px;
+	height: 15px;
+	width: 15px;
 	margin: auto 0;
 	border-radius: 100%;
 	display: inline-block;
 	background: transparent;
 	border: 1px solid black;
 	margin-right: 4px;
+	display: block;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: contain;
 }
 
 .U {
-	background-color: blue;
+	content: url('../utils/images/mana/BlueMana.png');
+	object-fit: fill;
+	object-position: 30%;
 }
 .B {
-	background-color: black;
+	content: url('../utils/images/mana/BlackMana.png');
 }
 .G {
-	background-color: green;
+	content: url('../utils/images/mana/GreenMana.png');
 }
 .R {
-	background-color: red;
+	content: url('../utils/images/mana/RedMana.png');
 }
 .W {
-	background-color: white;
+	content: url('../utils/images/mana/WhiteMana.png');
 }
 
 .selectedDeck {
@@ -249,11 +259,6 @@ button.logout {
 
 .featuredDeck {
 	margin: 6px -6px;
-	padding-top: 10px;
-}
-
-div.featuredDeck .colorContainer {
-	bottom: 4px;
 }
 
 div.featuredDeck .slotNameDisplay {
@@ -387,6 +392,14 @@ div.featuredDeck .slotNameDisplay {
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
+	cursor: move;
+}
+
+.dropZone {
+	margin: 4px 0;
+	width: 100%;
+	height: 12px;
+	border-radius: 6px;
 }
 
 .typeName {
@@ -419,19 +432,23 @@ div.featuredDeck .slotNameDisplay {
 	color: #fff;
 	display: flex;
 	flex-direction: column;
-	margin: 6px 4.5%;
-	width: 15%;
+	margin: 8px 13px;
+	width: 90px;
 }
 
 .quantContainer {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
+	padding: 0 2px;
+	padding-bottom: 1px;
 	position: absolute;
 	z-index: 5;
 	bottom: 0;
-	left: 2px;
-	background-color: rgba(0, 0, 0, 0.4);
+	left: 0px;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .arrowContainer {
@@ -479,7 +496,7 @@ div.featuredDeck .slotNameDisplay {
 }
 
 .cardInfo {
-	width: 130%;
+	width: 95px;
 }
 
 .infoContainer {
@@ -500,45 +517,44 @@ div.featuredDeck .slotNameDisplay {
 	color: white;
 	text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
 		0.5px 0.5px 0 #000;
-	text-indent: -2px;
-	/* margin: 16px 0;
-	text-indent: 80%; */
+	text-indent: -4px;
 }
 
 .cardArtContainer {
 	position: relative;
-	height: inherit;
 }
 
 .cardArt {
 	display: block;
-	width: 100%;
-	cursor: move;
+	width: 93px;
+	height: 110px;
 	border-radius: 6px;
-	border: 2px solid black;
+	border: 3px solid black;
 	background-color: black;
+	object-fit: cover;
+	object-position: 50% 0%;
+	filter: saturate(130%) contrast(110%);
 }
 
 .moreCards {
-	display: block;
 	opacity: 0.5;
-	width: 100%;
-	cursor: move;
-	border-radius: 6px;
 	border: 2px dashed grey;
-	background-color: black;
 }
 
 .cardImage {
-	visibility: hidden;
-	display: none;
 	position: absolute;
-	width: 19%;
+	width: 350px;
 	z-index: 8;
 	border-radius: 20px;
+	filter: saturate(130%) contrast(110%);
 }
 
-.cardInfo:hover > .cardImage {
+.hidden {
+	visibility: hidden;
+	display: none;
+}
+
+.unhidden {
 	visibility: visible;
 	display: block;
 }
@@ -621,6 +637,17 @@ div.featuredDeck .slotNameDisplay {
 	background-color: var(--main-bg-color);
 	float: right;
 	width: 84%;
+}
+
+.importButton {
+	background: none !important;
+	border: none;
+	padding: 0 !important;
+	font-size: 16px;
+	font-family: arial, sans-serif;
+	color: lightgray;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .metaTools {
