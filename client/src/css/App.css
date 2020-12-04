@@ -649,14 +649,17 @@ div.featuredDeck .slotNameDisplay {
 .settings {
 	display: flex;
 	position: absolute;
-	top: 0;
-	right: 4px;
-	margin: 6px 6px;
+	top: 4px;
+	right: 1px;
 	z-index: 5;
 	border-radius: 100%;
 	cursor: pointer;
-	background: transparent;
-	background-color: transparent;
+}
+
+.settingsIcon {
+	height: 18px;
+	width: 18px;
+	z-index: 5;
 }
 
 .center {

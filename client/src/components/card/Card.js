@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { incrementCard, decrementCard, changeImage } from '../../actions/deck';
 import CardArt from './CardArt';
 
+import settingsIcon from '../../utils/images/Settings_Cog.png';
+
 import axios from 'axios';
 
 export const Card = ({
@@ -435,13 +437,14 @@ export const Card = ({
 						className="settings hidden"
 						onClick={() => console.log('Hi')}
 					>
-						<div className="center"></div>
+						<img className="settingsIcon" src={settingsIcon} alt="set" />
+						{/* <div className="center"></div>
 						<div className="tooth"></div>
 						<div className="tooth"></div>
 						<div className="tooth"></div>
 						<div className="tooth"></div>
 						<div className="tooth"></div>
-						<div className="tooth"></div>
+						<div className="tooth"></div> */}
 					</div>
 					{quantityDisp ? (
 						<div
