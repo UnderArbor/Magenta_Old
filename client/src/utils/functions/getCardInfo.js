@@ -14,12 +14,22 @@ const getCardInfo = async (name, quantity) => {
 	let manaCost = '';
 	let types = ['', ''];
 	let colors = '';
+	let url = '';
 	try {
 		await fetch(`${SCRYFALL_API}/cards/named?exact=${name}`)
 			.then((response) => {
 				return response.json();
 			})
-			.then((json) => {
+			.then(async (json) => {
+				url = json.prints_search_uri;
+				console.log('URL: ', url);
+				await fetch(url)
+					.then((response2) => {
+						return response2.json();
+					})
+					.then((json2) => {
+						console.log('JSON: ', json2);
+					});
 				if (!json.image_uris) {
 					json = json.card_faces[0];
 				}
