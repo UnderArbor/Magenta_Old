@@ -1,28 +1,28 @@
 import React from 'react';
 
 const DeckColors = ({ colors }) => {
-	var class1 = 'colorDot';
-	var class2 = 'colorDot';
-	var class3 = 'colorDot';
-	var class4 = 'colorDot';
-	var class5 = 'colorDot';
+	var class1 = 'deckColorDot';
+	var class2 = 'deckColorDot';
+	var class3 = 'deckColorDot';
+	var class4 = 'deckColorDot';
+	var class5 = 'deckColorDot';
 
 	for (var i = 0; i < colors.length; ++i) {
 		switch (i) {
 			case 0:
-				class1 = 'colorDot '.concat(colors[i]);
+				class1 = 'deckColorDot '.concat(colors[i]);
 				break;
 			case 1:
-				class2 = 'colorDot '.concat(colors[i]);
+				class2 = 'deckColorDot '.concat(colors[i]);
 				break;
 			case 2:
-				class3 = 'colorDot '.concat(colors[i]);
+				class3 = 'deckColorDot '.concat(colors[i]);
 				break;
 			case 3:
-				class4 = 'colorDot '.concat(colors[i]);
+				class4 = 'deckColorDot '.concat(colors[i]);
 				break;
 			case 4:
-				class5 = 'colorDot '.concat(colors[i]);
+				class5 = 'deckColorDot '.concat(colors[i]);
 				break;
 			default:
 				break;

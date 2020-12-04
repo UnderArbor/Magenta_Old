@@ -21,11 +21,11 @@ export const DeckList = ({ tools, height, func }) => {
 					<div className="deckSlots">
 						<DeckSlotList func={func} />
 					</div>
-					<hr className="normal" />
 				</div>
 			) : (
 				<div className="deckList">
 					<ToggleTools />
+					<hr className="normal" />
 					<MetaTools />
 				</div>
 			)}

@@ -17,7 +17,8 @@ import {
 	LOGOUT,
 	CLOSE_TYPE,
 	OPEN_TYPE,
-	MOVE_TYPE,
+	ADD_TYPE,
+	REMOVE_TYPE,
 } from '../actions/types';
 
 const initialState = {
@@ -151,8 +152,23 @@ export default function (state = initialState, action) {
 					...state.types.slice(index + 1),
 				],
 			};
-		case MOVE_TYPE:
-			return null;
+		case ADD_TYPE:
+			return {
+				...state,
+				types: [
+					...state.types.slice(0, Number(payload)),
+					action.typeObject,
+					...state.types.slice(Number(payload)),
+				],
+			};
+		case REMOVE_TYPE:
+			return {
+				...state,
+				types: [
+					...state.types.slice(0, Number(payload)),
+					...state.types.slice(Number(payload) + 1),
+				],
+			};
 		case ADD_CARD:
 			var exists = false;
 			for (index = 0; index < state.types.length; ++index) {
@@ -199,7 +215,8 @@ export default function (state = initialState, action) {
 										...state.types[index].cards.slice(0, index2),
 										{
 											...state.types[index].cards[index2],
-											quantity: state.types[index].cards[index2].quantity + 1,
+											quantity:
+												Number(state.types[index].cards[index2].quantity) + 1,
 										},
 										...state.types[index].cards.slice(index2 + 1),
 									],

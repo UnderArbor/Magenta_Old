@@ -18,7 +18,8 @@ import {
 	CLOSE_TOOLS,
 	CLOSE_TYPE,
 	OPEN_TYPE,
-	MOVE_TYPE,
+	ADD_TYPE,
+	REMOVE_TYPE,
 } from './types';
 
 import { loadUser } from './auth';
@@ -45,8 +46,10 @@ export const openDeck = (deckId, types) => async (dispatch) => {
 			var deckImage =
 				'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 			for (var i = 0; i < types.length; ++i) {
+				console.log('.');
 				if (types[i].cards.length > 0) {
-					deckImage = types[i].cards[types[i].cards.length - 1].cartArt;
+					deckImage = types[i].cards[0].cardArt;
+					break;
 				}
 			}
 			dispatch({
@@ -140,10 +143,36 @@ export const toggleType = (typeName, status) => async (dispatch) => {
 	}
 };
 
-export const moveType = () => async (dispatch) => {
+export const moveType = (prevIndex, newIndex) => async (dispatch, getState) => {
 	try {
-		console.log('Hi');
-		dispatch({ type: MOVE_TYPE });
+		const typeObject = getState().deck.types[prevIndex];
+		const isAuthenticated = getState().auth.isAuthenticated;
+
+		dispatch({ type: REMOVE_TYPE, payload: prevIndex });
+		if (Number(prevIndex) < Number(newIndex)) {
+			newIndex = Number(newIndex) - 1;
+		}
+
+		dispatch({ type: ADD_TYPE, payload: newIndex, typeObject });
+
+		if (isAuthenticated) {
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			};
+
+			const body = await JSON.stringify({
+				id: typeObject.id,
+				kind: 'move',
+				shape: getState().deck.types,
+			});
+			await axios.put(
+				`/api/deck/types/typeChange/${getState().deck.deckId}`,
+				body,
+				config
+			);
+		}
 	} catch (error) {
 		dispatch({ type: DECK_ERROR });
 	}

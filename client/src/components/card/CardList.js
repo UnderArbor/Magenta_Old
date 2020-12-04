@@ -7,8 +7,6 @@ import TypeHeader from './TypeHeader';
 export const CardList = ({ types, columnCount }) => {
 	var cardAreaName = 'cardArea2';
 	var indexBuffer = 0;
-	var index = 0;
-
 	if (columnCount === 1) {
 		cardAreaName = 'cardArea1';
 	} else if (columnCount === 2) {
@@ -16,6 +14,8 @@ export const CardList = ({ types, columnCount }) => {
 	} else if (columnCount === 3) {
 		cardAreaName = 'cardArea3';
 	}
+
+	let index = 0;
 
 	return (
 		<div
@@ -25,7 +25,7 @@ export const CardList = ({ types, columnCount }) => {
 			}}
 		>
 			{types.map((type) => {
-				index++;
+				index = Number(index) + 1;
 				if (type.cards.length > 0 && type.open) {
 					indexBuffer += type.cards.length;
 					return (
@@ -34,7 +34,7 @@ export const CardList = ({ types, columnCount }) => {
 							type={type}
 							cards={type.cards}
 							indexBuffer={indexBuffer - type.cards.length}
-							index={index - 1}
+							index={Number(index) - 1}
 							open={type.open}
 						/>
 					);
@@ -45,13 +45,17 @@ export const CardList = ({ types, columnCount }) => {
 							className="typeArea"
 							style={{ width: '100%', float: 'left' }}
 						>
-							<TypeHeader type={type} key={type.name.concat('closed')} />
+							<TypeHeader
+								type={type}
+								key={type.name.concat('closed')}
+								index={Number(index) - 1}
+							/>
 							<hr
 								key={type.name.concat('hr')}
 								style={{ marginBottom: '16px' }}
 								className="normal"
 							/>
-							<div className="dropZone" data-id={index - 1}></div>
+							<div className="dropZone" data-id={Number(index)}></div>
 						</div>
 					);
 				} else {

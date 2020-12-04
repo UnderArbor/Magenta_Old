@@ -1,7 +1,7 @@
 :root {
 	--main-bg-color: #50395b;
 	--secondary-color: #dd9;
-	--backdrop-color: #303;
+	--backdrop-color: #646;
 	--header-color: #a5a;
 	--header-text-color: #eae;
 }
@@ -211,7 +211,7 @@ button.logout {
 	background-color: rgba(255, 255, 255, 0.3);
 }
 
-.colorDot {
+.deckColorDot {
 	height: 15px;
 	width: 15px;
 	margin: auto 0;
@@ -226,10 +226,24 @@ button.logout {
 	background-size: contain;
 }
 
+.cardColorDot {
+	height: 15px;
+	width: 15px;
+	margin: 2px 0;
+	margin-right: 1px;
+	border-radius: 100%;
+	display: inline-block;
+	background: transparent;
+	border: 1px solid black;
+	display: block;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: contain;
+	filter: contrast(100%);
+}
+
 .U {
 	content: url('../utils/images/mana/BlueMana.png');
-	object-fit: fill;
-	object-position: 30%;
 }
 .B {
 	content: url('../utils/images/mana/BlackMana.png');
@@ -242,6 +256,138 @@ button.logout {
 }
 .W {
 	content: url('../utils/images/mana/WhiteMana.png');
+}
+.C {
+	content: url('../utils/images/mana/ColorlessMana.png');
+}
+.X {
+	content: url('../utils/images/mana/XMana.png');
+}
+.S {
+	content: url('../utils/images/mana/SnowMana.png');
+}
+.mana0 {
+	content: url('../utils/images/mana/0Mana.png');
+}
+.mana1 {
+	content: url('../utils/images/mana/1Mana.png');
+}
+.mana2 {
+	content: url('../utils/images/mana/2Mana.png');
+}
+.mana3 {
+	content: url('../utils/images/mana/3Mana.png');
+}
+.mana4 {
+	content: url('../utils/images/mana/4Mana.png');
+}
+.mana5 {
+	content: url('../utils/images/mana/5Mana.png');
+}
+.mana6 {
+	content: url('../utils/images/mana/6Mana.png');
+}
+.mana7 {
+	content: url('../utils/images/mana/7Mana.png');
+}
+.mana8 {
+	content: url('../utils/images/mana/8Mana.png');
+}
+.mana9 {
+	content: url('../utils/images/mana/9Mana.png');
+}
+.mana10 {
+	content: url('../utils/images/mana/10Mana.png');
+}
+.mana11 {
+	content: url('../utils/images/mana/11Mana.png');
+}
+.mana12 {
+	content: url('../utils/images/mana/12Mana.png');
+}
+.mana13 {
+	content: url('../utils/images/mana/13Mana.png');
+}
+.mana14 {
+	content: url('../utils/images/mana/14Mana.png');
+}
+.mana15 {
+	content: url('../utils/images/mana/15Mana.png');
+}
+.mana16 {
+	content: url('../utils/images/mana/16Mana.png');
+}
+.mana17 {
+	content: url('../utils/images/mana/17Mana.png');
+}
+.mana18 {
+	content: url('../utils/images/mana/18Mana.png');
+}
+.mana19 {
+	content: url('../utils/images/mana/19Mana.png');
+}
+.mana20 {
+	content: url('../utils/images/mana/20Mana.png');
+}
+.Uor2 {
+	content: url('../utils/images/mana/Uor2Mana.png');
+}
+.Bor2 {
+	content: url('../utils/images/mana/Bor2Mana.png');
+}
+.Gor2 {
+	content: url('../utils/images/mana/Gor2Mana.png');
+}
+.Wor2 {
+	content: url('../utils/images/mana/Wor2Mana.png');
+}
+.Ror2 {
+	content: url('../utils/images/mana/Ror2Mana.png');
+}
+.RorW {
+	content: url('../utils/images/mana/RorWMana.png');
+}
+.GorU {
+	content: url('../utils/images/mana/GorUMana.png');
+}
+.BorG {
+	content: url('../utils/images/mana/BorGMana.png');
+}
+.BorR {
+	content: url('../utils/images/mana/BorRMana.png');
+}
+.GorW {
+	content: url('../utils/images/mana/GorWMana.png');
+}
+.RorG {
+	content: url('../utils/images/mana/RorGMana.png');
+}
+.UorB {
+	content: url('../utils/images/mana/UorBMana.png');
+}
+.UorR {
+	content: url('../utils/images/mana/UorRMana.png');
+}
+.WorB {
+	content: url('../utils/images/mana/WorBMana.png');
+}
+.WorU {
+	content: url('../utils/images/mana/WorUMana.png');
+}
+.UP {
+	content: url('../utils/images/mana/UPMana.png');
+}
+.GP {
+	content: url('../utils/images/mana/GPMana.png');
+}
+.RP {
+	content: url('../utils/images/mana/RPMana.png');
+}
+.BP {
+	content: url('../utils/images/mana/BPMana.png');
+}
+.WP {
+	content: url('../utils/images/mana/WPMana.png');
 }
 
 .selectedDeck {
@@ -390,9 +536,11 @@ div.featuredDeck .slotNameDisplay {
 .typeHeader {
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-start;
+	justify-content: space-between;
 	align-items: center;
 	cursor: move;
+	border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
 }
 
 .dropZone {
@@ -403,21 +551,63 @@ div.featuredDeck .slotNameDisplay {
 }
 
 .typeName {
+	text-indent: 4px;
 	color: var(--secondary-color);
 	font-size: 24px;
 }
 
-.toggleArea {
+/* Arrow Experiment */
+
+.arrow-down {
 	visibility: hidden;
-	margin: 0 8px;
-	height: 80%;
+	width: 30px;
+	height: 30px;
+	position: relative;
+	background: transparent;
+	box-shadow: 0px 0px 0px transparent;
+	border: 0px solid transparent;
+	text-shadow: 0px 0px 0px transparent;
 }
+
+.arrow-down:before,
+.arrow-down:after {
+	content: '';
+	display: block;
+	width: 8px;
+	height: 2px;
+	background: var(--secondary-color);
+	position: absolute;
+	margin: auto 0;
+	/* transition: transform 0.5s;        Doesn't currently work*/
+}
+
+.arrow-down:before {
+	right: 14px;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	transform: rotate(45deg);
+}
+
+.arrow-down:after {
+	right: 10px;
+	transform: rotate(-45deg);
+}
+
+.arrow-down.active:before {
+	transform: rotate(-45deg);
+}
+
+.arrow-down.active:after {
+	transform: rotate(45deg);
+}
+
+/* Arrow Experiment */
 
 .typeHeader:hover {
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
-.typeHeader:hover > .toggleArea {
+.typeHeader:hover > .arrow-down {
 	visibility: visible;
 }
 
@@ -436,6 +626,80 @@ div.featuredDeck .slotNameDisplay {
 	width: 90px;
 }
 
+.manaContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+	position: absolute;
+	visibility: visible;
+	z-index: 5;
+	left: 0px;
+	top: 0px;
+	width: calc(100% - 2px);
+	background-color: rgba(255, 255, 255, 0.13);
+	color: black;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	padding-right: 1px;
+	margin-left: 2px;
+	margin-top: 2px;
+}
+
+.settings {
+	display: flex;
+	position: absolute;
+	top: 0;
+	right: 4px;
+	margin: 6px 6px;
+	z-index: 5;
+	border-radius: 100%;
+	cursor: pointer;
+	background: transparent;
+	background-color: transparent;
+}
+
+.center {
+	position: absolute;
+	height: 7px;
+	width: 7px;
+	border-radius: 100%;
+	right: -7px;
+	top: 2px;
+	z-index: 6;
+	border: 2px solid var(--secondary-color);
+	color: var(--main-bg-color);
+	background-color: var(--main-bg-color);
+}
+
+.tooth {
+	position: absolute;
+	z-index: 1;
+	width: 3px;
+	height: 15px;
+	background: var(--secondary-color);
+}
+
+.tooth:nth-child(2) {
+	transform: rotate(60deg);
+}
+
+.tooth:nth-child(3) {
+	transform: rotate(120deg);
+}
+
+.tooth:nth-child(4) {
+	transform: rotate(180deg);
+}
+
+.tooth:nth-child(5) {
+	transform: rotate(240deg);
+}
+
+.tooth:nth-child(6) {
+	transform: rotate(300deg);
+}
+
 .quantContainer {
 	display: flex;
 	flex-direction: row;
@@ -448,7 +712,7 @@ div.featuredDeck .slotNameDisplay {
 	left: 0px;
 	border-bottom-left-radius: 6px;
 	border-bottom-right-radius: 6px;
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.15);
 }
 
 .arrowContainer {
@@ -652,7 +916,7 @@ div.featuredDeck .slotNameDisplay {
 
 .metaTools {
 	display: 'inline-block';
-	background-color: var(--header-text-color);
+	background-color: #a8a;
 	width: 100%;
 	order: 2;
 }
@@ -668,6 +932,7 @@ div.featuredDeck .slotNameDisplay {
 
 .manaCurve {
 	background-color: #fdf;
+	margin: 12px;
 }
 
 .registerContainer {

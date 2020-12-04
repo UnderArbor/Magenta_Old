@@ -22,12 +22,17 @@ export const CHANGE_IMAGE = 'CHANGE_IMAGE';
 
 export const CLOSE_TYPE = 'CLOSE_TYPE';
 export const OPEN_TYPE = 'OPEN_TYPE';
-export const MOVE_TYPE = 'MOVE_TYPE';
+export const ADD_TYPE = 'ADD_TYPE';
+export const REMOVE_TYPE = 'REMOVE_TYPE';
 
 export const OPEN_TOOLS = 'OPEN_TOOLS';
 export const CLOSE_TOOLS = 'CLOSE_TOOLS';
 export const COLUMN_CHANGE = 'COLUMN_CHANGE';
 export const TOOLS_ERROR = 'TOOLS_ERROR';
+export const SHOW_COLORS = 'SHOW_COLORS';
+export const HIDE_COLORS = 'HIDE_COLORS';
+export const SHOW_QUANTITY = 'SHOW_QUANTITY';
+export const HIDE_QUANTITY = 'HIDE_QUANTITY';
 
 export const ADD_CARD = 'ADD_CARD';
 export const INCREMENT_CARD = 'INCREMENT_CARD';

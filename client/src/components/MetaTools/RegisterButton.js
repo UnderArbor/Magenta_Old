@@ -20,7 +20,6 @@ const RegisterButton = ({ openModalAuth }) => {
 						display: 'block',
 						position: 'relative',
 						margin: '16px auto',
-						top: '16px',
 						border: 'none',
 						backgroundColor: '#a5a',
 						padding: '8px',

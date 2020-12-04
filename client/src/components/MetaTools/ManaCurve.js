@@ -9,15 +9,16 @@ const ManaCurve = ({ types }) => {
 		if (!type.name.includes('Land')) {
 			for (var i = 0; i < type.cards.length; ++i) {
 				if (cmcArray[type.cards[i].cmc] === undefined) {
-					return (cmcArray[type.cards[i].cmc] = type.cards[i].quantity);
+					cmcArray[type.cards[i].cmc] = Number(type.cards[i].quantity);
 				} else {
-					return (cmcArray[type.cards[i].cmc] =
-						cmcArray[type.cards[i].cmc] + type.cards[i].quantity);
+					cmcArray[type.cards[i].cmc] =
+						cmcArray[type.cards[i].cmc] + Number(type.cards[i].quantity);
 				}
 			}
 		} else {
 			return null;
 		}
+		return null;
 	});
 
 	for (var i = 0; i < cmcArray.length; ++i) {

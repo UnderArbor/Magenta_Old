@@ -6,14 +6,24 @@ import axios from 'axios';
 
 import { toggleType, moveType } from '../../actions/deck';
 
-export const TypeHeader = ({ type, deckId, isAuthenticated, toggleType }) => {
+export const TypeHeader = ({
+	type,
+	deckId,
+	isAuthenticated,
+	toggleType,
+	moveType,
+	index,
+}) => {
 	function handleDragStart(e) {
-		e.stopPropagation();
+		e.stopImmediatePropagation();
 		this.style.opacity = 0.4;
 		let dropZone = document.querySelectorAll('.dropZone');
 		dropZone.forEach(function (item) {
 			item.style.backgroundColor = 'rgba(0, 0, 0, 0.25)';
 		});
+
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/plain', this.dataset.id);
 	}
 
 	function handleDragEnd(e) {
@@ -32,31 +42,44 @@ export const TypeHeader = ({ type, deckId, isAuthenticated, toggleType }) => {
 
 	function handleDragOver(e) {
 		e.preventDefault();
+		e.dataTransfer.dropEffect = 'move';
 
 		return false;
 	}
 
 	function handleDragLeave(e) {
 		e.stopPropagation();
-		this.style.height = '12px';
 		this.style.border = 'none';
 	}
 
 	function handleDrop(e) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
-
-		console.log('Hup');
-		this.style.height = '12px';
 		this.style.border = 'none';
-		moveType();
+
+		const prevIndex = e.dataTransfer.getData('text/plain');
+		const newIndex = this.dataset.id;
+
+		moveType(prevIndex, newIndex);
+
+		e.dataTransfer.clearData();
+
 		return false;
 	}
+
+	var quantity = 0;
+	for (var i = 0; i < type.cards.length; ++i) {
+		quantity = Number(quantity) + Number(type.cards[i].quantity);
+	}
+
+	const className = type.open ? 'arrow-down active' : 'arrow-down';
 
 	return (
 		<div
 			className="typeHeader"
 			id="typeHeader"
+			data-id={index}
+			data-type={type}
 			draggable="true"
 			onMouseOver={(e) => {
 				let typeHeader = document.querySelectorAll('.typeHeader');
@@ -77,10 +100,10 @@ export const TypeHeader = ({ type, deckId, isAuthenticated, toggleType }) => {
 			}}
 		>
 			<p className="typeName">
-				{type.name} ({type.cards.length}){type.open ? null : '...'}
+				{type.name} ({quantity}){type.open ? null : '...'}
 			</p>
 			<button
-				className="toggleArea"
+				className={className}
 				onClick={async () => {
 					toggleType(type.name, type.open);
 					if (isAuthenticated) {
@@ -102,9 +125,7 @@ export const TypeHeader = ({ type, deckId, isAuthenticated, toggleType }) => {
 						);
 					}
 				}}
-			>
-				Up
-			</button>
+			></button>
 		</div>
 	);
 };
@@ -113,6 +134,7 @@ TypeHeader.propTypes = {
 	deckId: PropTypes.string.isRequired,
 	isAuthenticated: PropTypes.bool.isRequired,
 	toggleType: PropTypes.func.isRequired,
+	moveType: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -120,4 +142,4 @@ const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { toggleType })(TypeHeader);
+export default connect(mapStateToProps, { toggleType, moveType })(TypeHeader);

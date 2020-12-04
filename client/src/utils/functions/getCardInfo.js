@@ -11,6 +11,7 @@ const getCardInfo = async (name, quantity) => {
 	let imageURL = '';
 	let cardImageURL = '';
 	let cmc = '';
+	let manaCost = '';
 	let types = ['', ''];
 	let colors = '';
 	try {
@@ -25,6 +26,7 @@ const getCardInfo = async (name, quantity) => {
 				imageURL = json.image_uris.art_crop;
 				cardImageURL = json.image_uris.normal;
 				cmc = json.cmc;
+				manaCost = json.mana_cost;
 				types = json.type_line.split('—');
 				colors = json.colors;
 			});
@@ -48,6 +50,10 @@ const getCardInfo = async (name, quantity) => {
 		}
 	}
 
+	manaCost = manaCost.replace(/\{/g, '').replace(/\}/g, ',').split(',');
+
+	manaCost.pop();
+
 	//Create new card
 	const card = {
 		name: name.replace(/\s*$/, ''),
@@ -55,6 +61,7 @@ const getCardInfo = async (name, quantity) => {
 		cardArt: imageURL,
 		cardImage: cardImageURL,
 		cmc,
+		manaCost,
 		mainType,
 		types: mainTypeList,
 		subtypes: types[1].trim().split(' '),

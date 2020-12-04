@@ -13,12 +13,17 @@ const MetaTools = ({ deckId, isAuthenticated }) => {
 	return (
 		<div>
 			<div className="metaTools">
+				<div className="toolsHeader">Name Goes Here</div>
 				<DeckSlot func={'Nothing'} key={deckId} id={deckId} />
+				<hr className="normal" />
 				<div className="manaCurve">
 					<ManaCurve />
 				</div>
+				<hr className="normal" />
 				{isAuthenticated ? <DeleteDeckButton /> : <RegisterButton />}
+				<hr className="normal" />
 				<ColumnButtons />
+				<hr className="normal" />
 			</div>
 		</div>
 	);

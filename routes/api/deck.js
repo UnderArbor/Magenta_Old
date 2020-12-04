@@ -98,23 +98,28 @@ router.put('/types/typeChange/:deckId', async (req, res) => {
 	try {
 		const deck = await Deck.findOne({ _id: req.params.deckId });
 		const { id, kind, shape } = await req.body;
+		switch (kind) {
+			case 'open':
+				var index = -1;
+				for (var i = 0; i < deck.types.length; ++i) {
+					if (deck.types[i].id === id) {
+						index = i;
+						break;
+					}
+				}
 
-		var index = -1;
-		for (var i = 0; i < deck.types.length; ++i) {
-			if (deck.types[i].id === id) {
-				index = i;
-				break;
-			}
-		}
-
-		if (index !== -1) {
-			switch (kind) {
-				case 'open':
+				if (index !== -1) {
 					deck.types[index].open = shape;
 					await deck.save();
 					res.json(deck);
-					return;
-			}
+				}
+				return;
+
+			case 'move':
+				deck.types = shape;
+				await deck.save();
+				res.json(deck);
+				return;
 		}
 	} catch (error) {
 		res.status(500).send('Server Error');

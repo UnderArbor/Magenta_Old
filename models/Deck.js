@@ -37,6 +37,9 @@ const DeckSchema = new Schema({
 					cmc: {
 						type: Number,
 					},
+					manaCost: {
+						type: String,
+					},
 					mainType: {
 						type: String,
 					},
