@@ -259,6 +259,7 @@ export const heightChange = (element) => async (dispatch) => {
 
 export const changeImage = (imageURL, deckId) => async (dispatch) => {
 	try {
+		dispatch({ type: CHANGE_IMAGE, payload: imageURL });
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
@@ -269,7 +270,6 @@ export const changeImage = (imageURL, deckId) => async (dispatch) => {
 		if (deckId) {
 			await axios.post(`/api/deck/image/${deckId}`, body, config);
 		}
-		dispatch({ type: CHANGE_IMAGE, payload: imageURL });
 	} catch (error) {
 		dispatch({ type: CARD_ERROR });
 	}
