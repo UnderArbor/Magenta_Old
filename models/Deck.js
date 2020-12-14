@@ -17,9 +17,6 @@ const DeckSchema = new Schema({
 			open: {
 				type: Boolean,
 			},
-			length: {
-				type: Number,
-			},
 			cards: [
 				{
 					name: {
@@ -27,6 +24,9 @@ const DeckSchema = new Schema({
 					},
 					quantity: {
 						type: Number,
+					},
+					setName: {
+						type: String,
 					},
 					cardArt: {
 						type: String,
@@ -37,9 +37,11 @@ const DeckSchema = new Schema({
 					cmc: {
 						type: Number,
 					},
-					manaCost: {
-						type: String,
-					},
+					manaCost: [
+						{
+							type: String,
+						},
+					],
 					mainType: {
 						type: String,
 					},
@@ -65,13 +67,23 @@ const DeckSchema = new Schema({
 	picture: {
 		type: String,
 	},
-	colors: [
-		{
-			color: {
-				type: String,
-			},
+	colors: {
+		red: {
+			type: Number,
 		},
-	],
+		blue: {
+			type: Number,
+		},
+		green: {
+			type: Number,
+		},
+		white: {
+			type: Number,
+		},
+		black: {
+			type: Number,
+		},
+	},
 });
 
 module.exports = Deck = mongoose.model('Deck', DeckSchema);

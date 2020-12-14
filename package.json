@@ -30,6 +30,8 @@
 		"node-fetch": "^2.6.0",
 		"passport": "^0.4.1",
 		"path": "^0.12.7",
+		"react-anim-kit": "^1.0.19",
+		"react-animate-height": "^2.0.23",
 		"react-chartjs-2": "^2.10.0",
 		"react-modal-login": "^1.4.5",
 		"request": "^2.88.2",

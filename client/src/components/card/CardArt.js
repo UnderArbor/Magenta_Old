@@ -1,11 +1,20 @@
 import React from 'react';
 
-const CardArt = ({ src, offset, zIndex, position, vOffset, className }) => {
+const CardArt = ({
+	src,
+	offset,
+	zIndex,
+	position,
+	vOffset,
+	className,
+	name,
+}) => {
 	return (
 		<img
 			draggable="true"
 			className={className}
 			src={src}
+			data-name={name}
 			style={{
 				left: `${offset}`,
 				zIndex,

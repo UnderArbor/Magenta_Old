@@ -60,10 +60,10 @@ router.post('/:deckName', async (req, res) => {
 			types: types,
 			user: user,
 			picture: picture,
+			colors: { red: 0, blue: 0, green: 0, black: 0, white: 0 },
 		});
 
 		//FIND COLORS
-		var colors = [];
 		const currentTypes = newDeck.types;
 		for (var i = 0; i < currentTypes.length; ++i) {
 			for (var j = 0; j < currentTypes[i].cards.length; ++j) {
@@ -73,9 +73,27 @@ router.post('/:deckName', async (req, res) => {
 				}
 				for (var k = 0; k < currentCard.colors.length; ++k) {
 					const newColor = currentCard.colors[k];
-					if (newColor && !colors.includes(newColor)) {
-						colors.unshift(newColor);
-						newDeck.colors.push({ color: newColor });
+					switch (newColor) {
+						case 'R':
+							newDeck.colors.red =
+								newDeck.colors.red + 1 * currentCard.quantity;
+							break;
+						case 'U':
+							newDeck.colors.blue =
+								newDeck.colors.blue + 1 * currentCard.quantity;
+							break;
+						case 'G':
+							newDeck.colors.green =
+								newDeck.colors.green + 1 * currentCard.quantity;
+							break;
+						case 'W':
+							newDeck.colors.white =
+								newDeck.colors.white + 1 * currentCard.quantity;
+							break;
+						case 'B':
+							newDeck.colors.black =
+								newDeck.colors.black + 1 * currentCard.quantity;
+							break;
 					}
 				}
 			}
@@ -126,10 +144,9 @@ router.put('/types/typeChange/:deckId', async (req, res) => {
 	}
 });
 
-router.put('/types/:deckId/:cardName', async (req, res) => {
+router.put('/types/card/:deckId', async (req, res) => {
 	try {
-		const cardName = req.params.cardName;
-		const { card } = await req.body;
+		var { card } = await req.body;
 
 		//Find Correct Deck
 		const deck = await Deck.findOne({ _id: req.params.deckId });
@@ -146,13 +163,14 @@ router.put('/types/:deckId/:cardName', async (req, res) => {
 		for (var i = 0; i < deck.types.length; ++i) {
 			for (var j = 0; j < deck.types[i].cards.length; ++j) {
 				const name = deck.types[i].cards[j].name.toString();
-				if (name === cardName.toString()) {
+				if (name === card.name.toString()) {
 					exists = true;
 
-					deck.types[i].cards[j].quantity++;
+					if (card === undefined) {
+						card = deck.types[i].cards[j];
+					}
 
-					await deck.save();
-					return res.json(deck);
+					deck.types[i].cards[j].quantity++;
 				}
 			}
 		}
@@ -173,38 +191,29 @@ router.put('/types/:deckId/:cardName', async (req, res) => {
 					cards: card,
 				});
 			}
-
-			//FIND COLORS
-			deck.colors = [];
-
-			const types = deck.types;
-			for (var i = 0; i < types.length; ++i) {
-				for (var j = 0; j < types[i].cards.length; ++j) {
-					const card = types[i].cards[j];
-					for (var k = 0; k < card.colors.length; ++k) {
-						const newColor = card.colors[k];
-						if (deck.colors.length > 0) {
-							var exists = false;
-							for (var l = 0; l < deck.colors.length; ++l) {
-								if (deck.colors[l].color === newColor) {
-									exists = true;
-									break;
-								}
-							}
-							if (!exists) {
-								deck.colors.push({ color: newColor });
-							}
-						} else {
-							deck.colors.push({ color: newColor });
-						}
-					}
-				}
-			}
-			//END COLOR FINDING
-
-			await deck.save();
-			return res.json(card);
 		}
+
+		//FIND COLORS
+		for (var i = 0; i < card.colors.length; ++i) {
+			switch (card.colors[i]) {
+				case 'R':
+					deck.colors.red++;
+					break;
+				case 'U':
+					deck.colors.blue++;
+					break;
+				case 'G':
+					deck.colors.green++;
+					break;
+				case 'W':
+					deck.colors.white++;
+					break;
+				case 'B':
+					deck.colors.black++;
+					break;
+			}
+		}
+		//END COLOR FINDING
 
 		await deck.save();
 		return res.json(card);
@@ -214,58 +223,44 @@ router.put('/types/:deckId/:cardName', async (req, res) => {
 	}
 });
 
-router.delete('/types/:deckId/:cardName', async (req, res) => {
+router.delete('/types/card/:deckId/:cardId', async (req, res) => {
 	try {
-		const cardName = req.params.cardName;
-
 		const deck = await Deck.findOne({ _id: req.params.deckId });
 		if (!deck) {
 			return res.json('Deck does not exist');
 		}
 
-		//If Card Exists, Decrement It
-
 		for (var i = 0; i < deck.types.length; ++i) {
 			for (var j = 0; j < deck.types[i].cards.length; ++j) {
-				if (deck.types[i].cards[j].name.toString() === cardName) {
+				if (
+					deck.types[i].cards[j]._id.toString() === req.params.cardId.toString()
+				) {
+					//FIND COLORS
+					for (var k = 0; k < deck.types[i].cards[j].colors.length; ++k) {
+						switch (deck.types[i].cards[j].colors[k]) {
+							case 'R':
+								deck.colors.red--;
+								break;
+							case 'U':
+								deck.colors.blue--;
+								break;
+							case 'G':
+								deck.colors.green--;
+								break;
+							case 'W':
+								deck.colors.white--;
+								break;
+							case 'B':
+								deck.colors.black--;
+								break;
+						}
+					}
+					//END COLOR FINDING
+
 					if (deck.types[i].cards[j].quantity > 1) {
 						deck.types[i].cards[j].quantity--;
-
-						await deck.save();
-						return res.json(deck);
 					} else {
 						deck.types[i].cards.splice(j, 1);
-
-						//FIND COLORS
-						deck.colors = [];
-
-						const types = deck.types;
-						for (var i = 0; i < types.length; ++i) {
-							for (var j = 0; j < types[i].cards.length; ++j) {
-								const card = types[i].cards[j];
-								for (var k = 0; k < card.colors.length; ++k) {
-									const newColor = card.colors[k];
-									if (deck.colors.length > 0) {
-										var exists = false;
-										for (var l = 0; l < deck.colors.length; ++l) {
-											if (deck.colors[l].color === newColor) {
-												exists = true;
-												break;
-											}
-										}
-										if (!exists) {
-											deck.colors.push({ color: newColor });
-										}
-									} else {
-										deck.colors.push({ color: newColor });
-									}
-								}
-							}
-						}
-						//END COLOR FINDING
-
-						await deck.save();
-						return res.json(deck);
 					}
 				}
 			}

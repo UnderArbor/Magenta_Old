@@ -9,6 +9,8 @@ import {
 	DELETE_DECK,
 	DECK_ERROR,
 	ADD_CARD,
+	REMOVE_CARD,
+	INSERT_CARD,
 	INCREMENT_CARD,
 	DECREMENT_CARD,
 	HEIGHT_CHANGE,
@@ -19,6 +21,7 @@ import {
 	OPEN_TYPE,
 	ADD_TYPE,
 	REMOVE_TYPE,
+	CHANGE_CARD_SET,
 } from '../actions/types';
 
 const initialState = {
@@ -201,6 +204,47 @@ export default function (state = initialState, action) {
 			}
 			break;
 
+		case REMOVE_CARD:
+			for (index = 0; index < state.types.length; ++index) {
+				for (index2 = 0; index2 < state.types[index].cards.length; ++index2) {
+					if (payload === state.types[index].cards[index2].name) {
+						return {
+							...state,
+							types: [
+								...state.types.slice(0, index),
+								{
+									...state.types[index],
+									cards: [
+										...state.types[index].cards.slice(0, index2),
+										...state.types[index].cards.slice(index2 + 1),
+									],
+								},
+								...state.types.slice(index + 1),
+							],
+						};
+					}
+				}
+			}
+
+			break;
+
+		case INSERT_CARD:
+			return {
+				...state,
+				types: [
+					...state.types.slice(0, action.i),
+					{
+						...state.types[action.i],
+						cards: [
+							...state.types[action.i].cards.slice(0, action.j),
+							payload,
+							...state.types[action.i].cards.slice(action.j),
+						],
+					},
+					...state.types.slice(action.i + 1),
+				],
+			};
+
 		case INCREMENT_CARD:
 			for (index = 0; index < state.types.length; ++index) {
 				for (index2 = 0; index2 < state.types[index].cards.length; ++index2) {
@@ -271,6 +315,29 @@ export default function (state = initialState, action) {
 				}
 			}
 			break;
+		case CHANGE_CARD_SET:
+			return {
+				...state,
+				types: [
+					...state.types.slice(0, action.typeIndex),
+					{
+						...state.types[action.typeIndex],
+						cards: [
+							...state.types[action.typeIndex].cards.slice(0, action.cardIndex),
+							{
+								...state.types[action.typeIndex].cards[action.cardIndex],
+								setName: payload.setName,
+								cardArt: payload.cardArt,
+								cardImage: payload.cardImage,
+							},
+							...state.types[action.typeIndex].cards.slice(
+								action.cardIndex + 1
+							),
+						],
+					},
+					...state.types.slice(action.typeIndex + 1),
+				],
+			};
 		case HEIGHT_CHANGE:
 			return { ...state, height: payload };
 		case CHANGE_IMAGE:

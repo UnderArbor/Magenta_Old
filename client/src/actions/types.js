@@ -34,7 +34,11 @@ export const HIDE_COLORS = 'HIDE_COLORS';
 export const SHOW_QUANTITY = 'SHOW_QUANTITY';
 export const HIDE_QUANTITY = 'HIDE_QUANTITY';
 
+export const CHANGE_CARD_SET = 'CHANGE_CARD_SET';
+
 export const ADD_CARD = 'ADD_CARD';
+export const REMOVE_CARD = 'REMOVE_CARD';
+export const INSERT_CARD = 'INSERT_CARD';
 export const INCREMENT_CARD = 'INCREMENT_CARD';
 export const DECREMENT_CARD = 'DECREMENT_CARD';
 export const CARD_ERROR = 'CARD_ERROR';

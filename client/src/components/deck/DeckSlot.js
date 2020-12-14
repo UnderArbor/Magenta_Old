@@ -29,15 +29,33 @@ const DeckSlot = ({
 
 	const [pulled, setPulled] = useState(0);
 
+	const [showColors, setShowColors] = useState(false);
+
 	useEffect(() => {
 		if (id === deckId) {
-			var colors = [];
+			var colors = { red: 0, blue: 0, green: 0, black: 0, white: 0 };
 			for (var i = 0; i < types.length; ++i) {
 				for (var j = 0; j < types[i].cards.length; ++j) {
 					for (var k = 0; k < types[i].cards[j].colors.length; ++k) {
 						const newColor = types[i].cards[j].colors[k];
-						if (!colors.includes(newColor)) {
-							colors.unshift(newColor);
+						switch (newColor) {
+							case 'R':
+								colors.red = colors.red + 1 * types[i].cards[j].quantity;
+								break;
+							case 'U':
+								colors.blue = colors.blue + 1 * types[i].cards[j].quantity;
+								break;
+							case 'G':
+								colors.green = colors.green + 1 * types[i].cards[j].quantity;
+								break;
+							case 'W':
+								colors.white = colors.white + 1 * types[i].cards[j].quantity;
+								break;
+							case 'B':
+								colors.black = colors.black + 1 * types[i].cards[j].quantity;
+								break;
+							default:
+								break;
 						}
 					}
 				}
@@ -56,13 +74,7 @@ const DeckSlot = ({
 
 				if (pulled === 0) {
 					setPulled(1);
-
-					var colors = [];
-					for (var i = 0; i < res.data.colors.length; ++i) {
-						const color = res.data.colors[i].color;
-						colors.unshift(color);
-					}
-					setDeckColors(colors);
+					setDeckColors(res.data.colors);
 				}
 			});
 		} catch (error) {
@@ -90,7 +102,15 @@ const DeckSlot = ({
 
 	return (
 		<div className={slotFormat}>
-			<div className="deckContainer">
+			<div
+				className="deckContainer"
+				onMouseOver={() => {
+					setShowColors(true);
+				}}
+				onMouseLeave={() => {
+					setShowColors(false);
+				}}
+			>
 				<input
 					type="image"
 					className="deckButton"
@@ -118,7 +138,11 @@ const DeckSlot = ({
 					}}
 				/>
 				<p className="slotNameDisplay">{deckName}</p>
-				<DeckColors colors={deckColors} />
+				<DeckColors
+					colors={deckColors}
+					deckId={'a'.concat(id)}
+					showColors={showColors}
+				/>
 			</div>
 		</div>
 	);

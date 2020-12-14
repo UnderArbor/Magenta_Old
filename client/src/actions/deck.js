@@ -9,6 +9,8 @@ import {
 	DELETE_DECK,
 	DECK_ERROR,
 	ADD_CARD,
+	REMOVE_CARD,
+	INSERT_CARD,
 	INCREMENT_CARD,
 	DECREMENT_CARD,
 	CARD_ERROR,
@@ -20,6 +22,7 @@ import {
 	OPEN_TYPE,
 	ADD_TYPE,
 	REMOVE_TYPE,
+	CHANGE_CARD_SET,
 } from './types';
 
 import { loadUser } from './auth';
@@ -186,6 +189,50 @@ export const addCard = (card) => async (dispatch) => {
 	}
 };
 
+export const moveCard = (cardName, newIndex, newType) => async (
+	dispatch,
+	getState
+) => {
+	try {
+		console.log('Beginning');
+		var card = null;
+
+		const types = getState().deck.types;
+
+		for (var k = 0; k < types.length; ++k) {
+			for (var l = 0; l < types[k].cards.length; ++l) {
+				if (types[k].cards[l].name === cardName) {
+					card = types[k].cards[l];
+					if (types[k].name === newType && l < newIndex) {
+						newIndex--;
+					}
+					break;
+				}
+			}
+		}
+
+		console.log('Intermission 1');
+
+		dispatch({ type: REMOVE_CARD, payload: cardName });
+
+		console.log('Intermission 2');
+
+		for (var i = 0; i < types.length; ++i) {
+			if (types[i].name === newType) {
+				for (var j = 0; j < types[i].cards.length + 1; ++j) {
+					if (j === Number(newIndex) && card !== null) {
+						dispatch({ type: INSERT_CARD, payload: card, i, j });
+						break;
+					}
+				}
+			}
+		}
+		console.log('End');
+	} catch (error) {
+		dispatch({ type: CARD_ERROR });
+	}
+};
+
 export const incrementCard = (name) => async (dispatch) => {
 	try {
 		dispatch({ type: INCREMENT_CARD, payload: name });
@@ -223,6 +270,31 @@ export const changeImage = (imageURL, deckId) => async (dispatch) => {
 			await axios.post(`/api/deck/image/${deckId}`, body, config);
 		}
 		dispatch({ type: CHANGE_IMAGE, payload: imageURL });
+	} catch (error) {
+		dispatch({ type: CARD_ERROR });
+	}
+};
+
+export const changeCardSet = (setInfo, name) => async (dispatch, getState) => {
+	try {
+		const types = await getState().deck.types;
+		var index1 = null;
+		var index2 = null;
+		for (var i = 0; i < types.length; ++i) {
+			for (var j = 0; j < types[i].cards.length; ++j) {
+				if (types[i].cards[j].name === name) {
+					index1 = i;
+					index2 = j;
+					break;
+				}
+			}
+		}
+		dispatch({
+			type: CHANGE_CARD_SET,
+			payload: setInfo,
+			typeIndex: index1,
+			cardIndex: index2,
+		});
 	} catch (error) {
 		dispatch({ type: CARD_ERROR });
 	}

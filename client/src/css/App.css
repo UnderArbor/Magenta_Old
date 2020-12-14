@@ -11,6 +11,13 @@
 	padding: 0px;
 }
 
+/* Button Format
+background: transparent;
+	box-shadow: 0px 0px 0px transparent;
+	border: 0px solid transparent;
+	text-shadow: 0px 0px 0px transparent;
+*/
+
 [draggable='true'] {
 	cursor: move;
 }
@@ -178,6 +185,7 @@ button.logout {
 	position: relative;
 	height: 90%;
 	margin: 0 16px;
+	border: 1px solid black;
 }
 
 .slotNameDisplay {
@@ -209,6 +217,7 @@ button.logout {
 	padding: 4px;
 	width: calc(100% - 8px);
 	background-color: rgba(255, 255, 255, 0.3);
+	border-top: 1px solid black;
 }
 
 .deckColorDot {
@@ -224,6 +233,47 @@ button.logout {
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: contain;
+}
+
+.colorColumnContainer {
+	pointer-events: none;
+	display: flex;
+	position: absolute;
+	flex-direction: row;
+	left: 0;
+	bottom: 19px;
+	align-items: flex-end;
+	padding: 6px;
+	width: calc(100% - 8px);
+	height: 80px;
+}
+
+.colorColumn {
+	list-style-type: none;
+	width: 12px;
+	margin-right: 7px;
+	border: 1px solid black;
+	height: 100px;
+}
+
+.columnred {
+	background-color: rgb(245, 83, 83);
+}
+
+.columnblue {
+	background-color: rgb(65, 65, 252);
+}
+
+.columngreen {
+	background-color: rgb(24, 112, 24);
+}
+
+.columnwhite {
+	background-color: rgb(236, 236, 184);
+}
+
+.columnblack {
+	background-color: rgb(44, 43, 43);
 }
 
 .cardColorDot {
@@ -242,19 +292,19 @@ button.logout {
 	filter: contrast(100%);
 }
 
-.U {
+.blue {
 	content: url('../utils/images/mana/BlueMana.png');
 }
-.B {
+.black {
 	content: url('../utils/images/mana/BlackMana.png');
 }
-.G {
+.green {
 	content: url('../utils/images/mana/GreenMana.png');
 }
-.R {
+.red {
 	content: url('../utils/images/mana/RedMana.png');
 }
-.W {
+.white {
 	content: url('../utils/images/mana/WhiteMana.png');
 }
 .C {
@@ -409,6 +459,10 @@ button.logout {
 
 div.featuredDeck .slotNameDisplay {
 	font-size: 24px;
+}
+
+.deckButton {
+	opacity: 1;
 }
 
 .newArtDeck {
@@ -622,7 +676,7 @@ div.featuredDeck .slotNameDisplay {
 	color: #fff;
 	display: flex;
 	flex-direction: column;
-	margin: 8px 13px;
+	margin: 0 5px;
 	width: 90px;
 }
 
@@ -651,7 +705,7 @@ div.featuredDeck .slotNameDisplay {
 	position: absolute;
 	top: 4px;
 	right: 1px;
-	z-index: 5;
+	z-index: 12;
 	border-radius: 100%;
 	cursor: pointer;
 }
@@ -662,45 +716,98 @@ div.featuredDeck .slotNameDisplay {
 	z-index: 5;
 }
 
-.center {
+.settingSelector {
 	position: absolute;
-	height: 7px;
-	width: 7px;
-	border-radius: 100%;
-	right: -7px;
-	top: 2px;
-	z-index: 6;
-	border: 2px solid var(--secondary-color);
-	color: var(--main-bg-color);
-	background-color: var(--main-bg-color);
+	display: flex;
+	flex-direction: column;
+	background-color: rgb(25, 25, 25);
+	color: white;
+	width: 360px;
+	height: 540px;
+	top: -122px;
+	left: 100px;
+	border: 2px solid grey;
+	z-index: 12;
+	border-radius: 6px;
 }
 
-.tooth {
+.settingBar {
+	width: 88%;
+	background-color: grey;
+	margin: 16px auto;
+	z-index: 10;
+}
+
+.settingName {
+	text-align: center;
+	margin: 16px 0 8px 0;
+}
+
+.setSelector {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	position: relative;
+	margin: 4px auto;
+	width: 88%;
+	align-items: center;
+	white-space: nowrap;
+}
+
+.setInput {
+	width: 80%;
+	margin-left: 8px;
+	color: black;
+	background-color: white;
+	text-indent: 4px;
+	font-size: 16px;
+	height: 24px;
+	border: none;
+}
+
+.setDropButton {
+	background: transparent;
+	box-shadow: 0px 0px 0px transparent;
+	border: 0px solid transparent;
+	text-shadow: 0px 0px 0px transparent;
+	background-color: white;
+	height: 24px;
+	padding: 2px;
+	border-left: 1px solid lightgrey;
+}
+
+.setDropDown {
 	position: absolute;
-	z-index: 1;
-	width: 3px;
-	height: 15px;
-	background: var(--secondary-color);
+	top: 28px;
+	left: 32px;
+	width: 90%;
+	z-index: 11;
+	white-space: nowrap;
 }
 
-.tooth:nth-child(2) {
-	transform: rotate(60deg);
+.overflowY {
+	overflow-y: auto;
+	overflow-x: hidden;
+	min-height: 360px;
 }
 
-.tooth:nth-child(3) {
-	transform: rotate(120deg);
+.setOption {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	width: calc(100% - 6px);
+	height: 32px;
+	background-color: white;
+	color: black;
+	border: 3px solid grey;
+	text-indent: 4px;
+	font-size: 18px;
+	white-space: nowrap;
 }
 
-.tooth:nth-child(4) {
-	transform: rotate(180deg);
-}
-
-.tooth:nth-child(5) {
-	transform: rotate(240deg);
-}
-
-.tooth:nth-child(6) {
-	transform: rotate(300deg);
+.setOption:hover {
+	color: white;
+	background-color: grey;
 }
 
 .quantContainer {
@@ -710,8 +817,8 @@ div.featuredDeck .slotNameDisplay {
 	padding: 0 2px;
 	padding-bottom: 1px;
 	position: absolute;
-	z-index: 5;
-	bottom: 0;
+	z-index: 4;
+	top: 92px;
 	left: 0px;
 	border-bottom-left-radius: 6px;
 	border-bottom-right-radius: 6px;
@@ -762,6 +869,13 @@ div.featuredDeck .slotNameDisplay {
 	color: lightcoral;
 }
 
+.cardDropZone {
+	width: 8px;
+	height: 116px;
+	border-radius: 6px;
+	z-index: 5;
+}
+
 .cardInfo {
 	width: 95px;
 }
@@ -810,15 +924,28 @@ div.featuredDeck .slotNameDisplay {
 
 .cardImage {
 	position: absolute;
+	z-index: 15;
 	width: 350px;
-	z-index: 8;
 	border-radius: 20px;
 	filter: saturate(130%) contrast(110%);
+}
+
+.small {
+	width: 240px;
 }
 
 .hidden {
 	visibility: hidden;
 	display: none;
+}
+
+.superhidden {
+	visibility: hidden;
+	display: none;
+}
+
+.noHover {
+	pointer-events: none;
 }
 
 .unhidden {

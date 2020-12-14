@@ -1,16 +1,24 @@
 import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { incrementCard, decrementCard, changeImage } from '../../actions/deck';
+import {
+	incrementCard,
+	decrementCard,
+	changeImage,
+	moveCard,
+} from '../../actions/deck';
 import CardArt from './CardArt';
+import Settings from './Settings';
 
 import settingsIcon from '../../utils/images/Settings_Cog.png';
 
 import axios from 'axios';
 
 export const Card = ({
+	card,
 	index,
 	name,
+	set,
 	quantity,
 	manaCost,
 	src,
@@ -18,6 +26,7 @@ export const Card = ({
 	incrementCard,
 	decrementCard,
 	changeImage,
+	moveCard,
 	deckId,
 	colorDisp,
 	quantityDisp,
@@ -34,7 +43,21 @@ export const Card = ({
 		flippedX: false,
 	});
 
+	const [settingInfo, setSettings] = useState({
+		openSettings: false,
+		settingX: 0,
+		settingY: 0,
+	});
+
 	const { leftCoord, topCoord, flippedY, flippedX } = ghostCoords;
+
+	const { openSettings, settingX, settingY } = settingInfo;
+
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	};
 
 	const handleMouseMove = (e) => {
 		const buffer = 4;
@@ -106,15 +129,31 @@ export const Card = ({
 			cardImage.current.classList.add('hidden');
 		} catch (err) {}
 
+		let cardDropZones = document.querySelectorAll('.cardDropZone');
+		cardDropZones.forEach(function (item) {
+			item.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+			item.style.border = '1px solid black';
+			item.style.width = '6px';
+		});
+
 		e.dataTransfer.effectAllowed = 'move';
 		e.dataTransfer.setData('text/plain', this.src);
+		e.dataTransfer.setData('type', 'card');
+		e.dataTransfer.setData('text/name', this.dataset.name);
 	}
 
 	function handleDragEnd(e) {
 		this.style.opacity = '1';
+		let cardDropZones = document.querySelectorAll('.cardDropZone');
+		cardDropZones.forEach(function (item) {
+			item.style.backgroundColor = '';
+			item.style.border = 'none';
+			item.style.width = '8px';
+		});
 	}
 
 	function handleDragEnter(e) {
+		e.stopImmediatePropagation();
 		if (this.dataset.id === deckId) {
 			this.classList.add('newArtDeck');
 		}
@@ -132,6 +171,7 @@ export const Card = ({
 
 	function handleDragLeave(e) {
 		e.preventDefault();
+		e.stopImmediatePropagation();
 		this.classList.remove('newArtDeck');
 	}
 
@@ -145,7 +185,6 @@ export const Card = ({
 				changeImage(newURL, deckId);
 			}
 		}
-		this.style.opacity = '1';
 		e.dataTransfer.clearData();
 		return false;
 	}
@@ -164,6 +203,52 @@ export const Card = ({
 		item.addEventListener('drop', handleDrop, false);
 	});
 
+	function handleDragEnter2(e) {
+		e.stopPropagation();
+
+		this.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+		this.style.width = '6px';
+	}
+
+	function handleDragOver2(e) {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'move';
+
+		return false;
+	}
+
+	function handleDragLeave2(e) {
+		e.stopPropagation();
+
+		this.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+		this.style.width = '6px';
+	}
+
+	function handleDrop2(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
+		this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+		this.style.width = '6px';
+
+		const cardName = e.dataTransfer.getData('text/name');
+		const newIndex = this.dataset.index;
+		const newType = this.dataset.type;
+
+		moveCard(cardName, newIndex, newType);
+
+		e.dataTransfer.clearData();
+
+		return false;
+	}
+
+	let cardDropZones = document.querySelectorAll('.cardDropZone');
+	cardDropZones.forEach(function (item) {
+		item.addEventListener('dragenter', handleDragEnter2, false);
+		item.addEventListener('dragover', handleDragOver2, false);
+		item.addEventListener('dragleave', handleDragLeave2, false);
+		item.addEventListener('drop', handleDrop2, false);
+	});
+
 	const cardArt = [];
 
 	for (var i = 0; i < quantity; ++i) {
@@ -171,6 +256,7 @@ export const Card = ({
 			cardArt.push(
 				<CardArt
 					key={i}
+					name={name}
 					src={src}
 					offset={i}
 					zIndex={4}
@@ -183,11 +269,12 @@ export const Card = ({
 			cardArt.push(
 				<CardArt
 					key={i}
+					name={name}
 					src={src}
-					offset={`${i * 4}px`}
+					offset={`${i * 1}px`}
 					zIndex={`${4 - i}`}
 					position={'absolute'}
-					vOffset={`${i * -2}px`}
+					vOffset={`${i * -5}px`}
 					className={'cardArt'}
 				/>
 			);
@@ -195,11 +282,12 @@ export const Card = ({
 			cardArt.push(
 				<CardArt
 					key={i}
+					name={name}
 					src={src}
-					offset={`${i * 4}px`}
+					offset={`${i * 1 + 2}px`}
 					zIndex={`${4 - i}`}
 					position={'absolute'}
-					vOffset={`${i * -2}px`}
+					vOffset={`${i * -5 + 2}px`}
 					className={'cardArt moreCards'}
 				/>
 			);
@@ -212,15 +300,25 @@ export const Card = ({
 	for (var j = 0; j < manaCost.length; ++j) {
 		if (!manaCost[j].includes('/')) {
 			if (manaCost[j] === 'W') {
-				currentManaCost.push(<li key={j} className="cardColorDot W" alt="W" />);
+				currentManaCost.push(
+					<li key={j} className="cardColorDot white" alt="W" />
+				);
 			} else if (manaCost[j] === 'U') {
-				currentManaCost.push(<li key={j} className="cardColorDot U" alt="U" />);
+				currentManaCost.push(
+					<li key={j} className="cardColorDot blue" alt="U" />
+				);
 			} else if (manaCost[j] === 'B') {
-				currentManaCost.push(<li key={j} className="cardColorDot B" alt="B" />);
+				currentManaCost.push(
+					<li key={j} className="cardColorDot black" alt="B" />
+				);
 			} else if (manaCost[j] === 'G') {
-				currentManaCost.push(<li key={j} className="cardColorDot G" alt="G" />);
+				currentManaCost.push(
+					<li key={j} className="cardColorDot green" alt="G" />
+				);
 			} else if (manaCost[j] === 'R') {
-				currentManaCost.push(<li key={j} className="cardColorDot R" alt="R" />);
+				currentManaCost.push(
+					<li key={j} className="cardColorDot red" alt="R" />
+				);
 			} else if (manaCost[j] === 'C') {
 				currentManaCost.push(<li key={j} className="cardColorDot C" alt="C" />);
 			} else if (manaCost[j] === 'X') {
@@ -420,7 +518,9 @@ export const Card = ({
 					}}
 					onMouseLeave={() => {
 						cardImage.current.classList.add('hidden');
-						settings.current.classList.add('hidden');
+						if (!openSettings) {
+							settings.current.classList.add('hidden');
+						}
 						if (colorDisp) {
 							manaContainer.current.classList.remove('hidden');
 						}
@@ -433,18 +533,60 @@ export const Card = ({
 						</div>
 					) : null}
 					<div
+						onMouseEnter={() => cardImage.current.classList.add('hidden')}
+						onMouseLeave={() => cardImage.current.classList.remove('hidden')}
 						ref={settings}
-						className="settings hidden"
-						onClick={() => console.log('Hi')}
+						className={'settings hidden'}
+						onClick={async (e) => {
+							if (!openSettings) {
+								var cardImages = document.getElementsByClassName('cardInfo');
+								for (var i = 0; i < cardImages.length; ++i) {
+									if (
+										name ===
+										cardImages[i].childNodes[0].childNodes[
+											cardImages[i].childNodes[0].childNodes.length - 1
+										].childNodes[0].innerHTML
+									) {
+										cardImages[i].childNodes[0].classList.add('noHover');
+									} else {
+										cardImages[i].classList.add('noHover');
+									}
+								}
+								var p = {};
+								var obj = e.target;
+								p.x = obj.offsetLeft;
+								p.y = obj.offsetTop;
+								while (obj.offsetParent) {
+									p.x = p.x + obj.offsetParent.offsetLeft;
+									p.y = p.y + obj.offsetParent.offsetTop;
+									if (obj === document.getElementsByTagName('body')[0]) {
+										break;
+									} else {
+										obj = obj.offsetParent;
+									}
+								}
+								setSettings({
+									openSettings: !openSettings,
+									settingX: p.x,
+									settingY: p.y,
+								});
+								settings.current.classList.remove('hidden');
+								if (colorDisp) {
+									manaContainer.current.classList.add('superhidden');
+								}
+								let cardArt = document.querySelectorAll('.cardArtContainer');
+								cardArt.forEach(function (item) {
+									if (
+										item.childNodes[item.childNodes.length - 1].childNodes[0]
+											.innerHTML !== name
+									) {
+										item.style.opacity = '.4';
+									}
+								});
+							}
+						}}
 					>
 						<img className="settingsIcon" src={settingsIcon} alt="set" />
-						{/* <div className="center"></div>
-						<div className="tooth"></div>
-						<div className="tooth"></div>
-						<div className="tooth"></div>
-						<div className="tooth"></div>
-						<div className="tooth"></div>
-						<div className="tooth"></div> */}
 					</div>
 					{quantityDisp ? (
 						<div
@@ -458,7 +600,9 @@ export const Card = ({
 									onClick={async () => {
 										decrementCard(name);
 										if (isAuthenticated) {
-											await axios.delete(`/api/deck/types/${deckId}/${name}`);
+											await axios.delete(
+												`/api/deck/types/card/${deckId}/${card._id}`
+											);
 										}
 									}}
 								>
@@ -469,7 +613,12 @@ export const Card = ({
 									onClick={async () => {
 										incrementCard(name);
 										if (isAuthenticated) {
-											await axios.put(`/api/deck/types/${deckId}/${name}`);
+											const body = await JSON.stringify({ card });
+											await axios.put(
+												`/api/deck/types/card/${deckId}`,
+												body,
+												config
+											);
 										}
 									}}
 								>
@@ -479,15 +628,28 @@ export const Card = ({
 							<div className="cardQuantity">{`${quantity}x `}</div>
 						</div>
 					) : null}
+					<div className="infoContainer">
+						<div className="cardName">{name}</div>
+					</div>
 				</div>
-				<div className="infoContainer">
-					<div className="cardName">{name}</div>
-				</div>
+				{openSettings ? (
+					<Settings
+						name={name}
+						set={set}
+						setSettings={setSettings}
+						settingX={settingX + 27}
+						settingY={settingY - 4}
+						cardImageRef={cardImage}
+						manaContainer={manaContainer}
+						colorDisp={colorDisp}
+						openSettings={settings}
+					/>
+				) : null}
 				<img
 					ref={cardImage}
 					draggable="false"
 					className="cardImage hidden"
-					style={{ left: leftCoord, top: topCoord }}
+					style={{ left: leftCoord, top: topCoord, width: '350px' }}
 					src={src2}
 					alt="Doopsie"
 				></img>
@@ -500,6 +662,7 @@ Card.propTypes = {
 	incrementCard: PropTypes.func.isRequired,
 	decrementCard: PropTypes.func.isRequired,
 	changeImage: PropTypes.func.isRequired,
+	moveCard: PropTypes.func.isRequired,
 	deckId: PropTypes.string,
 	colorDisp: PropTypes.bool.isRequired,
 	quantityDisp: PropTypes.bool.isRequired,
@@ -517,4 +680,5 @@ export default connect(mapStateToProps, {
 	incrementCard,
 	decrementCard,
 	changeImage,
+	moveCard,
 })(Card);

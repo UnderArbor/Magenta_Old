@@ -23,7 +23,7 @@ export const TypeHeader = ({
 		});
 
 		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/plain', this.dataset.id);
+		e.dataTransfer.setData('headerInfo', this.dataset.id);
 	}
 
 	function handleDragEnd(e) {
@@ -37,6 +37,7 @@ export const TypeHeader = ({
 
 	function handleDragEnter(e) {
 		e.stopPropagation();
+
 		this.style.border = '1px solid white';
 	}
 
@@ -57,10 +58,12 @@ export const TypeHeader = ({
 		e.preventDefault();
 		this.style.border = 'none';
 
-		const prevIndex = e.dataTransfer.getData('text/plain');
+		const prevIndex = e.dataTransfer.getData('headerInfo');
 		const newIndex = this.dataset.id;
 
-		moveType(prevIndex, newIndex);
+		if (prevIndex) {
+			moveType(prevIndex, newIndex);
+		}
 
 		e.dataTransfer.clearData();
 

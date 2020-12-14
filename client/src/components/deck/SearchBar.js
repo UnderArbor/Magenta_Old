@@ -83,7 +83,7 @@ const SearchBar = ({
 					const body = await JSON.stringify({ card });
 
 					await axios
-						.put(`/api/deck/types/${deckId}/${name}`, body, config)
+						.put(`/api/deck/types/card/${deckId}`, body, config)
 						.then(() => {
 							setQuery({ ...query, loading: false, userQuery: '' });
 						})

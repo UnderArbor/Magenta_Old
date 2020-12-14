@@ -8,17 +8,42 @@ const TypeArea = ({ type, cards, indexBuffer, index }) => {
 			<TypeHeader type={type} index={index} />
 			<hr style={{ marginBottom: '16px' }} className="normal" />
 			<div className="typeGroupContainer">
-				{cards.map((card, index) => (
-					<Card
-						key={card.name}
-						name={card.name}
-						index={index + indexBuffer}
-						quantity={card.quantity}
-						manaCost={card.manaCost}
-						src={card.cardArt}
-						src2={card.cardImage}
-					/>
+				{cards.map((card, cardIndex) => (
+					<div
+						key={Number(cardIndex) + Number(indexBuffer)}
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							margin: '8px 0',
+							marginRight: '9px',
+						}}
+					>
+						<div
+							key={Number(cardIndex) + Number(indexBuffer)}
+							data-type={type.name}
+							data-index={Number(cardIndex)}
+							className="cardDropZone"
+						></div>
+						<Card
+							card={card}
+							key={card.name}
+							name={card.name}
+							set={card.setName}
+							index={cardIndex + indexBuffer}
+							quantity={card.quantity}
+							manaCost={card.manaCost}
+							src={card.cardArt}
+							src2={card.cardImage}
+						/>
+					</div>
 				))}
+				<div
+					key={type.name.concat('final')}
+					data-type={type.name}
+					data-index={cards.length}
+					style={{ margin: '8px 0' }}
+					className="cardDropZone"
+				></div>
 			</div>
 			<div className="dropZone" data-id={index + 1}></div>
 		</div>
