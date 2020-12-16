@@ -468,7 +468,7 @@ button.logout {
 .selectedDeck {
 	background-image: linear-gradient(
 		to right,
-		var(--secondary-color),
+		var(--backdrop-color),
 		rgba(0, 0, 0, 0)
 	);
 	border-top: double 4px transparent;
