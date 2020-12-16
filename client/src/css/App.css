@@ -1,9 +1,9 @@
 :root {
-	--main-bg-color: #50395b;
-	--secondary-color: #dd9;
-	--backdrop-color: #646;
-	--header-color: #a5a;
-	--header-text-color: #eae;
+	--backdrop-color: #4e1a4f;
+	--deck-color: #6a2d51;
+	--tool-color: #9f5954;
+	--main-color: #844150;
+	--header-color: #ba6d55;
 }
 
 * {
@@ -23,12 +23,9 @@ background: transparent;
 }
 
 body {
-	background-color: #212;
-	width: 85%;
-
+	background-color: var(--backdrop-color);
+	color: white;
 	margin: auto;
-	border-style: solid;
-	border-width: 3px;
 	scrollbar-width: thin;
 	scrollbar-color: var(--thumbBG) var(--scrollbarBG);
 }
@@ -57,8 +54,14 @@ hr {
 }
 
 hr.normal {
-	background-color: var(--secondary-color);
-	/* width: 100%; */
+	background-color: lightgrey;
+	width: 92%;
+	margin: 0 auto;
+}
+
+hr.typeBar {
+	background-color: white;
+	margin-bottom: 16px;
 }
 
 hr.unsaved {
@@ -87,15 +90,15 @@ a.linkRouter {
 	background-color: var(--header-color);
 	height: 48px;
 	font-size: 24px;
-	padding-left: 16px;
+	text-indent: 16px;
 	display: flex;
 	align-items: center;
 	color: var(--header-text-color);
+	width: 100%;
 }
 
 .home {
-	border-right: 2px solid var(--header-text-color);
-	background-color: var(--main-bg-color);
+	background-color: var(--main-color);
 	align-items: center;
 	flex-grow: 1;
 }
@@ -142,17 +145,38 @@ button.logout {
 .deckbuilderZone {
 	display: flex;
 	flex-direction: row;
-	width: 100%;
+	width: 85%;
+	margin: 0 auto;
 	min-height: 1000px;
+	background-color: var(--main-color);
+}
+
+.toolsList {
+	display: flex;
+	flex-direction: column;
+	margin: 6px 8px;
+	width: 268px;
 }
 
 .deckList {
 	display: flex;
 	flex-direction: column;
 	height: inherit;
-	background-color: var(--main-bg-color);
-	width: 24%;
-	border-right: 1px solid var(--secondary-color);
+	background-color: var(--tool-color);
+	border-radius: 8px;
+}
+
+.createDeckButton {
+	width: 216px;
+	margin: 16px auto;
+	border: 1px outset;
+	font-size: 36px;
+	color: var(--main-bg-color);
+	background-color: black;
+	opacity: 40%;
+	height: 100px;
+	cursor: pointer;
+	border-radius: 15px;
 }
 
 .blockedDeckList {
@@ -185,23 +209,23 @@ button.logout {
 	position: relative;
 	height: 90%;
 	margin: 0 16px;
-	border: 1px solid black;
+	border-radius: 8px;
 }
 
 .slotNameDisplay {
 	position: absolute;
-	width: calc(100% - 8px);
+	width: calc(100% - 12px);
 	top: 0;
 	left: 0;
-	padding: 4px;
+	padding: 1px 6px;
 	color: white;
 	text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
 		0.5px 0.5px 0 #000;
 	background: transparent;
 	background-color: rgba(0, 0, 0, 0.5);
 	font-size: 24px;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
 	z-index: 0;
 	pointer-events: none;
 }
@@ -218,6 +242,8 @@ button.logout {
 	width: calc(100% - 8px);
 	background-color: rgba(255, 255, 255, 0.3);
 	border-top: 1px solid black;
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
 }
 
 .deckColorDot {
@@ -454,7 +480,7 @@ button.logout {
 }
 
 .featuredDeck {
-	margin: 6px -6px;
+	margin: 0px -6px;
 }
 
 div.featuredDeck .slotNameDisplay {
@@ -463,6 +489,12 @@ div.featuredDeck .slotNameDisplay {
 
 .deckButton {
 	opacity: 1;
+	margin: 0 auto;
+	border-radius: 12px;
+	cursor: pointer;
+	height: 100%;
+	width: 100%;
+	filter: saturate(140%) contrast (140%);
 }
 
 .newArtDeck {
@@ -481,10 +513,10 @@ div.featuredDeck .slotNameDisplay {
 
 .searchBar {
 	outline: none;
-	background-color: var(--main-bg-color);
-	color: #ddd;
+	background-color: white;
+	color: black;
 	font-size: 32px;
-	margin: 16px;
+	margin: 8px;
 	text-align: left;
 	padding-left: 8px;
 	height: 32px;
@@ -496,10 +528,10 @@ div.featuredDeck .slotNameDisplay {
 .ghostBar {
 	position: absolute;
 	outline: none;
-	background-color: black;
-	color: silver;
+	background-color: white;
+	color: black;
 	font-size: 32px;
-	margin-left: 16px;
+	margin-left: 8px;
 	text-align: left;
 	padding-left: 8px;
 	height: 32px;
@@ -538,11 +570,20 @@ div.featuredDeck .slotNameDisplay {
 }
 
 .deckContent {
-	border-color: var(--secondary-color);
-	background-color: var(--backdrop-color);
-	border-width: 1px;
-	border-style: solid;
+	background-color: var(--deck-color);
 	min-height: 1000px;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
+
+.deckNameDisplay {
+	display: flex;
+	width: calc(100% - 2px);
+	height: 48px;
+	background-color: var(--header-color);
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	border: 1px solid grey;
 }
 
 .unsavedContent {
@@ -964,7 +1005,7 @@ div.featuredDeck .slotNameDisplay {
 
 .modal-box {
 	position: absolute;
-	background: var(--main-bg-color);
+	background: var(--main-color);
 	border: 3px solid var(--backdrop-color);
 	display: flex;
 	justify-content: space-between;
@@ -1023,14 +1064,15 @@ div.featuredDeck .slotNameDisplay {
 
 .deckNameField::placeholder {
 	opacity: 1;
-	color: var(--main-bg-color);
+	color: white;
 }
 
 .wholeDeck {
-	padding: 8px;
-	background-color: var(--main-bg-color);
+	padding: 6px;
 	float: right;
 	width: 84%;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
 }
 
 .importButton {
@@ -1046,9 +1088,16 @@ div.featuredDeck .slotNameDisplay {
 
 .metaTools {
 	display: 'inline-block';
-	background-color: #a8a;
+	background-color: var(--tool-color);
 	width: 100%;
 	order: 2;
+	border-radius: 8px;
+}
+
+.toolsDeckName {
+	font-weight: bold;
+	font-size: 20px;
+	margin: 8px 12px 0px 12px;
 }
 
 .metaHeader {
@@ -1061,49 +1110,87 @@ div.featuredDeck .slotNameDisplay {
 }
 
 .manaCurve {
-	background-color: #fdf;
+	background-color: white;
 	margin: 12px;
 }
 
 .registerContainer {
-	background-color: 'blue';
 	padding: '16px';
-}
-
-.columnContainer {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	padding: 16px 0;
 }
 
 .toolsContainer {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
-	margin: 16px 0;
+	justify-content: space-between;
+	margin: 0 8px;
+	margin-bottom: 6px;
 }
 
 .tools {
 	all: unset;
 	cursor: pointer;
 	text-align: center;
-	width: 128px;
+	width: 96px;
 	height: 32px;
 	font-size: 24px;
-	border-radius: 35%;
-	border: 2px solid var(--secondary-color);
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid black;
+	background-color: grey;
+	color: lightgrey;
 }
 
 .inactiveTools {
 	cursor: not-allowed;
-	color: darkgray;
-	border: 2px solid black;
-	background-color: gray;
+	opacity: 25%;
 }
 
 .activeTools {
-	background-color: var(--secondary-color);
-	color: var(--main-bg-color);
-	border: 2px solid var(--backdrop-color);
+	background-color: lightgrey;
+	color: grey;
+}
+
+.columnContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	text-indent: 12px;
+}
+
+.columnButton {
+	height: 32px;
+	width: 20px;
+	color: grey;
+	background-color: lightgrey;
+	margin-left: 16px;
+	box-shadow: 0px 0px 0px transparent;
+	border: 0px solid transparent;
+	text-shadow: 0px 0px 0px transparent;
+	border-radius: 4px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.activeColumnButton {
+	color: lightgrey;
+	background-color: grey;
+}
+
+.redButtonContainer {
+	text-align: center;
+	padding: 16px 0;
+	width: 100%;
+}
+
+.redToolsButton {
+	display: inline-block;
+	color: darkRed;
+	font-size: 16px;
+	font-weight: bold;
+	background-color: lightPink;
+	border: 1px solid black;
+	border-radius: 4px;
+	width: 90%;
+	height: auto;
+	padding: 4px;
 }

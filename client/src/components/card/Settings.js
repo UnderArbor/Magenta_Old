@@ -72,6 +72,7 @@ const Settings = ({
 			}
 		}
 		if (settingCoords.left + 360 > window.innerWidth) {
+			// eslint-disable-next-line
 			settingX = settingCoords.left - 471;
 			setSettingCoords({
 				left: settingCoords.left - 471,

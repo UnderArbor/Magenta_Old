@@ -117,15 +117,6 @@ const DeckSlot = ({
 					data-id={id}
 					src={deckImage}
 					alt="made an oopsie"
-					style={{
-						width: '100%',
-						height: '100%',
-						margin: '0 auto',
-						cursor: 'pointer',
-						borderRadius: '2px',
-						border: '1px',
-						filter: 'saturate(140%) contrast (140%)',
-					}}
 					onClick={() => {
 						if (id === deckId && func !== 'Nothing') {
 							closeDeck();
@@ -137,7 +128,9 @@ const DeckSlot = ({
 						}
 					}}
 				/>
-				<p className="slotNameDisplay">{deckName}</p>
+				{func !== 'Nothing' ? (
+					<p className="slotNameDisplay">{deckName}</p>
+				) : null}
 				<DeckColors
 					colors={deckColors}
 					deckId={'a'.concat(id)}

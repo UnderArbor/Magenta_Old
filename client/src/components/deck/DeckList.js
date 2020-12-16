@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -11,25 +11,22 @@ export const DeckList = ({ tools, height, func }) => {
 	useEffect(() => {}, [height]);
 
 	return (
-		<Fragment>
+		<div className="toolsList">
+			<ToggleTools />
 			{!tools ? (
 				<div className="deckList" style={{ height: `${height}px` }}>
-					<ToggleTools />
-					<hr className="normal" />
 					<NewDeckButton />
-					<hr style={{ backgroundColor: 'var(--secondary-color' }} />
+					<hr className="normal" />
 					<div className="deckSlots">
 						<DeckSlotList func={func} />
 					</div>
 				</div>
 			) : (
 				<div className="deckList">
-					<ToggleTools />
-					<hr className="normal" />
 					<MetaTools />
 				</div>
 			)}
-		</Fragment>
+		</div>
 	);
 };
 

@@ -9,22 +9,16 @@ import DeckSlot from '../deck/DeckSlot';
 
 import PropTypes from 'prop-types';
 
-const MetaTools = ({ deckId, isAuthenticated }) => {
+const MetaTools = ({ deckId, isAuthenticated, deckName }) => {
 	return (
-		<div>
-			<div className="metaTools">
-				<div className="toolsHeader">Name Goes Here</div>
-				<DeckSlot func={'Nothing'} key={deckId} id={deckId} />
-				<hr className="normal" />
-				<div className="manaCurve">
-					<ManaCurve />
-				</div>
-				<hr className="normal" />
-				{isAuthenticated ? <DeleteDeckButton /> : <RegisterButton />}
-				<hr className="normal" />
-				<ColumnButtons />
-				<hr className="normal" />
+		<div className="metaTools">
+			<p className="toolsDeckName">{deckName}</p>
+			<DeckSlot func={'Nothing'} key={deckId} id={deckId} />
+			<div className="manaCurve">
+				<ManaCurve />
 			</div>
+			<ColumnButtons />
+			{isAuthenticated ? <DeleteDeckButton /> : <RegisterButton />}
 		</div>
 	);
 };
@@ -32,11 +26,13 @@ const MetaTools = ({ deckId, isAuthenticated }) => {
 MetaTools.propTypes = {
 	isAuthenticated: PropTypes.bool,
 	deckId: PropTypes.string.isRequired,
+	deckName: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 	deckId: state.deck.deckId,
+	deckName: state.deck.deckName,
 });
 
 export default connect(mapStateToProps)(MetaTools);

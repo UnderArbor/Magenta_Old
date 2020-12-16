@@ -25,9 +25,9 @@ const App = () => {
 
 	return (
 		<Provider store={store}>
+			<Header />
 			<Fragment>
 				<ModalAuthenticator />
-				<Header />
 				<div ref={scrollRef} className="deckbuilderZone">
 					<DeckList func={executeScroll} />
 					<Deck />

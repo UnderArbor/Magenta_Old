@@ -6,7 +6,7 @@ const TypeArea = ({ type, cards, indexBuffer, index }) => {
 	return (
 		<div className="typeArea" style={{ width: '100%', float: 'left' }}>
 			<TypeHeader type={type} index={index} />
-			<hr style={{ marginBottom: '16px' }} className="normal" />
+			<hr className="typeBar" />
 			<div className="typeGroupContainer">
 				{cards.map((card, cardIndex) => (
 					<div

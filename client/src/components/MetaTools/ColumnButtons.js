@@ -21,21 +21,40 @@ const ColumnButtons = ({
 	hideQuantity,
 }) => {
 	return (
-		<div style={{ textAlign: 'center' }}>
+		<div className="columnContainer">
 			<h3
 				style={{
 					display: 'inline-block',
 					margin: '16px 0',
 				}}
 			>
-				Column Count
+				Columns:
 			</h3>
-			<div className="columnContainer">
-				<button onClick={() => columnChange(1)}>1</button>
-				<button onClick={() => columnChange(2)}>2</button>
-				<button onClick={() => columnChange(3)}>3</button>
-			</div>
-			{colorDisp ? (
+			<button
+				className={
+					columnCount === 1 ? 'columnButton activeColumnButton' : 'columnButton'
+				}
+				onClick={() => columnChange(1)}
+			>
+				1
+			</button>
+			<button
+				className={
+					columnCount === 2 ? 'columnButton activeColumnButton' : 'columnButton'
+				}
+				onClick={() => columnChange(2)}
+			>
+				2
+			</button>
+			<button
+				className={
+					columnCount === 3 ? 'columnButton activeColumnButton' : 'columnButton'
+				}
+				onClick={() => columnChange(3)}
+			>
+				3
+			</button>
+			{/* {colorDisp ? (
 				<button onClick={() => hideColors()}>Check</button>
 			) : (
 				<button onClick={() => showColors()}>Uncheck</button>
@@ -44,7 +63,7 @@ const ColumnButtons = ({
 				<button onClick={() => hideQuantity()}>Check</button>
 			) : (
 				<button onClick={() => showQuantity()}>Uncheck</button>
-			)}
+			)} */}
 		</div>
 	);
 };

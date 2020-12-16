@@ -11,14 +11,7 @@ export const Header = ({ isAuthenticated, logout, openModalAuth }) => {
 
 	return (
 		<div className="header">
-			<div className="home">
-				{/* <a className="linkRouter" href="#">
-					Home
-				</a>
-				<a className="linkRouter" href="#">
-					Social
-				</a> */}
-			</div>
+			<div className="home"></div>
 			<div className="headerButton">
 				{!isAuthenticated ? (
 					<button className="login" onClick={() => openModalAuth()}>

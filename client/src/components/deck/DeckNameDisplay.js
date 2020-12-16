@@ -2,15 +2,7 @@ import React from 'react';
 
 const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 	return (
-		<div
-			className="deckNameDisplay"
-			style={{
-				width: '100%',
-				height: '48px',
-				backgroundColor: 'var(--secondary-color)',
-				display: 'flex',
-			}}
-		>
+		<div className="deckNameDisplay">
 			<input
 				onBlur={() => keyPress('blur')}
 				className="deckNameField"
@@ -19,9 +11,9 @@ const DeckNameDisplay = ({ deckName, tempName, setTempName, keyPress }) => {
 					boxSizing: 'border-box',
 					width: '100%',
 					padding: '3px',
-					backgroundColor: 'var(--secondary-color)',
+					backgroundColor: 'var(--header-color)',
 					border: '0px',
-					color: 'black',
+					color: 'white',
 					fontSize: '36px',
 					paddingLeft: '12px',
 					borderTopRightRadius: '10px',

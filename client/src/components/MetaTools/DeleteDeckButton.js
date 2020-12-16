@@ -9,28 +9,11 @@ const DeleteDeckButton = ({ isAuthenticated, deckId, deleteDeck }) => {
 
 	if (isAuthenticated) {
 		return (
-			<div
-				style={{
-					textAlign: 'center',
-					padding: '32px 0',
-					width: '100%',
-				}}
-			>
+			<div className="redButtonContainer">
 				{!reconfirm ? (
 					<div>
 						<button
-							style={{
-								display: 'inline-block',
-								color: 'darkRed',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								backgroundColor: 'lightPink',
-								border: '1px solid black',
-								borderRadius: '4px',
-								width: '90%',
-								height: 'auto',
-								padding: '4px',
-							}}
+							className="redToolsButton"
 							onClick={() => setReconfirm(true)}
 						>
 							DELETE DECK

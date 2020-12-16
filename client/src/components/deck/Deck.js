@@ -94,8 +94,6 @@ const Deck = ({
 					/>
 
 					<SearchBar deckId={deckId} />
-
-					<hr className="normal" />
 					{!loading ? (
 						<CardList />
 					) : (

@@ -14,18 +14,6 @@ const NewDeckButton = ({
 		<Fragment>
 			<button
 				className="createDeckButton"
-				style={{
-					border: '1px outset',
-					fontSize: '36px',
-					color: 'var(--main-bg-color)',
-					backgroundColor: 'black',
-					margin: '20px',
-					opacity: '40%',
-					width: '80%',
-					height: '100px',
-					cursor: 'pointer',
-					borderRadius: '15px',
-				}}
 				onClick={() => {
 					closeDeck();
 					openDeck(-1);

@@ -17,7 +17,7 @@ const SetDropDown = ({ sets, image, setOpenSets, changeCardSet }) => {
 			// Unbind the event listener on clean up
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [setDropDown]);
+	}, [setDropDown, setOpenSets]);
 	return (
 		<div
 			ref={setDropDown}
