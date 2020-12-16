@@ -14,6 +14,9 @@ const NewDeckButton = ({
 		<Fragment>
 			<button
 				className="createDeckButton"
+				style={{ opacity: '40%' }}
+				onMouseEnter={(e) => (e.target.style.opacity = '60%')}
+				onMouseLeave={(e) => (e.target.style.opacity = '40%')}
 				onClick={() => {
 					closeDeck();
 					openDeck(-1);

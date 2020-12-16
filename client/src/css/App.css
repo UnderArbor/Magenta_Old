@@ -173,7 +173,6 @@ button.logout {
 	font-size: 36px;
 	color: var(--main-bg-color);
 	background-color: black;
-	opacity: 40%;
 	height: 100px;
 	cursor: pointer;
 	border-radius: 15px;
@@ -499,10 +498,6 @@ div.featuredDeck .slotNameDisplay {
 
 .newArtDeck {
 	opacity: 0.4;
-}
-
-.createDeckButton:hover {
-	opacity: 60%;
 }
 
 .searchArea {
