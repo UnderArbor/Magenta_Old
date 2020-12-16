@@ -23,6 +23,7 @@ const ToggleTools = ({ tools, deckName, openTools, closeTools }) => {
 				className={toolsStyle}
 				disabled={!deckName}
 				onClick={() => openTools()}
+				style={{ opacity: deckName === '' ? '25%' : '100%' }}
 			>
 				Tools
 			</button>
