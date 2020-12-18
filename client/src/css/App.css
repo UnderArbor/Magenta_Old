@@ -88,23 +88,24 @@ a.linkRouter {
 
 .header {
 	background-color: var(--header-color);
-	height: 48px;
+	/* height: 48px; */
 	font-size: 24px;
 	text-indent: 16px;
-	display: flex;
-	align-items: center;
 	color: var(--header-text-color);
 	width: 100%;
 }
 
-.home {
-	background-color: var(--main-color);
+.headerContent {
+	width: 85%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: row;
 	align-items: center;
-	flex-grow: 1;
+	justify-content: space-between;
 }
 
-.headerButton {
-	border-right: 2px solid var(--header-text-color);
+.home {
+	background-color: var(--main-color);
 	align-items: center;
 	flex-grow: 1;
 }
@@ -567,8 +568,7 @@ div.featuredDeck .slotNameDisplay {
 .deckContent {
 	background-color: var(--deck-color);
 	min-height: 1000px;
-	border-top-left-radius: 8px;
-	border-top-right-radius: 8px;
+	border-radius: 8px;
 }
 
 .deckNameDisplay {
@@ -712,7 +712,7 @@ div.featuredDeck .slotNameDisplay {
 	color: #fff;
 	display: flex;
 	flex-direction: column;
-	margin: 0 5px;
+	margin: 0 14px;
 	width: 90px;
 }
 
@@ -765,6 +765,7 @@ div.featuredDeck .slotNameDisplay {
 	border: 2px solid grey;
 	z-index: 12;
 	border-radius: 6px;
+	font-size: 24px;
 }
 
 .settingBar {
@@ -815,8 +816,8 @@ div.featuredDeck .slotNameDisplay {
 .setDropDown {
 	position: absolute;
 	top: 28px;
-	left: 32px;
-	width: 90%;
+	left: 45px;
+	width: 85.8%;
 	z-index: 11;
 	white-space: nowrap;
 }
@@ -906,14 +907,44 @@ div.featuredDeck .slotNameDisplay {
 }
 
 .cardDropZone {
-	width: 8px;
 	height: 116px;
+	z-index: 1;
+	background-color: transparent;
+}
+
+.leftCardDropZone {
+	width: 63px;
+	margin-right: -62px;
+}
+
+.extendedLeftZone {
+	width: 168px;
+	margin-left: -122px;
+}
+
+.rightCardDropZone {
+	width: 56px;
+	margin-left: -56px;
+}
+
+.extendedRightZone {
+	width: 170px;
+	margin-right: -124px;
+}
+
+.acceptDrop {
+	z-index: 6;
+}
+
+.cardHolder {
+	opacity: 0.5;
+	border: 2px dashed grey;
+	height: 110px;
 	border-radius: 6px;
-	z-index: 5;
 }
 
 .cardInfo {
-	width: 95px;
+	width: 96px;
 }
 
 .infoContainer {

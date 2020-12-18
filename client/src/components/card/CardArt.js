@@ -8,6 +8,8 @@ const CardArt = ({
 	vOffset,
 	className,
 	name,
+	typeIndex,
+	typeName,
 }) => {
 	return (
 		<img
@@ -15,6 +17,8 @@ const CardArt = ({
 			className={className}
 			src={src}
 			data-name={name}
+			data-index={typeIndex}
+			data-typename={typeName}
 			style={{
 				left: `${offset}`,
 				zIndex,

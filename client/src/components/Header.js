@@ -11,66 +11,26 @@ export const Header = ({ isAuthenticated, logout, openModalAuth }) => {
 
 	return (
 		<div className="header">
-			<div className="home"></div>
-			<div className="headerButton">
-				{!isAuthenticated ? (
-					<button className="login" onClick={() => openModalAuth()}>
-						Log In
-					</button>
-				) : (
-					<button className="logout" onClick={() => logout()}>
-						Log Out
-					</button>
-				)}
-				<button
-					className="colorButton"
-					onClick={() => setColorToggle(!colorToggle)}
+			<div className="headerContent">
+				<div
+					style={{
+						float: 'left',
+						fontSize: '36px',
+					}}
 				>
-					Toggle Colors
-				</button>
-			</div>
-			<div>
-				{colorToggle ? (
-					<div className="colorSelection">
-						<ColorPicker
-							color={style.getPropertyValue('--header-color')}
-							title="Header"
-							cssVar="--header-color"
-						/>
-						<ColorPicker
-							color={style.getPropertyValue('--header-text-color')}
-							title="H-text"
-							cssVar="--header-text-color"
-						/>
-						<ColorPicker
-							color={style.getPropertyValue('--main-bg-color')}
-							title="Body"
-							cssVar="--main-bg-color"
-						/>
-						<ColorPicker
-							color={style.getPropertyValue('--secondary-color')}
-							title="Secondary"
-							cssVar="--secondary-color"
-						/>
-						<ColorPicker
-							color={style.getPropertyValue('--backdrop-color')}
-							title="Container"
-							cssVar="--backdrop-color"
-						/>
-					</div>
-				) : (
-					<div
-						style={{
-							float: 'left',
-							fontSize: '24px',
-							marginRight: '434px',
-							paddingLeft: '16px',
-							flexGrow: '2',
-						}}
-					>
-						Magenta 0.1
-					</div>
-				)}
+					Magenta 0.2
+				</div>
+				<div className="headerButton">
+					{!isAuthenticated ? (
+						<button className="login" onClick={() => openModalAuth()}>
+							Log In
+						</button>
+					) : (
+						<button className="logout" onClick={() => logout()}>
+							Log Out
+						</button>
+					)}
+				</div>
 			</div>
 		</div>
 	);

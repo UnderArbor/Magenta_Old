@@ -17,6 +17,8 @@ import axios from 'axios';
 export const Card = ({
 	card,
 	index,
+	typeIndex,
+	typeName,
 	name,
 	set,
 	quantity,
@@ -125,15 +127,27 @@ export const Card = ({
 		e.stopImmediatePropagation();
 		this.style.opacity = '0.4';
 
-		try {
+		if (cardImage.current !== null) {
 			cardImage.current.classList.add('hidden');
-		} catch (err) {}
+		}
+
+		let cardImages = document.querySelectorAll('.cardImage');
+		cardImages.forEach(function (item) {
+			item.classList.add('superhidden');
+		});
 
 		let cardDropZones = document.querySelectorAll('.cardDropZone');
 		cardDropZones.forEach(function (item) {
-			item.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
-			item.style.border = '1px solid black';
-			item.style.width = '6px';
+			if (item.dataset.type === e.target.dataset.typename) {
+				if (
+					Number(item.dataset.index) !== Number(e.target.dataset.index) &&
+					Number(item.dataset.index) !== Number(e.target.dataset.index) + 1
+				) {
+					item.classList.add('acceptDrop');
+				}
+			} else {
+				item.classList.add('acceptDrop');
+			}
 		});
 
 		e.dataTransfer.effectAllowed = 'move';
@@ -146,9 +160,12 @@ export const Card = ({
 		this.style.opacity = '1';
 		let cardDropZones = document.querySelectorAll('.cardDropZone');
 		cardDropZones.forEach(function (item) {
-			item.style.backgroundColor = '';
-			item.style.border = 'none';
-			item.style.width = '8px';
+			item.classList.remove('acceptDrop');
+		});
+
+		let cardImages = document.querySelectorAll('.cardImage');
+		cardImages.forEach(function (item) {
+			item.classList.remove('superhidden');
 		});
 	}
 
@@ -204,13 +221,32 @@ export const Card = ({
 	});
 
 	function handleDragEnter2(e) {
+		e.stopImmediatePropagation();
 		e.stopPropagation();
+		e.preventDefault();
 
-		this.style.backgroundColor = 'rgba(255, 255, 255, 1)';
-		this.style.width = '6px';
+		const currentType = String(this.dataset.type);
+		const currentIndex = Number(this.dataset.index);
+
+		let cardHolder = document.querySelectorAll('.cardHolder');
+		cardHolder.forEach(function (item) {
+			if (
+				Number(item.dataset.index) === currentIndex &&
+				e.target.classList.contains('acceptDrop') &&
+				item.classList.contains(currentType)
+			) {
+				if (e.target.classList.contains('leftCardDropZone')) {
+					e.target.classList.add('extendedLeftZone');
+				} else if (e.target.classList.contains('rightCardDropZone')) {
+					e.target.classList.add('extendedRightZone');
+				}
+				item.classList.remove('hidden');
+			}
+		});
 	}
 
 	function handleDragOver2(e) {
+		e.stopImmediatePropagation();
 		e.preventDefault();
 		e.dataTransfer.dropEffect = 'move';
 
@@ -218,23 +254,33 @@ export const Card = ({
 	}
 
 	function handleDragLeave2(e) {
+		e.stopImmediatePropagation();
 		e.stopPropagation();
-
-		this.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
-		this.style.width = '6px';
+		let cardHolder = document.querySelectorAll('.cardHolder');
+		cardHolder.forEach(function (item) {
+			item.classList.add('hidden');
+			if (e.target.classList.contains('extendedLeftZone')) {
+				e.target.classList.remove('extendedLeftZone');
+			} else if (e.target.classList.contains('extendedRightZone')) {
+				e.target.classList.remove('extendedRightZone');
+			}
+		});
 	}
 
 	function handleDrop2(e) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
-		this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-		this.style.width = '6px';
 
 		const cardName = e.dataTransfer.getData('text/name');
 		const newIndex = this.dataset.index;
 		const newType = this.dataset.type;
 
 		moveCard(cardName, newIndex, newType);
+		let cardHolder = document.querySelectorAll('.cardHolder');
+		cardHolder.forEach(function (item) {
+			item.classList.add('hidden');
+			e.target.classList.remove('extendedLeftZone');
+		});
 
 		e.dataTransfer.clearData();
 
@@ -263,6 +309,8 @@ export const Card = ({
 					position={'relative'}
 					vOffset={i}
 					className={'cardArt'}
+					typeIndex={typeIndex}
+					typeName={typeName}
 				/>
 			);
 		} else if (i < 4) {
@@ -276,6 +324,8 @@ export const Card = ({
 					position={'absolute'}
 					vOffset={`${i * -5}px`}
 					className={'cardArt'}
+					typeIndex={typeIndex}
+					typeName={typeName}
 				/>
 			);
 		} else {
@@ -289,6 +339,8 @@ export const Card = ({
 					position={'absolute'}
 					vOffset={`${i * -5 + 2}px`}
 					className={'cardArt moreCards'}
+					typeIndex={typeIndex}
+					typeName={typeName}
 				/>
 			);
 			break;
