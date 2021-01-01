@@ -53,7 +53,7 @@ export const CardList = ({ types, columnCount }) => {
 							<hr
 								key={type.name.concat('hr')}
 								style={{ marginBottom: '16px' }}
-								className="normal"
+								className="typeBar"
 							/>
 							<div className="dropZone" data-id={Number(index)}></div>
 						</div>

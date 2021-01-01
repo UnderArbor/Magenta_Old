@@ -5,6 +5,7 @@ import getSets from '../../utils/functions/getSets';
 import SetDropDown from './SetDropDown';
 
 import blackImage from '../../utils/images/Black.png';
+import spinnerGif from '../../utils/gifs/spinner.gif';
 import { changeCardSet } from '../../actions/deck';
 
 const Settings = ({
@@ -14,27 +15,27 @@ const Settings = ({
 	settingY,
 	setSettings,
 	changeCardSet,
-	manaContainer,
-	colorDisp,
-	openSettings,
+	settingsRef,
+	settingsIconRef,
 }) => {
-	const [sets, setSets] = useState([]);
+	const [sets, setSets] = useState({ setList: [], loading: false });
+	const [filterSets, setFilterSets] = useState([]);
 	const [openSets, setOpenSets] = useState(false);
 	const [imageCoords, setImageCoords] = useState({
 		top: Number(120),
 		left: Number(364),
 	});
-	const [settingCoords, setSettingCoords] = useState({
-		top: settingY,
-		left: settingX,
-	});
+	const [userQuery, setUserQuery] = useState('');
+
 	const setImage = useRef(null);
 	const settingWindow = useRef(null);
 
 	useEffect(() => {
 		async function getData() {
+			setSets({ ...sets, loading: true });
 			const newSets = await getSets(name);
-			setSets(newSets);
+			setSets({ ...sets, setList: newSets, loading: false });
+			setFilterSets(newSets);
 		}
 		getData();
 	}, [name]);
@@ -47,15 +48,13 @@ const Settings = ({
 			) {
 				setSettings(false);
 
-				let cardArt = document.querySelectorAll('.cardArtContainer');
+				let cardArt = document.querySelectorAll('.cardInfo');
 				cardArt.forEach(function (item) {
 					item.style.opacity = '1';
 				});
 
-				if (colorDisp) {
-					manaContainer.current.classList.remove('superhidden');
-				}
-				openSettings.current.classList.add('hidden');
+				settingsRef.current.classList.remove('settingsHover');
+				settingsIconRef.current.classList.remove('settingsIconHover');
 				var cardImages = document.getElementsByClassName('cardInfo');
 				for (var i = 0; i < cardImages.length; ++i) {
 					if (
@@ -69,15 +68,12 @@ const Settings = ({
 						cardImages[i].classList.remove('noHover');
 					}
 				}
+				var typeHeaders = document.getElementsByClassName('typeHeader');
+				for (var j = 0; j < typeHeaders.length; ++j) {
+					typeHeaders[j].classList.remove('noHover');
+					typeHeaders[j].style.opacity = '1';
+				}
 			}
-		}
-		if (settingCoords.left + 360 > window.innerWidth) {
-			// eslint-disable-next-line
-			settingX = settingCoords.left - 471;
-			setSettingCoords({
-				left: settingCoords.left - 471,
-				top: settingCoords.top,
-			});
 		}
 
 		if (settingX + 360 + imageCoords.left > window.innerWidth) {
@@ -88,11 +84,33 @@ const Settings = ({
 
 		// Bind the event listener
 		document.addEventListener('mousedown', handleClickOutside);
+
 		return () => {
 			// Unbind the event listener on clean up
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [settingWindow]);
+
+		// eslint-disable-next-line
+	}, [settingWindow, settingsRef]);
+
+	useEffect(() => {
+		if (userQuery !== '' && sets.loading === false) {
+			var recommendArray = [];
+			for (var i = 0; i < sets.setList.length; ++i) {
+				if (
+					sets.setList[i].setName
+						.toUpperCase()
+						.startsWith(userQuery.toUpperCase())
+				) {
+					recommendArray.push(sets.setList[i]);
+				}
+			}
+			setFilterSets(recommendArray);
+			setOpenSets(true);
+		} else {
+			setOpenSets(false);
+		}
+	}, [userQuery, sets.loading]);
 
 	const updateCard = (setInfo) => {
 		changeCardSet(setInfo, name);
@@ -102,7 +120,7 @@ const Settings = ({
 		<div
 			ref={settingWindow}
 			className="settingSelector"
-			style={{ top: settingCoords.top, left: settingCoords.left }}
+			style={{ top: settingY + 'px', left: settingX + 'px' }}
 		>
 			<div>
 				<p className="settingName">{name}</p>
@@ -110,20 +128,35 @@ const Settings = ({
 			</div>
 			<div className="setSelector">
 				<p>Set: </p>
-				<input className="setInput" placeholder={set}></input>
+				<input
+					className="setInput"
+					type="text"
+					placeholder={set}
+					value={userQuery}
+					onChange={(e) => {
+						setUserQuery(e.target.value);
+					}}
+					required
+				></input>
+				{sets.loading ? (
+					<img className="loadingSpinner" src={spinnerGif}></img>
+				) : null}
 				<button
 					className="setDropButton"
-					onClick={() => setOpenSets(!openSets)}
+					onClick={() => {
+						setOpenSets(!openSets);
+					}}
 				>
-					Down
+					...
 				</button>
 
 				{openSets ? (
 					<SetDropDown
-						sets={sets}
+						sets={filterSets}
 						image={setImage}
 						setOpenSets={setOpenSets}
 						changeCardSet={updateCard}
+						userQuery={userQuery}
 					/>
 				) : null}
 			</div>

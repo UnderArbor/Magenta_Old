@@ -1,7 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import SetOption from './SetOption';
 
-const SetDropDown = ({ sets, image, setOpenSets, changeCardSet }) => {
+const SetDropDown = ({
+	sets,
+	image,
+	setOpenSets,
+	changeCardSet,
+	userQuery,
+}) => {
 	const setDropDown = useRef(null);
 
 	useEffect(() => {

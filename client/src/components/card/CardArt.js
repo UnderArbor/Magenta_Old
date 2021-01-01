@@ -13,7 +13,6 @@ const CardArt = ({
 }) => {
 	return (
 		<img
-			draggable="true"
 			className={className}
 			src={src}
 			data-name={name}

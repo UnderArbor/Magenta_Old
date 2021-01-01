@@ -31,6 +31,33 @@ export const Header = ({ isAuthenticated, logout, openModalAuth }) => {
 						</button>
 					)}
 				</div>
+				{/* <div className="colorSelection">
+					<ColorPicker
+						color={style.getPropertyValue('--header-color')}
+						title="Header"
+						cssVar="--header-color"
+					/>
+					<ColorPicker
+						color={style.getPropertyValue('--main-color')}
+						title="Main"
+						cssVar="--main-color"
+					/>
+					<ColorPicker
+						color={style.getPropertyValue('--tool-color')}
+						title="Tool"
+						cssVar="--tool-color"
+					/>
+					<ColorPicker
+						color={style.getPropertyValue('--deck-color')}
+						title="Deck"
+						cssVar="--deck-color"
+					/>
+					<ColorPicker
+						color={style.getPropertyValue('--backdrop-color')}
+						title="Backdrop"
+						cssVar="--backdrop-color"
+					/>
+				</div> */}
 			</div>
 		</div>
 	);

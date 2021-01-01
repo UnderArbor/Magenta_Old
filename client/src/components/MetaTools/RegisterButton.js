@@ -8,7 +8,7 @@ const RegisterButton = ({ openModalAuth }) => {
 	return (
 		<div className="redButtonContainer">
 			<button className="redToolsButton" onClick={() => openModalAuth()}>
-				Login/Register
+				Login / Register
 			</button>
 		</div>
 	);

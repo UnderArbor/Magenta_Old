@@ -37,6 +37,7 @@ export const Card = ({
 	const cardImage = useRef(null);
 	const manaContainer = useRef(null);
 	const settings = useRef(null);
+	const settingsIconRef = useRef(null);
 
 	const [ghostCoords, setGhostCoords] = useState({
 		leftCoord: 0,
@@ -47,13 +48,11 @@ export const Card = ({
 
 	const [settingInfo, setSettings] = useState({
 		openSettings: false,
-		settingX: 0,
-		settingY: 0,
 	});
 
 	const { leftCoord, topCoord, flippedY, flippedX } = ghostCoords;
 
-	const { openSettings, settingX, settingY } = settingInfo;
+	const { openSettings } = settingInfo;
 
 	const config = {
 		headers: {
@@ -62,8 +61,6 @@ export const Card = ({
 	};
 
 	const handleMouseMove = (e) => {
-		const buffer = 4;
-
 		const windowHeight =
 			window.innerHeight || document.documentElement.clientHeight;
 
@@ -73,63 +70,80 @@ export const Card = ({
 		const image = document.getElementsByClassName('cardImage');
 		const bounding = image[index].getBoundingClientRect();
 
-		//Flip vertically and horizontally
-		if (
-			(bounding.bottom > windowHeight ||
-				(flippedY === true &&
-					bounding.bottom + bounding.height > windowHeight)) &&
-			(bounding.right > windowWidth ||
-				(flippedX === true && bounding.right + bounding.width > windowWidth))
-		) {
-			setGhostCoords({
-				leftCoord: e.nativeEvent.pageX - buffer - bounding.width + 'px',
-				topCoord: e.nativeEvent.pageY - buffer - bounding.height + 'px',
-				flippedY: true,
-				flippedX: true,
-			});
+		if (bounding.height > 0) {
+			var p = {};
+			var obj = e.target;
+			p.x = obj.offsetLeft;
+			p.y = obj.offsetTop;
+			while (obj.offsetParent) {
+				p.x = p.x + obj.offsetParent.offsetLeft;
+				p.y = p.y + obj.offsetParent.offsetTop;
+				if (obj === document.getElementsByTagName('body')[0]) {
+					break;
+				} else {
+					obj = obj.offsetParent;
+				}
+			}
 
-			//Flip vertically
-		} else if (
-			bounding.bottom > windowHeight ||
-			(flippedY === true && bounding.bottom + bounding.height > windowHeight)
-		) {
-			setGhostCoords({
-				leftCoord: e.nativeEvent.pageX + 1 + 'px',
-				topCoord: e.nativeEvent.pageY - buffer - bounding.height + 'px',
-				flippedY: true,
-				flippedX: false,
-			});
+			p.x = p.x + e.target.offsetWidth + 8;
 
-			//Flip horizontally
-		} else if (
-			bounding.right > windowWidth ||
-			(flippedX === true && bounding.right + bounding.width > windowWidth)
-		) {
-			setGhostCoords({
-				leftCoord: e.nativeEvent.pageX - buffer - bounding.width + 'px',
-				topCoord: e.nativeEvent.pageY + 1 + 'px',
-				flippedY: false,
-				flippedX: true,
-			});
+			p.y = p.y - 3;
 
-			//Standard orientation
-		} else {
-			setGhostCoords({
-				leftCoord: e.nativeEvent.pageX + 1 + 'px',
-				topCoord: e.nativeEvent.pageY + 1 + 'px',
-				flippedY: false,
-				flippedX: false,
-			});
+			//Flip vertically and horizontally
+			if (
+				(bounding.bottom > windowHeight ||
+					(flippedY === true &&
+						bounding.bottom + bounding.height > windowHeight)) &&
+				(bounding.right > windowWidth ||
+					(flippedX === true &&
+						bounding.right + bounding.width + e.target.width > windowWidth))
+			) {
+				setGhostCoords({
+					leftCoord: p.x - e.target.width - bounding.width - 11,
+					topCoord: p.y - bounding.height + 116,
+					flippedY: true,
+					flippedX: true,
+				});
+
+				//Flip vertically
+			} else if (
+				bounding.bottom > windowHeight ||
+				(flippedY === true && bounding.bottom + bounding.height > windowHeight)
+			) {
+				setGhostCoords({
+					leftCoord: p.x,
+					topCoord: p.y - bounding.height + 116,
+					flippedY: true,
+					flippedX: false,
+				});
+
+				//Flip horizontally
+			} else if (
+				bounding.right > windowWidth ||
+				(flippedX === true &&
+					bounding.right + bounding.width + e.target.width > windowWidth)
+			) {
+				setGhostCoords({
+					leftCoord: p.x - e.target.width - bounding.width - 11,
+					topCoord: p.y,
+					flippedY: false,
+					flippedX: true,
+				});
+
+				//Standard orientation
+			} else {
+				setGhostCoords({
+					leftCoord: p.x,
+					topCoord: p.y,
+					flippedY: false,
+					flippedX: false,
+				});
+			}
 		}
 	};
 
 	function handleDragStart(e) {
 		e.stopImmediatePropagation();
-		this.style.opacity = '0.4';
-
-		if (cardImage.current !== null) {
-			cardImage.current.classList.add('hidden');
-		}
 
 		let cardImages = document.querySelectorAll('.cardImage');
 		cardImages.forEach(function (item) {
@@ -150,14 +164,32 @@ export const Card = ({
 			}
 		});
 
+		let cardArts = document.querySelectorAll('.cardArt');
+		for (var i = 0; i < cardArts.length; ++i) {
+			if (cardArts[i].dataset.name === this.dataset.name) {
+				e.dataTransfer.setDragImage(cardArts[i], 54, 60);
+				e.dataTransfer.setData('text/plain', cardArts[i].src);
+				break;
+			}
+		}
+		var cardInfo = document.getElementsByClassName('cardInfo');
+		for (var j = 0; j < cardInfo.length; ++j) {
+			if (
+				cardInfo[j].childNodes[1].childNodes[0].innerHTML !== this.dataset.name
+			) {
+				cardInfo[j].style.opacity = '.4';
+			}
+		}
+
 		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/plain', this.src);
 		e.dataTransfer.setData('type', 'card');
 		e.dataTransfer.setData('text/name', this.dataset.name);
 	}
 
 	function handleDragEnd(e) {
-		this.style.opacity = '1';
+		e.stopImmediatePropagation();
+		e.target.classList.remove('settingsHover');
+		e.target.childNodes[0].classList.remove('settingsIconHover');
 		let cardDropZones = document.querySelectorAll('.cardDropZone');
 		cardDropZones.forEach(function (item) {
 			item.classList.remove('acceptDrop');
@@ -167,6 +199,10 @@ export const Card = ({
 		cardImages.forEach(function (item) {
 			item.classList.remove('superhidden');
 		});
+		var cardInfo = document.getElementsByClassName('cardInfo');
+		for (var i = 0; i < cardInfo.length; ++i) {
+			cardInfo[i].style.opacity = '1';
+		}
 	}
 
 	function handleDragEnter(e) {
@@ -206,7 +242,7 @@ export const Card = ({
 		return false;
 	}
 
-	let targetArt = document.querySelectorAll('.cardArt');
+	let targetArt = document.querySelectorAll('.settings');
 	targetArt.forEach(function (item) {
 		item.addEventListener('dragstart', handleDragStart, false);
 		item.addEventListener('dragend', handleDragEnd, false);
@@ -560,21 +596,16 @@ export const Card = ({
 			<div className="cardInfo">
 				<div
 					className="cardArtContainer"
-					onMouseMove={(e) => handleMouseMove(e)}
 					onMouseEnter={() => {
-						if (colorDisp) {
-							manaContainer.current.classList.add('hidden');
-						}
-						settings.current.classList.remove('hidden');
 						cardImage.current.classList.remove('hidden');
+						settings.current.classList.add('settingsHover');
+						settingsIconRef.current.classList.add('settingsIconHover');
 					}}
 					onMouseLeave={() => {
 						cardImage.current.classList.add('hidden');
 						if (!openSettings) {
-							settings.current.classList.add('hidden');
-						}
-						if (colorDisp) {
-							manaContainer.current.classList.remove('hidden');
+							settings.current.classList.remove('settingsHover');
+							settingsIconRef.current.classList.remove('settingsIconHover');
 						}
 					}}
 				>
@@ -585,10 +616,13 @@ export const Card = ({
 						</div>
 					) : null}
 					<div
-						onMouseEnter={() => cardImage.current.classList.add('hidden')}
-						onMouseLeave={() => cardImage.current.classList.remove('hidden')}
 						ref={settings}
-						className={'settings hidden'}
+						data-name={name}
+						data-index={typeIndex}
+						data-typename={typeName}
+						className="settings"
+						draggable="true"
+						onMouseMove={(e) => handleMouseMove(e)}
 						onClick={async (e) => {
 							if (!openSettings) {
 								var cardImages = document.getElementsByClassName('cardInfo');
@@ -603,49 +637,33 @@ export const Card = ({
 									} else {
 										cardImages[i].classList.add('noHover');
 									}
-								}
-								var p = {};
-								var obj = e.target;
-								p.x = obj.offsetLeft;
-								p.y = obj.offsetTop;
-								while (obj.offsetParent) {
-									p.x = p.x + obj.offsetParent.offsetLeft;
-									p.y = p.y + obj.offsetParent.offsetTop;
-									if (obj === document.getElementsByTagName('body')[0]) {
-										break;
-									} else {
-										obj = obj.offsetParent;
+									if (
+										cardImages[i].childNodes[1].childNodes[0].innerHTML !== name
+									) {
+										cardImages[i].style.opacity = '.4';
 									}
+								}
+								var typeHeaders = document.getElementsByClassName('typeHeader');
+								for (var j = 0; j < typeHeaders.length; ++j) {
+									typeHeaders[j].classList.add('noHover');
+									typeHeaders[j].style.opacity = '.4';
 								}
 								setSettings({
 									openSettings: !openSettings,
-									settingX: p.x,
-									settingY: p.y,
 								});
 								settings.current.classList.remove('hidden');
-								if (colorDisp) {
-									manaContainer.current.classList.add('superhidden');
-								}
-								let cardArt = document.querySelectorAll('.cardArtContainer');
-								cardArt.forEach(function (item) {
-									if (
-										item.childNodes[item.childNodes.length - 1].childNodes[0]
-											.innerHTML !== name
-									) {
-										item.style.opacity = '.4';
-									}
-								});
 							}
 						}}
 					>
-						<img className="settingsIcon" src={settingsIcon} alt="set" />
+						<img
+							ref={settingsIconRef}
+							className="settingsIcon"
+							src={settingsIcon}
+							alt="set"
+						/>
 					</div>
 					{quantityDisp ? (
-						<div
-							className={quantClass}
-							onMouseEnter={() => cardImage.current.classList.add('hidden')}
-							onMouseLeave={() => cardImage.current.classList.remove('hidden')}
-						>
+						<div className={quantClass}>
 							<div className="arrowContainer">
 								<button
 									className="arrow down"
@@ -680,32 +698,37 @@ export const Card = ({
 							<div className="cardQuantity">{`${quantity}x `}</div>
 						</div>
 					) : null}
-					<div className="infoContainer">
-						<div className="cardName">{name}</div>
-					</div>
 				</div>
-				{openSettings ? (
-					<Settings
-						name={name}
-						set={set}
-						setSettings={setSettings}
-						settingX={settingX + 27}
-						settingY={settingY - 4}
-						cardImageRef={cardImage}
-						manaContainer={manaContainer}
-						colorDisp={colorDisp}
-						openSettings={settings}
-					/>
-				) : null}
+				<div className="infoContainer">
+					<div className="cardName">{name}</div>
+				</div>
 				<img
 					ref={cardImage}
 					draggable="false"
 					className="cardImage hidden"
-					style={{ left: leftCoord, top: topCoord, width: '350px' }}
+					style={{
+						left: leftCoord + 'px',
+						top: topCoord + 'px',
+						width: '350px',
+					}}
 					src={src2}
 					alt="Doopsie"
 				></img>
 			</div>
+			{openSettings ? (
+				<Settings
+					name={name}
+					set={set}
+					setSettings={setSettings}
+					settingX={flippedX ? leftCoord - 14 : leftCoord}
+					settingY={topCoord}
+					cardImageRef={cardImage}
+					manaContainer={manaContainer}
+					colorDisp={colorDisp}
+					settingsRef={settings}
+					settingsIconRef={settingsIconRef}
+				/>
+			) : null}
 		</div>
 	);
 };
