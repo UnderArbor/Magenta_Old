@@ -752,7 +752,7 @@ div.featuredDeck .slotNameDisplay {
 
 .settingsHover {
 	background-color: rgba(0, 0, 0, 0.4);
-	opacity: 100%;
+	opacity: 1;
 	transition: 0.45s;
 }
 
@@ -767,7 +767,7 @@ div.featuredDeck .slotNameDisplay {
 }
 
 .settingsIconHover {
-	opacity: 80%;
+	opacity: 0.8;
 	transition: 0.45s;
 }
 
