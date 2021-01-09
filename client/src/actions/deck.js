@@ -20,8 +20,7 @@ import {
 	CLOSE_TOOLS,
 	CLOSE_TYPE,
 	OPEN_TYPE,
-	ADD_TYPE,
-	REMOVE_TYPE,
+	MOVE_TYPES,
 	CHANGE_CARD_SET,
 } from './types';
 
@@ -146,36 +145,19 @@ export const toggleType = (typeName, status) => async (dispatch) => {
 	}
 };
 
-export const moveType = (prevIndex, newIndex) => async (dispatch, getState) => {
+export const moveCards = (cards) => async (dispatch, getState) => {
 	try {
-		const typeObject = getState().deck.types[prevIndex];
-		const isAuthenticated = getState().auth.isAuthenticated;
+		// var currentTypes = await getState().deck.types;
+		// for (var i = 0; i < currentTypes.length; ++i) {}
+		console.log('cards: ', cards);
+	} catch (error) {
+		dispatch({ type: DECK_ERROR });
+	}
+};
 
-		dispatch({ type: REMOVE_TYPE, payload: prevIndex });
-		if (Number(prevIndex) < Number(newIndex)) {
-			newIndex = Number(newIndex) - 1;
-		}
-
-		dispatch({ type: ADD_TYPE, payload: newIndex, typeObject });
-
-		if (isAuthenticated) {
-			const config = {
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			};
-
-			const body = await JSON.stringify({
-				id: typeObject.id,
-				kind: 'move',
-				shape: getState().deck.types,
-			});
-			await axios.put(
-				`/api/deck/types/typeChange/${getState().deck.deckId}`,
-				body,
-				config
-			);
-		}
+export const moveTypes = (types) => async (dispatch) => {
+	try {
+		dispatch({ type: MOVE_TYPES, payload: types });
 	} catch (error) {
 		dispatch({ type: DECK_ERROR });
 	}
@@ -196,6 +178,8 @@ export const moveCard = (cardName, newIndex, newType) => async (
 	try {
 		console.log('Beginning');
 		var card = null;
+		var oldIndex = -1;
+		var oldTypeIndex = '';
 
 		const types = getState().deck.types;
 
@@ -203,6 +187,8 @@ export const moveCard = (cardName, newIndex, newType) => async (
 			for (var l = 0; l < types[k].cards.length; ++l) {
 				if (types[k].cards[l].name === cardName) {
 					card = types[k].cards[l];
+					oldIndex = l;
+					oldTypeIndex = k;
 					if (types[k].name === newType && l < newIndex) {
 						newIndex--;
 					}
@@ -213,7 +199,11 @@ export const moveCard = (cardName, newIndex, newType) => async (
 
 		console.log('Intermission 1');
 
-		dispatch({ type: REMOVE_CARD, payload: cardName });
+		dispatch({
+			type: REMOVE_CARD,
+			oldIndex: oldTypeIndex,
+			oldIndex2: oldIndex,
+		});
 
 		console.log('Intermission 2');
 

@@ -1,6 +1,7 @@
-import React, { Fragment, useState, useEffect, useLayoutEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import CardList from '../card/CardList';
 import SearchBar from './SearchBar';
@@ -8,16 +9,12 @@ import DeckNameDisplay from './DeckNameDisplay';
 import FileUpload from './FileUpload';
 
 import { openModalAuth } from '../../actions/auth';
-import {
-	saveName,
-	heightChange,
-	importDeck,
-	openDeck,
-} from '../../actions/deck';
+import { saveName, importDeck, openDeck } from '../../actions/deck';
 import axios from 'axios';
 
 const Deck = ({
 	showDeck,
+	types,
 	loading,
 	isAuthenticated,
 	deckId,
@@ -25,21 +22,13 @@ const Deck = ({
 	importDeck,
 	openDeck,
 	deckName,
-	cards,
-	heightChange,
+	columnCount,
 }) => {
 	const [tempName, setTempName] = useState('');
 
 	useEffect(() => {
 		setTempName('');
 	}, [deckId]);
-
-	useLayoutEffect(() => {
-		setTimeout(function () {
-			const element = document.querySelector('div.deckbuilderZone');
-			heightChange(element);
-		}, 1000);
-	}, [cards, heightChange]);
 
 	if (!showDeck) {
 		return (
@@ -95,7 +84,7 @@ const Deck = ({
 
 					<SearchBar deckId={deckId} />
 					{!loading ? (
-						<CardList />
+						<CardList types={types} />
 					) : (
 						<div
 							style={{
@@ -116,6 +105,8 @@ const Deck = ({
 };
 
 Deck.propTypes = {
+	types: PropTypes.array.isRequired,
+	columnCount: PropTypes.number.isRequired,
 	showDeck: PropTypes.bool,
 	loading: PropTypes.bool,
 	isAuthenticated: PropTypes.bool,
@@ -125,17 +116,16 @@ Deck.propTypes = {
 	openDeck: PropTypes.func.isRequired,
 	deckId: PropTypes.string,
 	deckName: PropTypes.string,
-	cards: PropTypes.array,
-	heightChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+	types: state.deck.types,
 	showDeck: state.deck.showDeck,
 	loading: state.deck.loading,
 	isAuthenticated: state.auth.isAuthenticated,
 	deckId: state.deck.deckId,
 	deckName: state.deck.deckName,
-	cards: state.deck.cards,
+	columnCount: state.tools.columnCount,
 });
 
 export default connect(mapStateToProps, {
@@ -143,5 +133,4 @@ export default connect(mapStateToProps, {
 	saveName,
 	importDeck,
 	openDeck,
-	heightChange,
 })(Deck);

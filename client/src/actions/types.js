@@ -22,8 +22,7 @@ export const CHANGE_IMAGE = 'CHANGE_IMAGE';
 
 export const CLOSE_TYPE = 'CLOSE_TYPE';
 export const OPEN_TYPE = 'OPEN_TYPE';
-export const ADD_TYPE = 'ADD_TYPE';
-export const REMOVE_TYPE = 'REMOVE_TYPE';
+export const MOVE_TYPES = 'MOVE_TYPES';
 
 export const OPEN_TOOLS = 'OPEN_TOOLS';
 export const CLOSE_TOOLS = 'CLOSE_TOOLS';

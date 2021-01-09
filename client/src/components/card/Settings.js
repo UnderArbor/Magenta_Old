@@ -139,7 +139,11 @@ const Settings = ({
 					required
 				></input>
 				{sets.loading ? (
-					<img className="loadingSpinner" src={spinnerGif}></img>
+					<img
+						className="loadingSpinner"
+						src={spinnerGif}
+						alt="loading..."
+					></img>
 				) : null}
 				<button
 					className="setDropButton"

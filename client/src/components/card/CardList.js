@@ -1,10 +1,12 @@
 import React from 'react';
+import { ReactSortable } from 'react-sortablejs';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import TypeArea from './TypeArea';
-import TypeHeader from './TypeHeader';
 
-export const CardList = ({ types, columnCount }) => {
+import { moveTypes, moveCards } from '../../actions/deck';
+
+export const CardList = ({ types, columnCount, moveTypes, moveCards }) => {
 	var cardAreaName = 'cardArea2';
 	var indexBuffer = 0;
 	if (columnCount === 1) {
@@ -15,8 +17,6 @@ export const CardList = ({ types, columnCount }) => {
 		cardAreaName = 'cardArea3';
 	}
 
-	let index = 0;
-
 	return (
 		<div
 			className={cardAreaName}
@@ -24,9 +24,14 @@ export const CardList = ({ types, columnCount }) => {
 				padding: '8px',
 			}}
 		>
-			{types.map((type) => {
-				index = Number(index) + 1;
-				if (type.cards.length > 0 && type.open) {
+			<ReactSortable
+				list={types}
+				setList={moveTypes}
+				ghostClass={'ghost'}
+				animation={1000}
+				easing={'cubic-bezier(0.16, 1, 0.3, 1)'}
+			>
+				{types.map((type, index) => {
 					indexBuffer += type.cards.length;
 					return (
 						<TypeArea
@@ -34,34 +39,13 @@ export const CardList = ({ types, columnCount }) => {
 							type={type}
 							cards={type.cards}
 							indexBuffer={indexBuffer - type.cards.length}
-							index={Number(index) - 1}
+							index={Number(index)}
 							open={type.open}
+							moveCards={moveCards}
 						/>
 					);
-				} else if (type.cards.length > 0 && !type.open) {
-					return (
-						<div
-							key={type.name.concat('div')}
-							className="typeArea"
-							style={{ width: '100%', float: 'left' }}
-						>
-							<TypeHeader
-								type={type}
-								key={type.name.concat('closed')}
-								index={Number(index) - 1}
-							/>
-							<hr
-								key={type.name.concat('hr')}
-								style={{ marginBottom: '16px' }}
-								className="typeBar"
-							/>
-							<div className="dropZone" data-id={Number(index)}></div>
-						</div>
-					);
-				} else {
-					return null;
-				}
-			})}
+				})}
+			</ReactSortable>
 		</div>
 	);
 };
@@ -69,6 +53,8 @@ export const CardList = ({ types, columnCount }) => {
 CardList.propTypes = {
 	types: PropTypes.array,
 	columnCount: PropTypes.number.isRequired,
+	moveTypes: PropTypes.func.isRequired,
+	moveCards: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -76,4 +62,4 @@ const mapStateToProps = (state) => ({
 	columnCount: state.tools.columnCount,
 });
 
-export default connect(mapStateToProps)(CardList);
+export default connect(mapStateToProps, { moveTypes, moveCards })(CardList);

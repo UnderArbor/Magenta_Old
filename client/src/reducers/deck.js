@@ -19,8 +19,7 @@ import {
 	LOGOUT,
 	CLOSE_TYPE,
 	OPEN_TYPE,
-	ADD_TYPE,
-	REMOVE_TYPE,
+	MOVE_TYPES,
 	CHANGE_CARD_SET,
 } from '../actions/types';
 
@@ -83,21 +82,7 @@ export default function (state = initialState, action) {
 				...state,
 				loading: false,
 
-				types: [
-					{ name: 'Creature', open: true, cards: [] },
-					{ name: 'Enchantment', open: true, cards: [] },
-					{ name: 'Artifact', open: true, cards: [] },
-					{ name: 'Planeswalker', open: true, cards: [] },
-					{ name: 'Instant', open: true, cards: [] },
-					{ name: 'Sorcery', open: true, cards: [] },
-					{ name: 'Land', open: true, cards: [] },
-					{ name: 'Hero', open: true, cards: [] },
-					{ name: 'Vanguard', open: true, cards: [] },
-					{ name: 'Conspiracy', open: true, cards: [] },
-					{ name: 'Scheme', open: true, cards: [] },
-					{ name: 'Plane', open: true, cards: [] },
-					{ name: 'Phenomenon', open: true, cards: [] },
-				],
+				types: [],
 				deckName: `untitled`,
 			};
 		case SAVE_NAME:
@@ -155,27 +140,16 @@ export default function (state = initialState, action) {
 					...state.types.slice(index + 1),
 				],
 			};
-		case ADD_TYPE:
+		case MOVE_TYPES:
 			return {
 				...state,
-				types: [
-					...state.types.slice(0, Number(payload)),
-					action.typeObject,
-					...state.types.slice(Number(payload)),
-				],
-			};
-		case REMOVE_TYPE:
-			return {
-				...state,
-				types: [
-					...state.types.slice(0, Number(payload)),
-					...state.types.slice(Number(payload) + 1),
-				],
+				types: payload,
 			};
 		case ADD_CARD:
 			var exists = false;
 			for (index = 0; index < state.types.length; ++index) {
 				if (action.cardType === state.types[index].name) {
+					console.log('Hi');
 					return {
 						...state,
 						types: [
@@ -205,27 +179,22 @@ export default function (state = initialState, action) {
 			break;
 
 		case REMOVE_CARD:
-			for (index = 0; index < state.types.length; ++index) {
-				for (index2 = 0; index2 < state.types[index].cards.length; ++index2) {
-					if (payload === state.types[index].cards[index2].name) {
-						return {
-							...state,
-							types: [
-								...state.types.slice(0, index),
-								{
-									...state.types[index],
-									cards: [
-										...state.types[index].cards.slice(0, index2),
-										...state.types[index].cards.slice(index2 + 1),
-									],
-								},
-								...state.types.slice(index + 1),
-							],
-						};
-					}
-				}
-			}
-
+			const oldIndex = action.oldIndex;
+			const oldIndex2 = action.oldIndex2;
+			return {
+				...state,
+				types: [
+					...state.types.slice(0, oldIndex),
+					{
+						...state.types[oldIndex],
+						cards: [
+							...state.types[oldIndex].cards.slice(0, oldIndex2),
+							...state.types[oldIndex].cards.slice(oldIndex2 + 1),
+						],
+					},
+					...state.types.slice(oldIndex + 1),
+				],
+			};
 			break;
 
 		case INSERT_CARD:

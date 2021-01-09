@@ -60,6 +60,8 @@ export const Card = ({
 		},
 	};
 
+	var dragIndex = -1;
+
 	const handleMouseMove = (e) => {
 		const windowHeight =
 			window.innerHeight || document.documentElement.clientHeight;
@@ -150,6 +152,8 @@ export const Card = ({
 			item.classList.add('superhidden');
 		});
 
+		const cardDragName = this.dataset.name;
+
 		let cardDropZones = document.querySelectorAll('.cardDropZone');
 		cardDropZones.forEach(function (item) {
 			if (item.dataset.type === e.target.dataset.typename) {
@@ -158,9 +162,11 @@ export const Card = ({
 					Number(item.dataset.index) !== Number(e.target.dataset.index) + 1
 				) {
 					item.classList.add('acceptDrop');
+					item.innerHTML = `${cardDragName}`;
 				}
 			} else {
 				item.classList.add('acceptDrop');
+				item.innerHTML = `${cardDragName}`;
 			}
 		});
 
@@ -183,7 +189,6 @@ export const Card = ({
 
 		e.dataTransfer.effectAllowed = 'move';
 		e.dataTransfer.setData('type', 'card');
-		e.dataTransfer.setData('text/name', this.dataset.name);
 	}
 
 	function handleDragEnd(e) {
@@ -193,6 +198,8 @@ export const Card = ({
 		let cardDropZones = document.querySelectorAll('.cardDropZone');
 		cardDropZones.forEach(function (item) {
 			item.classList.remove('acceptDrop');
+			item.classList.remove('extendedRightZone');
+			item.classList.remove('extendedLeftZone');
 		});
 
 		let cardImages = document.querySelectorAll('.cardImage');
@@ -203,6 +210,7 @@ export const Card = ({
 		for (var i = 0; i < cardInfo.length; ++i) {
 			cardInfo[i].style.opacity = '1';
 		}
+		// console.log('DRAGEND');
 	}
 
 	function handleDragEnter(e) {
@@ -261,24 +269,41 @@ export const Card = ({
 		e.stopPropagation();
 		e.preventDefault();
 
-		const currentType = String(this.dataset.type);
-		const currentIndex = Number(this.dataset.index);
+		if (e.target.classList.contains('acceptDrop')) {
+			const newIndex = this.dataset.index;
+			const newType = this.dataset.type;
 
-		let cardHolder = document.querySelectorAll('.cardHolder');
-		cardHolder.forEach(function (item) {
-			if (
-				Number(item.dataset.index) === currentIndex &&
-				e.target.classList.contains('acceptDrop') &&
-				item.classList.contains(currentType)
-			) {
-				if (e.target.classList.contains('leftCardDropZone')) {
-					e.target.classList.add('extendedLeftZone');
-				} else if (e.target.classList.contains('rightCardDropZone')) {
-					e.target.classList.add('extendedRightZone');
+			moveCard(e.target.innerHTML, newIndex, newType);
+			let cardDropZones = document.querySelectorAll('.cardDropZone');
+			cardDropZones.forEach(function (item) {
+				if (item.dataset.type === e.target.dataset.typename) {
+					if (
+						Number(item.dataset.index) !== Number(e.target.dataset.index) &&
+						Number(item.dataset.index) !== Number(e.target.dataset.index) + 1
+					) {
+						item.classList.add('acceptDrop');
+					} else {
+						item.classList.remove('acceptDrop');
+					}
+				} else {
+					item.classList.add('acceptDrop');
 				}
-				item.classList.remove('hidden');
+			});
+			var cardInfo = document.getElementsByClassName('cardInfo');
+			for (var j = 0; j < cardInfo.length; ++j) {
+				if (
+					cardInfo[j].childNodes[1].childNodes[0].innerHTML !==
+					e.target.innerHTML
+				) {
+					console.log(
+						'firstname: ',
+						cardInfo[j].childNodes[1].childNodes[0].innerHTML
+					);
+					console.log('secondname: ', e.target.innerHTML);
+					cardInfo[j].style.opacity = '.4';
+				}
 			}
-		});
+		}
 	}
 
 	function handleDragOver2(e) {
@@ -292,33 +317,13 @@ export const Card = ({
 	function handleDragLeave2(e) {
 		e.stopImmediatePropagation();
 		e.stopPropagation();
-		let cardHolder = document.querySelectorAll('.cardHolder');
-		cardHolder.forEach(function (item) {
-			item.classList.add('hidden');
-			if (e.target.classList.contains('extendedLeftZone')) {
-				e.target.classList.remove('extendedLeftZone');
-			} else if (e.target.classList.contains('extendedRightZone')) {
-				e.target.classList.remove('extendedRightZone');
-			}
-		});
+
+		return false;
 	}
 
 	function handleDrop2(e) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
-
-		const cardName = e.dataTransfer.getData('text/name');
-		const newIndex = this.dataset.index;
-		const newType = this.dataset.type;
-
-		moveCard(cardName, newIndex, newType);
-		let cardHolder = document.querySelectorAll('.cardHolder');
-		cardHolder.forEach(function (item) {
-			item.classList.add('hidden');
-			e.target.classList.remove('extendedLeftZone');
-		});
-
-		e.dataTransfer.clearData();
 
 		return false;
 	}
@@ -621,7 +626,7 @@ export const Card = ({
 						data-index={typeIndex}
 						data-typename={typeName}
 						className="settings"
-						draggable="true"
+						// draggable="true"
 						onMouseMove={(e) => handleMouseMove(e)}
 						onClick={async (e) => {
 							if (!openSettings) {

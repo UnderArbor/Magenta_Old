@@ -21,24 +21,7 @@ const NewDeckButton = ({
 					closeDeck();
 					openDeck(-1);
 					if (isAuthenticated) {
-						saveDeck(
-							[
-								{ name: 'Creature', open: true, cards: [] },
-								{ name: 'Enchantment', open: true, cards: [] },
-								{ name: 'Artifact', open: true, cards: [] },
-								{ name: 'Planeswalker', open: true, cards: [] },
-								{ name: 'Instant', open: true, cards: [] },
-								{ name: 'Sorcery', open: true, cards: [] },
-								{ name: 'Land', open: true, cards: [] },
-								{ name: 'Hero', open: true, cards: [] },
-								{ name: 'Vanguard', open: true, cards: [] },
-								{ name: 'Conspiracy', open: true, cards: [] },
-								{ name: 'Scheme', open: true, cards: [] },
-								{ name: 'Plane', open: true, cards: [] },
-								{ name: 'Phenomenon', open: true, cards: [] },
-							],
-							`untitled`
-						);
+						saveDeck([], `untitled`);
 					}
 				}}
 			>

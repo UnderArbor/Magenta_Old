@@ -617,10 +617,15 @@ div.featuredDeck .slotNameDisplay {
 	column-gap: 1em;
 }
 
-.typeArea {
+.typeGroup {
 	display: inline-block;
 	-webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
 	page-break-inside: avoid; /* Firefox */
+	width: 100%;
+	float: left;
+}
+
+.typeArea {
 }
 
 .typeHeader {
@@ -631,13 +636,6 @@ div.featuredDeck .slotNameDisplay {
 	cursor: move;
 	border-top-right-radius: 6px;
 	border-top-left-radius: 6px;
-}
-
-.dropZone {
-	margin: 4px 0;
-	width: 100%;
-	height: 12px;
-	border-radius: 6px;
 }
 
 .typeName {
@@ -712,8 +710,8 @@ div.featuredDeck .slotNameDisplay {
 	color: #fff;
 	display: flex;
 	flex-flow: column wrap;
-	margin: 0 14px;
-	width: 90px;
+	padding: 0 4px;
+	width: 96px;
 }
 
 .manaContainer {
@@ -939,36 +937,56 @@ div.featuredDeck .slotNameDisplay {
 	height: 116px;
 	z-index: 1;
 	background-color: transparent;
-}
-
-.leftCardDropZone {
-	width: 63px;
-	margin-right: -62px;
-}
-
-.extendedLeftZone {
-	width: 168px;
-	margin-left: -122px;
-}
-
-.rightCardDropZone {
-	width: 56px;
-	margin-left: -56px;
-}
-
-.extendedRightZone {
-	width: 170px;
-	margin-right: -124px;
+	color: transparent;
+	position: absolute;
+	/* border: 1px solid red; */
 }
 
 .acceptDrop {
 	z-index: 6;
+	display: inline-block;
+	/* background-color: red; */
 }
+
+.leftCardDropZone {
+	width: 55px;
+	margin-right: -55px;
+}
+
+.extendedLeftZone {
+	width: 185px;
+	margin-left: -139px;
+	/* background-color: blue; */
+	opacity: 0.5;
+}
+
+.rightCardDropZone {
+	width: 55px;
+	margin-left: 56px;
+}
+
+.extendedRightZone {
+	width: 185px;
+	margin-right: -139px;
+	/* background-color: green; */
+	opacity: 0.5;
+}
+
+/* .midline {
+	border-right: 1px dotted blue;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	z-index: 8;
+	position: absolute;
+} */
 
 .cardHolder {
 	opacity: 0.5;
 	border: 2px dashed grey;
 	height: 110px;
+	width: 96px;
+	margin: 0 8px;
 	border-radius: 6px;
 }
 
@@ -1028,6 +1046,10 @@ div.featuredDeck .slotNameDisplay {
 
 .small {
 	width: 240px;
+}
+
+.ghost {
+	opacity: 0.4;
 }
 
 .hidden {
